@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Inspire College — UX Wireframes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Gloria+Hallelujah&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sk-hand: 'Kalam', 'Caveat', 'Gloria Hallelujah', sans-serif;
+    --sk-mono: 'JetBrains Mono', monospace;
+    --sk-accent: #3F007C;
+    --sk-accent-soft: #C6BBF0;
+  }
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  body { font-family: var(--sk-hand); color: #1d1a14; }
+  * { box-sizing: border-box; }
+  /* sketchy filter - subtle paper texture via filter */
+  .sketch-mode { filter: url(#sketchy-filter); }
+  .sketch-mode svg { filter: none; }
+  /* doodles can be toggled off via the "Show annotations" tweak */
+  body.no-doodles .sk-doodle { display: none; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/11/13-1-768x397.png" data-resource-id="prog_11" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/11/14-768x397.png" data-resource-id="prog_12" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/11/8-768x397.png" data-resource-id="prog_13" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/11/17-768x397.png" data-resource-id="prog_14" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/11/10-1-768x397.png" data-resource-id="prog_21" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/11/1-4-768x397.png" data-resource-id="prog_22" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/37-768x397.png" data-resource-id="prog_23" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/31-768x397.png" data-resource-id="prog_24" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2026/04/Gemini_Generated_Image_gop2mqgop2mqgop2-768x648.png" data-resource-id="prog_31" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-06-at-15.05.40-768x648.jpeg" data-resource-id="prog_32" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/7-1.png" data-resource-id="prog_33" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/2-1.png" data-resource-id="prog_34" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/10/Home-page-image-3.png" data-resource-id="campus_hero" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/Gemini_Generated_Image_7avc697avc697avc-Photoroom.png" data-resource-id="hero_candid" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/build-your-future-with-inspire-collage-and-WINC-1024x532.png" data-resource-id="news_winc" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2024/04/London-School-of-Business-and-Finance-is-in-Sri-Lanka-Now-scaled-1-1024x555.png" data-resource-id="news_lsbf" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2024/04/BLOG-POST-STEVE-AS-A-CHIRMAN-1024x555.jpg" data-resource-id="news_steve" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/LeadHype-300-x-80-px-1.png" data-resource-id="logo" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/10/Gemini_Generated_Image_vwcqbzvwcqbzvwcq-Photoroom.png" data-resource-id="ab_hero" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/10/About-us-image-1-1.png" data-resource-id="ab_who" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/steven-600x606-1.jpg" data-resource-id="ab_steven" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/dinesh-600x606-1.jpg" data-resource-id="ab_dinesh" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/bhanuka-600x606-1.jpg" data-resource-id="ab_bhanuka" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/tim-600x606-1.jpg" data-resource-id="ab_tim" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/kanishka-1.png" data-resource-id="ab_kanishka" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/09/enfk.png" data-resource-id="ab_sumaiya" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/Inspire-Portratis-14-819x1024.jpg" data-resource-id="ab_nishadie" />
+<meta name="ext-resource-dependency" content="https://inspirecollege.lk/wp-content/uploads/2025/12/Inspire-Portratis-4-819x1024.jpg" data-resource-id="ab_leandra" />
+<meta name="ext-resource-dependency" content="https://dwf.efc.mybluehost.me/website_8fb955f8/wp-content/uploads/2025/10/Colour-PNG-_No-BackGround_.png" data-resource-id="pl_athe" />
+<meta name="ext-resource-dependency" content="https://dwf.efc.mybluehost.me/website_8fb955f8/wp-content/uploads/2025/10/London_School_of_Business_and_Finance__LSBF__logo-removebg-preview.png" data-resource-id="pl_lsbf" />
+<meta name="ext-resource-dependency" content="https://dwf.efc.mybluehost.me/website_8fb955f8/wp-content/uploads/2025/10/WINC-Logo.png" data-resource-id="pl_winc" />
+<meta name="ext-resource-dependency" content="https://dwf.efc.mybluehost.me/website_8fb955f8/wp-content/uploads/2025/10/cpdmember-logo-1-removebg-preview.png" data-resource-id="pl_cpd" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&h=600&fit=crop&auto=format&q=80" data-resource-id="us_studio" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&h=600&fit=crop&auto=format&q=80" data-resource-id="us_library" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=400&fit=crop&auto=format&q=80" data-resource-id="us_studio2" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=600&h=400&fit=crop&auto=format&q=80" data-resource-id="us_lab" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&h=400&fit=crop&auto=format&q=80" data-resource-id="us_court" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&h=800&fit=crop&auto=format&q=80" data-resource-id="us_portraitF" />
+<meta name="ext-resource-dependency" content="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=500&fit=crop&auto=format&q=80" data-resource-id="us_portrait" />
+<template id="__bundler_thumbnail" data-bg-color="#3F007C">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#3F007C"/>
+    <text x="600" y="380" font-family="Kalam, Comic Sans MS, cursive" font-size="180" font-weight="800" fill="#C6B8F0" text-anchor="middle">IC</text>
+    <text x="600" y="480" font-family="Kalam, Comic Sans MS, cursive" font-size="52" fill="#faf6ee" text-anchor="middle">Inspire College</text>
+    <path d="M470 540 Q 600 520 730 540" stroke="#C6B8F0" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </svg>
+</template>
+</head>
+<body>
+<!-- Sketchy displacement filter -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="sketchy-filter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="2" />
+    <feDisplacementMap in="SourceGraphic" scale="1.2" />
+  </filter>
+</svg>
+
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="sketch-primitives.jsx"></script>
+<script type="text/babel" src="doodles.jsx"></script>
+<script type="text/babel" src="homepages.jsx"></script>
+<script type="text/babel" src="inner-pages.jsx"></script>
+<script type="text/babel" src="about-page.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#3F007C",
+  "sketchy": true,
+  "showAnnotations": true
+}/*EDITMODE-END*/;
+
+const ACCENT_MAP = {
+  "#3F007C": { name: "Purple (primary)", soft: "#C6B8F0" },
+  "#E85FAE": { name: "Pink", soft: "#F5C8E1" },
+  "#FF5129": { name: "Orange", soft: "#FFC9B8" },
+  "#0C4939": { name: "Forest green", soft: "#B8D4CA" },
+  "#B3FAFF": { name: "Aqua", soft: "#DFFBFD" },
+  "#1d1a14": { name: "Mono", soft: "#c9c4b5" },
+};
+
+function App() {
+  const [tw, setTw] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('--sk-accent', tw.accent);
+    document.documentElement.style.setProperty('--sk-accent-soft', ACCENT_MAP[tw.accent]?.soft || '#f2d7a8');
+    document.body.classList.toggle('sketch-mode', !!tw.sketchy);
+    document.body.classList.toggle('no-doodles', !tw.showAnnotations);
+  }, [tw.accent, tw.sketchy]);
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="home" title="Homepage" subtitle="Four distinct approaches · pick your direction">
+          <DCArtboard id="A" label="A · Classic academic" width={HOME_W} height={1560}><HomeA /></DCArtboard>
+          <DCArtboard id="B" label="B · Editorial / magazine" width={HOME_W} height={1760}><HomeB /></DCArtboard>
+          <DCArtboard id="C" label="C · Modern product feel" width={HOME_W} height={1700}><HomeC /></DCArtboard>
+          <DCArtboard id="D" label="D · Bold typographic" width={HOME_W} height={1940}><HomeD /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="programs" title="Programs listing" subtitle="Two ways to browse 48 programs">
+          <DCArtboard id="A" label="A · Filter + results" width={INNER_W} height={1380}><ProgramsA /></DCArtboard>
+          <DCArtboard id="B" label="B · Visual catalog" width={INNER_W} height={1520}><ProgramsB /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="detail" title="Program detail" subtitle="How a single program is presented">
+          <DCArtboard id="A" label="A · Tabs + structured" width={INNER_W} height={1920}><DetailA /></DCArtboard>
+          <DCArtboard id="B" label="B · Storytelling long-scroll" width={INNER_W} height={1600}><DetailB /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="admit" title="Admissions" subtitle="Applying + getting through the door">
+          <DCArtboard id="A" label="A · Form + stepper" width={INNER_W} height={1360}><AdmitA /></DCArtboard>
+          <DCArtboard id="B" label="B · Friendly + FAQ" width={INNER_W} height={1720}><AdmitB /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="about" title="About Us" subtitle="Who we are, the board, leadership, faculty and values">
+          <DCArtboard id="A" label="A · Classic structured" width={ABOUT_W} height={2640}><AboutA /></DCArtboard>
+          <DCArtboard id="B" label="B · Editorial / story-led" width={ABOUT_W} height={2680}><AboutB /></DCArtboard>
+        </DCSection>
+
+        <DCPostIt top={20} left={1280} rotate={-3} width={220}>
+          These are wireframes — content & imagery are placeholder. Click any artboard label to focus. Use the Tweaks panel to switch accent color &amp; sketchiness.
+        </DCPostIt>
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Accent color">
+          <TweakRadio value={tw.accent} onChange={(v) => setTw({ accent: v })}
+            options={Object.entries(ACCENT_MAP).map(([k, v]) => ({ value: k, label: v.name }))} />
+        </TweakSection>
+        <TweakSection title="Style">
+          <TweakToggle label="Sketchy filter" value={tw.sketchy} onChange={(v) => setTw({ sketchy: v })} />
+          <TweakToggle label="Show annotations" value={tw.showAnnotations} onChange={(v) => setTw({ showAnnotations: v })} />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
