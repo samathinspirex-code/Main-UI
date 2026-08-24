@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Inspire College — UX Wireframes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Gloria+Hallelujah&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sk-hand: 'Kalam', 'Caveat', 'Gloria Hallelujah', sans-serif;
+    --sk-mono: 'JetBrains Mono', monospace;
+    --sk-accent: #3F007C;
+    --sk-accent-soft: #C6BBF0;
+  }
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  body { font-family: var(--sk-hand); color: #1d1a14; }
+  * { box-sizing: border-box; }
+  /* sketchy filter - subtle paper texture via filter */
+  .sketch-mode { filter: url(#sketchy-filter); }
+  .sketch-mode svg { filter: none; }
+  /* doodles can be toggled off via the "Show annotations" tweak */
+  body.no-doodles .sk-doodle { display: none; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- Sketchy displacement filter -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="sketchy-filter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="2" />
+    <feDisplacementMap in="SourceGraphic" scale="1.2" />
+  </filter>
+</svg>
+
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="sketch-primitives.jsx"></script>
+<script type="text/babel" src="doodles.jsx"></script>
+<script type="text/babel" src="homepages.jsx"></script>
+<script type="text/babel" src="inner-pages.jsx"></script>
+<script type="text/babel" src="about-page.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#3F007C",
+  "sketchy": true,
+  "showAnnotations": true
+}/*EDITMODE-END*/;
+
+const ACCENT_MAP = {
+  "#3F007C": { name: "Purple (primary)", soft: "#C6B8F0" },
+  "#E85FAE": { name: "Pink", soft: "#F5C8E1" },
+  "#FF5129": { name: "Orange", soft: "#FFC9B8" },
+  "#0C4939": { name: "Forest green", soft: "#B8D4CA" },
+  "#B3FAFF": { name: "Aqua", soft: "#DFFBFD" },
+  "#1d1a14": { name: "Mono", soft: "#c9c4b5" },
+};
+
+function App() {
+  const [tw, setTw] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('--sk-accent', tw.accent);
+    document.documentElement.style.setProperty('--sk-accent-soft', ACCENT_MAP[tw.accent]?.soft || '#f2d7a8');
+    document.body.classList.toggle('sketch-mode', !!tw.sketchy);
+    document.body.classList.toggle('no-doodles', !tw.showAnnotations);
+  }, [tw.accent, tw.sketchy]);
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="home" title="Homepage" subtitle="Four distinct approaches · pick your direction">
+          <DCArtboard id="A" label="A · Classic academic" width={HOME_W} height={1560}><HomeA /></DCArtboard>
+          <DCArtboard id="B" label="B · Editorial / magazine" width={HOME_W} height={1760}><HomeB /></DCArtboard>
+          <DCArtboard id="C" label="C · Modern product feel" width={HOME_W} height={1700}><HomeC /></DCArtboard>
+          <DCArtboard id="D" label="D · Bold typographic" width={HOME_W} height={1940}><HomeD /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="programs" title="Programs listing" subtitle="Two ways to browse 48 programs">
+          <DCArtboard id="A" label="A · Filter + results" width={INNER_W} height={1380}><ProgramsA /></DCArtboard>
+          <DCArtboard id="B" label="B · Visual catalog" width={INNER_W} height={1520}><ProgramsB /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="detail" title="Program detail" subtitle="How a single program is presented">
+          <DCArtboard id="A" label="A · Tabs + structured" width={INNER_W} height={1920}><DetailA /></DCArtboard>
+          <DCArtboard id="B" label="B · Storytelling long-scroll" width={INNER_W} height={1600}><DetailB /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="admit" title="Admissions" subtitle="Applying + getting through the door">
+          <DCArtboard id="A" label="A · Form + stepper" width={INNER_W} height={1360}><AdmitA /></DCArtboard>
+          <DCArtboard id="B" label="B · Friendly + FAQ" width={INNER_W} height={1720}><AdmitB /></DCArtboard>
+        </DCSection>
+
+        <DCSection id="about" title="About Us" subtitle="Who we are, the board, leadership, faculty and values">
+          <DCArtboard id="A" label="A · Classic structured" width={ABOUT_W} height={2640}><AboutA /></DCArtboard>
+          <DCArtboard id="B" label="B · Editorial / story-led" width={ABOUT_W} height={2680}><AboutB /></DCArtboard>
+        </DCSection>
+
+        <DCPostIt top={20} left={1280} rotate={-3} width={220}>
+          These are wireframes — content & imagery are placeholder. Click any artboard label to focus. Use the Tweaks panel to switch accent color &amp; sketchiness.
+        </DCPostIt>
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Accent color">
+          <TweakRadio value={tw.accent} onChange={(v) => setTw({ accent: v })}
+            options={Object.entries(ACCENT_MAP).map(([k, v]) => ({ value: k, label: v.name }))} />
+        </TweakSection>
+        <TweakSection title="Style">
+          <TweakToggle label="Sketchy filter" value={tw.sketchy} onChange={(v) => setTw({ sketchy: v })} />
+          <TweakToggle label="Show annotations" value={tw.showAnnotations} onChange={(v) => setTw({ showAnnotations: v })} />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
