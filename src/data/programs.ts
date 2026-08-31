@@ -266,7 +266,10 @@ export async function fetchPrograms(): Promise<Program[]> {
 export async function fetchProgramBySlug(slug: string): Promise<Program | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/v1/public/programs/${encodeURIComponent(slug)}`, { cache: "no-store" });
-    if (response.status === 404) return null;
+    if (response.status === 404) {
+      const programs = await fetchPrograms();
+      return programs.find((program) => program.slug === slug) ?? null;
+    }
     if (!response.ok) throw new Error(`Programme API returned ${response.status}`);
     return mapApiProgramToUi((await response.json()) as ApiProgram);
   } catch (error) {
