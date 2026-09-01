@@ -119,7 +119,10 @@ export async function fetchNewsEvents(): Promise<NewsItem[]> {
 export async function fetchNewsEventBySlug(slug: string): Promise<NewsItem | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/v1/public/news-events/${encodeURIComponent(slug)}`, { cache: "no-store" });
-    if (response.status === 404) return getNewsBySlug(slug) ?? null;
+    if (response.status === 404) {
+      const items = await fetchNewsEvents();
+      return items.find((item) => item.slug === slug) ?? null;
+    }
     if (!response.ok) throw new Error(`News API returned ${response.status}`);
     return mapApiNewsEvent((await response.json()) as ApiNewsEvent);
   } catch (error) {
