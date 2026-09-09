@@ -68,6 +68,15 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
   const [sort, setSort] = useState<'popularity'|'price-asc'|'price-desc'>('popularity')
   const [page, setPage] = useState(1)
   const [showFilters, setShowFilters] = useState(false)
+  const [programme, setProgramme] = useState('')
+  const [guidedLevel, setGuidedLevel] = useState('')
+  const [guidedSchool, setGuidedSchool] = useState('')
+  const [studyMode, setStudyMode] = useState('')
+
+  const programmeOptions = useMemo(() => [...new Set(programs.map(p => p.programmeName ?? p.level))].sort(), [programs])
+  const guidedCourses = useMemo(() => programs.filter(p => !programme || (p.programmeName ?? p.level) === programme), [programs, programme])
+  const guidedLevels = useMemo(() => [...new Set(guidedCourses.map(p => p.levelName).filter(Boolean))].sort() as string[], [guidedCourses])
+  const guidedSchools = useMemo(() => [...new Set(guidedCourses.filter(p => !guidedLevel || p.levelName === guidedLevel).map(p => p.schoolName ?? p.school))].sort(), [guidedCourses, guidedLevel])
 
   const counts = useMemo(() => {
     const lc = new Map<string, number>(); const sc = new Map<string, number>(); const bc = new Map<string, number>()
@@ -81,6 +90,10 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
 
   const filtered = useMemo(() => {
     let list = programs.filter(p => {
+      if (programme && (p.programmeName ?? p.level) !== programme) return false
+      if (guidedLevel && p.levelName !== guidedLevel) return false
+      if (guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
+      if (studyMode && !p.studyOptions?.some(option => option.study_mode === studyMode && option.is_enabled)) return false
       if (levels.size && !levels.has(p.level)) return false
       if (schools.size && !schools.has(p.school)) return false
       if (bodies.size && !bodies.has(p.awardingBody)) return false
@@ -89,7 +102,7 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
     })
     list = [...list].sort((a, b) => sort === 'price-asc' ? a.priceFrom - b.priceFrom : sort === 'price-desc' ? b.priceFrom - a.priceFrom : b.popularity - a.popularity)
     return list
-  }, [programs, levels, schools, bodies, query, sort])
+  }, [programs, levels, schools, bodies, query, sort, programme, guidedLevel, guidedSchool, studyMode])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const cur = Math.min(page, pageCount)
@@ -105,6 +118,15 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 12 }}>HOME / PROGRAMS</div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>Find your program</h1>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-soft)', margin: 0 }}>Foundation · HND · Top-Up Degree · Master's · Short Courses — all 100% online</p>
+          </div>
+        </div>
+
+        <div className="sx" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
+          <div className="rg-4" style={{ gap: 12, padding: 18, border: '1px solid var(--border-accent)', borderRadius: 12, background: 'var(--accent-dim)' }}>
+            <select aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setGuidedLevel(''); setGuidedSchool(''); setPage(1) }}><option value="">1 · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select aria-label="Academic level" value={guidedLevel} onChange={e => { setGuidedLevel(e.target.value); setGuidedSchool(''); setPage(1) }} disabled={!programme || !guidedLevels.length}><option value="">2 · {guidedLevels.length ? 'All levels' : 'No formal level'}</option>{guidedLevels.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setPage(1) }} disabled={!programme}><option value="">3 · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select aria-label="Study mode" value={studyMode} onChange={e => { setStudyMode(e.target.value); setPage(1) }}><option value="">4 · Any study mode</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option></select>
           </div>
         </div>
 
@@ -175,6 +197,7 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'var(--accent)' }}>From {formatLKR(p.priceFrom)}</span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--ink-muted)' }}>Details <Icon kind="arrow" size={13} /></span>
                     </div>
+                    {!!p.studyOptions?.length && <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>{p.studyOptions.map(option => <Tag key={option.study_mode}>{option.study_mode === 'full_time' ? 'Full-time' : 'Part-time'} · {option.duration} · {formatLKR(option.price)}</Tag>)}</div>}
                   </Link>
                 ))}
               </div>

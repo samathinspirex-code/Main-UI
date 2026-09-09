@@ -6,6 +6,14 @@ export interface Topic { topic_id: number; program_id: number; order: number; to
 export interface Outcome { outcome_id: number; program_id: number; order: number; outcome: string; }
 
 export interface Program {
+  courseId?: number;
+  programmeId?: number;
+  programmeName?: string;
+  levelId?: number | null;
+  levelName?: string | null;
+  schoolId?: number;
+  schoolName?: string;
+  studyOptions?: StudyOption[];
   slug: string;
   title: string;
   level: ProgramLevel;
@@ -22,6 +30,20 @@ export interface Program {
   popularity: number;
   topics?: Topic[];
   outcomes?: Outcome[];
+}
+
+export interface StudyOption {
+  study_mode: "full_time" | "part_time";
+  price: number;
+  duration: string;
+  is_enabled: boolean;
+}
+
+export interface ProgrammeNode {
+  programme_id: number;
+  code: string;
+  name: string;
+  description?: string | null;
 }
 
 const IC = (path: string) => `https://inspirecollege.lk/wp-content/uploads/${path}`;
@@ -210,20 +232,28 @@ export function formatLKR(amount: number): string {
 }
 
 interface ApiProgram {
+  course_id?: number;
+  programme_id?: number;
+  programme_name?: string;
+  level_id?: number | null;
+  level_name?: string | null;
+  school_id?: number;
+  school_name?: string;
+  study_options?: StudyOption[];
   slug: string;
   title: string;
-  level: string;
-  school: string;
+  level?: string;
+  school?: string;
   awarding_body: string;
   code: string;
-  duration: string;
-  price_from: number;
-  tag: string | null;
-  icon: string;
-  image_label: string;
+  duration?: string;
+  price_from?: number;
+  tag?: string | null;
+  icon?: string;
+  image_label?: string;
   image_url?: string | null;
   blurb: string;
-  popularity: number;
+  popularity?: number;
   topics?: Topic[];
   outcomes?: Outcome[];
 }
@@ -231,21 +261,31 @@ interface ApiProgram {
 const API_BASE_URL = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
 
 function mapApiProgramToUi(api: ApiProgram): Program {
+  const enabledOptions = (api.study_options ?? []).filter(option => option.is_enabled);
+  const lowestPrice = enabledOptions.length ? Math.min(...enabledOptions.map(option => option.price)) : (api.price_from ?? 0);
   return {
+    courseId: api.course_id,
+    programmeId: api.programme_id,
+    programmeName: api.programme_name ?? api.level ?? "Programme",
+    levelId: api.level_id,
+    levelName: api.level_name ?? api.level ?? null,
+    schoolId: api.school_id,
+    schoolName: api.school_name ?? api.school ?? "School",
+    studyOptions: enabledOptions,
     slug: api.slug,
     title: api.title,
-    level: api.level as ProgramLevel,
-    school: api.school as School,
+    level: (api.level_name ?? api.level ?? "Short Course") as ProgramLevel,
+    school: (api.school ?? api.school_name?.replace(/^School of /, "") ?? "CPD") as School,
     awardingBody: api.awarding_body as AwardingBody,
     code: api.code,
-    duration: api.duration,
-    priceFrom: api.price_from,
+    duration: enabledOptions[0]?.duration ?? api.duration,
+    priceFrom: lowestPrice,
     tag: api.tag || undefined,
-    icon: api.icon,
-    imageLabel: api.image_label,
+    icon: api.icon ?? "grad",
+    imageLabel: api.image_label ?? api.title,
     imageUrl: api.image_url || undefined,
     blurb: api.blurb,
-    popularity: api.popularity,
+    popularity: api.popularity ?? 0,
     topics: api.topics,
     outcomes: api.outcomes,
   };
@@ -253,13 +293,25 @@ function mapApiProgramToUi(api: ApiProgram): Program {
 
 export async function fetchPrograms(): Promise<Program[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/public/programs`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/catalogue/courses`, { cache: "no-store" });
     if (!response.ok) throw new Error(`Programme API returned ${response.status}`);
     const payload = (await response.json()) as { data: ApiProgram[] };
     return payload.data.map(mapApiProgramToUi);
   } catch (error) {
     console.error("Unable to load programmes from the API; using the bundled catalogue.", error);
     return PROGRAMS;
+  }
+}
+
+export async function fetchProgrammeNodes(): Promise<ProgrammeNode[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/catalogue/programmes`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Programme hierarchy API returned ${response.status}`);
+    return ((await response.json()) as { data: ProgrammeNode[] }).data;
+  } catch (error) {
+    console.error("Unable to load the programme hierarchy; deriving it from the catalogue.", error);
+    const names = [...new Set(PROGRAMS.map(program => program.level))];
+    return names.map((name, index) => ({ programme_id: -(index + 1), code: name.toUpperCase().replace(/\W+/g, "_"), name }));
   }
 }
 
