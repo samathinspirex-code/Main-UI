@@ -5,7 +5,7 @@ import { fetchPrograms } from "@/data/programs";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Find your program" };
 
-export default async function ProgramsPage({ searchParams }: { searchParams: Promise<{ q?: string; level?: string; body?: string }> }) {
+export default async function ProgramsPage({ searchParams }: { searchParams: Promise<{ q?: string; body?: string }> }) {
   const [params, programs] = await Promise.all([searchParams, fetchPrograms()]);
-  return <Programs programs={programs} initialQuery={params.q ?? ""} initialLevel={params.level ?? ""} initialBody={params.body ?? ""} />;
+  return <Programs programs={programs} initialQuery={params.q ?? ""} initialBody={params.body ?? ""} />;
 }

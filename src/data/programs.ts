@@ -9,8 +9,6 @@ export interface Program {
   courseId?: number;
   programmeId?: number;
   programmeName?: string;
-  levelId?: number | null;
-  levelName?: string | null;
   schoolId?: number;
   schoolName?: string;
   studyOptions?: StudyOption[];
@@ -19,6 +17,8 @@ export interface Program {
   level: ProgramLevel;
   school: School;
   awardingBody: AwardingBody;
+  entryRequirements?: string;
+  progressionRoute?: string;
   code: string;
   duration: string;
   priceFrom: number;
@@ -235,8 +235,6 @@ interface ApiProgram {
   course_id?: number;
   programme_id?: number;
   programme_name?: string;
-  level_id?: number | null;
-  level_name?: string | null;
   school_id?: number;
   school_name?: string;
   study_options?: StudyOption[];
@@ -245,6 +243,8 @@ interface ApiProgram {
   level?: string;
   school?: string;
   awarding_body: string;
+  entry_requirements?: string;
+  progression_route?: string;
   code: string;
   duration?: string;
   price_from?: number;
@@ -267,16 +267,16 @@ function mapApiProgramToUi(api: ApiProgram): Program {
     courseId: api.course_id,
     programmeId: api.programme_id,
     programmeName: api.programme_name ?? api.level ?? "Programme",
-    levelId: api.level_id,
-    levelName: api.level_name ?? api.level ?? null,
     schoolId: api.school_id,
     schoolName: api.school_name ?? api.school ?? "School",
     studyOptions: enabledOptions,
     slug: api.slug,
     title: api.title,
-    level: (api.level_name ?? api.level ?? "Short Course") as ProgramLevel,
+    level: (api.programme_name ?? api.level ?? "Short Course") as ProgramLevel,
     school: (api.school ?? api.school_name?.replace(/^School of /, "") ?? "CPD") as School,
     awardingBody: api.awarding_body as AwardingBody,
+    entryRequirements: api.entry_requirements,
+    progressionRoute: api.progression_route,
     code: api.code,
     duration: enabledOptions[0]?.duration ?? api.duration,
     priceFrom: lowestPrice,

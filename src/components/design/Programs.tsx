@@ -48,10 +48,9 @@ function FilterGroup({ title, items, selected, onToggle }: { title: string; item
   )
 }
 
-export default function Programs({ programs, initialQuery = '', initialLevel = '', initialBody = '' }: { programs: Program[]; initialQuery?: string; initialLevel?: string; initialBody?: string }) {
+export default function Programs({ programs, initialQuery = '', initialBody = '' }: { programs: Program[]; initialQuery?: string; initialBody?: string }) {
   const [query, setQuery] = useState(initialQuery)
   const [programmes, setProgrammes] = useState<Set<string>>(new Set())
-  const [levels, setLevels] = useState<Set<string>>(new Set(initialLevel ? [initialLevel] : []))
   const [schools, setSchools] = useState<Set<string>>(new Set())
   const [bodies, setBodies] = useState<Set<string>>(new Set(initialBody ? [initialBody] : []))
   const [sort, setSort] = useState<'popularity'|'price-asc'|'price-desc'>('popularity')
@@ -59,13 +58,10 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
   const [showFilters, setShowFilters] = useState(false)
   const [guidedSchool, setGuidedSchool] = useState('')
   const [programme, setProgramme] = useState('')
-  const [guidedLevel, setGuidedLevel] = useState('')
 
   const guidedSchools = useMemo(() => [...new Set(programs.map(p => p.schoolName ?? p.school))].sort(), [programs])
   const schoolCourses = useMemo(() => programs.filter(p => !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [programs, guidedSchool])
   const programmeOptions = useMemo(() => [...new Set(schoolCourses.map(p => p.programmeName ?? p.level))].sort(), [schoolCourses])
-  const guidedCourses = useMemo(() => schoolCourses.filter(p => !programme || (p.programmeName ?? p.level) === programme), [schoolCourses, programme])
-  const guidedLevels = useMemo(() => [...new Set(guidedCourses.map(p => p.levelName).filter(Boolean))].sort() as string[], [guidedCourses])
 
   const counts = useMemo(() => {
     const lc = new Map<string, number>(); const sc = new Map<string, number>(); const bc = new Map<string, number>()
@@ -79,21 +75,14 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
     return { lc, sc, bc }
   }, [programs])
   const programmeFilters = useMemo(() => [...counts.lc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
-  const levelFilters = useMemo(() => {
-    const values = new Map<string, number>()
-    programs.forEach((program) => { if (program.levelName) values.set(program.levelName, (values.get(program.levelName) ?? 0) + 1) })
-    return [...values].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label))
-  }, [programs])
   const schoolFilters = useMemo(() => [...counts.sc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
   const bodyFilters = useMemo(() => [...counts.bc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
 
   const filtered = useMemo(() => {
     let list = programs.filter(p => {
       if (programme && (p.programmeName ?? p.level) !== programme) return false
-      if (guidedLevel && p.levelName !== guidedLevel) return false
       if (guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
       if (programmes.size && !programmes.has(p.programmeName ?? p.level)) return false
-      if (levels.size && !levels.has(p.levelName ?? p.level)) return false
       if (schools.size && !schools.has(p.schoolName ?? p.school)) return false
       if (bodies.size && !bodies.has(p.awardingBody)) return false
       if (query.trim() && !p.title.toLowerCase().includes(query.trim().toLowerCase())) return false
@@ -101,7 +90,7 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
     })
     list = [...list].sort((a, b) => sort === 'price-asc' ? a.priceFrom - b.priceFrom : sort === 'price-desc' ? b.priceFrom - a.priceFrom : b.popularity - a.popularity)
     return list
-  }, [programs, programmes, levels, schools, bodies, query, sort, programme, guidedLevel, guidedSchool])
+  }, [programs, programmes, schools, bodies, query, sort, programme, guidedSchool])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const cur = Math.min(page, pageCount)
@@ -122,9 +111,8 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
 
         <div className="sx" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
           <div className="catalogue-pathway-selects">
-            <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setGuidedLevel(''); setPage(1) }}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>
-            <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setGuidedLevel(''); setPage(1) }} disabled={!guidedSchool}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
-            <select className="catalogue-select" aria-label="Academic level" value={guidedLevel} onChange={e => { setGuidedLevel(e.target.value); setPage(1) }} disabled={!programme || !guidedLevels.length}><option value="">Academic level · {guidedLevels.length ? 'All levels' : 'No formal level'}</option>{guidedLevels.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedSchool}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
           </div>
         </div>
 
@@ -137,8 +125,8 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
             <div style={{ position: 'sticky', top: 88 }} className={showFilters ? undefined : 'sidebar-collapsed'}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>Filters</div>
-                {(programmes.size || levels.size || schools.size || bodies.size || query) ? (
-                  <button onClick={() => { setProgrammes(new Set()); setLevels(new Set()); setSchools(new Set()); setBodies(new Set()); setQuery(''); setPage(1) }} style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--accent)', cursor: 'pointer' }}>
+                {(programmes.size || schools.size || bodies.size || query) ? (
+                  <button onClick={() => { setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setQuery(''); setPage(1) }} style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--accent)', cursor: 'pointer' }}>
                     Clear all
                   </button>
                 ) : null}
@@ -152,7 +140,6 @@ export default function Programs({ programs, initialQuery = '', initialLevel = '
               />
               <FilterGroup title="School" items={schoolFilters} selected={schools} onToggle={v => { setSchools(toggle(schools, v)); setPage(1) }} />
               <FilterGroup title="Programme" items={programmeFilters} selected={programmes} onToggle={v => { setProgrammes(toggle(programmes, v)); setPage(1) }} />
-              <FilterGroup title="Academic level" items={levelFilters} selected={levels} onToggle={v => { setLevels(toggle(levels, v)); setPage(1) }} />
               <FilterGroup title="Awarding Body" items={bodyFilters} selected={bodies} onToggle={v => { setBodies(toggle(bodies, v)); setPage(1) }} />
             </div>
           </div>
