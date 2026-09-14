@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useCounter } from '../../hooks/useCounter'
@@ -8,9 +8,19 @@ import { Button } from '../ui/Button'
 import { Tag } from '../ui/Tag'
 import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
-import { formatLKR, type Program } from '../../data/programs'
+import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
 const HERO_IMG = 'https://inspirecollege.lk/wp-content/uploads/2025/10/Home-page-image-3.png'
+const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
+const canonicalBody = (value: string) => {
+  const normalized = value.trim().toLowerCase()
+  if (normalized.includes('athe')) return 'ATHE'
+  if (normalized.includes('cpd')) return 'CPD'
+  if (normalized.includes('winc')) return 'WINC'
+  if (normalized.includes('lsbf')) return 'LSBF'
+  if (normalized.includes('jain')) return 'Jain University'
+  return value.trim()
+}
 
 const PATH_CARDS = [
   { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From ₨125,000', href: '/programs?level=Foundation', delay: 0 },
@@ -80,6 +90,17 @@ export default function Home({ programs, news }: { programs: Program[]; news: Ne
   const heroRef = useRef<HTMLDivElement>(null)
   const latestNews = [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
   const featuredPrograms = [...programs].sort((a, b) => b.popularity - a.popularity).slice(0, 6)
+  const [selectedBody, setSelectedBody] = useState('')
+  const [selectedSchool, setSelectedSchool] = useState('')
+  const [selectedProgramme, setSelectedProgramme] = useState('')
+  const awardingBodies = useMemo(() => [...new Set(programs.map((program) => canonicalBody(program.awardingBody)))].sort((a, b) => {
+    const aRank = AWARDING_BODY_ORDER.indexOf(a); const bRank = AWARDING_BODY_ORDER.indexOf(b)
+    return (aRank < 0 ? AWARDING_BODY_ORDER.length : aRank) - (bRank < 0 ? AWARDING_BODY_ORDER.length : bRank) || a.localeCompare(b)
+  }), [programs])
+  const bodyPrograms = useMemo(() => programs.filter((program) => !selectedBody || canonicalBody(program.awardingBody) === selectedBody), [programs, selectedBody])
+  const schoolOptions = useMemo(() => [...new Set(bodyPrograms.map((program) => program.schoolName ?? program.school))].sort(), [bodyPrograms])
+  const schoolPrograms = useMemo(() => bodyPrograms.filter((program) => !selectedSchool || (program.schoolName ?? program.school) === selectedSchool), [bodyPrograms, selectedSchool])
+  const programmeOptions = useMemo(() => [...new Set(schoolPrograms.map((program) => program.programmeName ?? program.level))].sort(), [schoolPrograms])
 
   const [heroVisible, setHeroVisible] = useState(false)
   useEffect(() => { const t = setTimeout(() => setHeroVisible(true), 80); return () => clearTimeout(t) }, [])
@@ -262,7 +283,7 @@ export default function Home({ programs, news }: { programs: Program[]; news: Ne
             {[
               { target: 100, suffix: '%', label: 'Online — learn anywhere' },
               { target: 4, label: 'UK & Indian partners' },
-              { target: 16, label: 'Programs available' },
+              { target: programs.length, label: 'Courses available' },
               { target: 50, label: 'First-50 HND seats' },
             ].map((s, i) => (
               <div key={i} ref={undefined} style={{ textAlign: 'center', borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.2)' : 'none', paddingLeft: i > 0 ? 32 : 0 }}>
@@ -285,21 +306,24 @@ export default function Home({ programs, news }: { programs: Program[]; news: Ne
               style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', background: '#fff', border: '1.5px solid rgba(63,0,124,0.18)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 32px rgba(63,0,124,0.08)' }}
             >
               <div style={{ padding: '18px 24px', borderRight: '1px solid rgba(63,0,124,0.10)' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 6 }}>I want to study</div>
-                <input type="text" name="q" placeholder="e.g. Software Engineering" style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)' }} />
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 6 }}>Awarding body</div>
+                <select name="body" value={selectedBody} onChange={(event) => { setSelectedBody(event.target.value); setSelectedSchool(''); setSelectedProgramme('') }} style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)', appearance: 'none' }}>
+                  <option value="">All awarding bodies</option>
+                  {awardingBodies.map((body) => <option key={body} value={body}>{body}</option>)}
+                </select>
               </div>
               <div style={{ padding: '18px 24px', borderRight: '1px solid rgba(63,0,124,0.10)' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 6 }}>Level</div>
-                <select name="level" defaultValue="" style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)', appearance: 'none' }}>
-                  <option value="">Foundation / HND / Master's</option>
-                  {['Foundation','HND','Higher Diploma','Diploma','Top-Up Degree','Postgraduate','Short Course'].map(l => <option key={l} value={l}>{l}</option>)}
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 6 }}>School</div>
+                <select name="school" value={selectedSchool} disabled={!selectedBody} onChange={(event) => { setSelectedSchool(event.target.value); setSelectedProgramme('') }} style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)', appearance: 'none', opacity: selectedBody ? 1 : .55 }}>
+                  <option value="">{selectedBody ? 'All schools' : 'Select awarding body first'}</option>
+                  {schoolOptions.map((school) => <option key={school} value={school}>{school}</option>)}
                 </select>
               </div>
               <div style={{ padding: '18px 24px' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 6 }}>Awarding Body</div>
-                <select name="body" defaultValue="" style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)', appearance: 'none' }}>
-                  <option value="">ATHE · WINC · LSBF</option>
-                  {['ATHE','WINC','LSBF','Jain'].map(b => <option key={b} value={b}>{b}</option>)}
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 6 }}>Programme</div>
+                <select name="programme" value={selectedProgramme} disabled={!selectedSchool} onChange={(event) => setSelectedProgramme(event.target.value)} style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink)', appearance: 'none', opacity: selectedSchool ? 1 : .55 }}>
+                  <option value="">{selectedSchool ? 'All programmes' : 'Select school first'}</option>
+                  {programmeOptions.map((programme) => <option key={programme} value={programme}>{programme}</option>)}
                 </select>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 28px', background: 'var(--accent)', cursor: 'pointer' }}>
@@ -354,23 +378,26 @@ export default function Home({ programs, news }: { programs: Program[]; news: Ne
                 <Link
                   key={p.slug}
                   href={`/programs/${p.slug}`}
-                  className={`card-hover card-shimmer reveal reveal-delay-${(i % 3) + 1}`}
-                  style={{ display: 'block', background: '#fff', border: '1.5px solid rgba(63,0,124,0.12)', borderRadius: 14, overflow: 'hidden', textDecoration: 'none', boxShadow: '0 4px 16px rgba(63,0,124,0.05)' }}
+                  className={`programme-image-card home-programme-card card-hover reveal reveal-delay-${(i % 3) + 1}`}
                 >
-                  <div style={{ height: 4, background: 'linear-gradient(90deg, var(--accent), var(--accent-lt))' }} />
-                  <div style={{ padding: 26 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
-                      <div style={{ width: 42, height: 42, borderRadius: 10, background: 'var(--accent-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon kind={p.icon} size={20} color="var(--accent)" />
-                      </div>
-                      {p.tag && <Tag accent>{p.tag}</Tag>}
+                  <div className="programme-card-cover">
+                    <img
+                      src={p.imageUrl || getProgramImage(p.imageLabel)}
+                      alt={`${p.title} course cover`}
+                      loading="lazy"
+                      onError={(event) => { event.currentTarget.src = getProgramImage(p.imageLabel) }}
+                    />
+                  </div>
+                  <div className="programme-card-content">
+                    <div className="programme-card-meta">
+                      <span>{p.awardingBody === 'Jain' ? 'Jain University' : p.awardingBody}</span>
+                      <small>{p.duration}</small>
                     </div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 8 }}>{p.code} · {p.duration}</div>
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 21, fontWeight: 700, margin: '0 0 10px', lineHeight: 1.25, color: 'var(--ink)' }}>{p.title}</h3>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.65, margin: '0 0 20px' }}>{p.blurb}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 16, borderTop: '1px solid var(--border)' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 700, color: 'var(--accent)' }}>From {formatLKR(p.priceFrom)}</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>Details <Icon kind="arrow" size={13} /></span>
+                    <h3>{p.title}</h3>
+                    <p>{p.blurb}</p>
+                    <div className="programme-card-footer">
+                      <strong>From {formatLKR(p.priceFrom)}</strong>
+                      <span className="programme-read-more">Read more <Icon kind="arrow" size={14} /></span>
                     </div>
                   </div>
                 </Link>
@@ -492,3 +519,4 @@ function StatBlockLight({ target, suffix, label }: { target: number; suffix?: st
     </div>
   )
 }
+

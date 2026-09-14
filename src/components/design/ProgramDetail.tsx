@@ -9,25 +9,6 @@ import { Tag } from '../ui/Tag'
 import { Icon } from '../ui/Icon'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
-const ENTRY: Record<Program['level'], string> = {
-  Foundation: 'O/L or equivalent',
-  HND: 'A/L or Foundation',
-  'Higher Diploma': 'A/L or equivalent',
-  Diploma: 'A/L or equivalent',
-  'Top-Up Degree': 'HND or equivalent Diploma',
-  Postgraduate: "Bachelor's degree or equivalent",
-  'Short Course': 'Open enrollment, no prerequisites',
-}
-const PROGRESS: Record<Program['level'], string> = {
-  Foundation: 'Progress to HND',
-  HND: 'Top-Up to UK Degree',
-  'Higher Diploma': 'Progress to Top-Up Degree',
-  Diploma: 'Progress to Top-Up Degree',
-  'Top-Up Degree': "Progress to Master's / MBA",
-  Postgraduate: 'Career progression',
-  'Short Course': 'Stackable toward a Diploma or HND',
-}
-
 const TABS = ['Overview','Curriculum','Careers','Fees & Aid','Apply']
 
 export default function ProgramDetail({ program, related }: { program: Program; related: Program[] }) {
@@ -69,10 +50,10 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             </div>
           </div>
           <div>
-            <img src={heroImg} alt={program.title} style={{ width: '100%', borderRadius: 10, border: '1px solid var(--border)', aspectRatio: '16/9', objectFit: 'cover' }} />
+            <img className="programme-detail-banner" src={heroImg} alt={program.title} />
             <div style={{ marginTop: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 20 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', color: 'var(--accent)', marginBottom: 14 }}>AT A GLANCE</div>
-              {[['Awarding body', program.awardingBody === 'Jain' ? 'Jain University' : `${program.awardingBody}, UK · Ofqual reg.`],['Entry', ENTRY[program.level]],['Format', 'Live online + LMS'],['Progression', PROGRESS[program.level]]].map(([k, v], i, arr) => (
+              {[['Awarding body', program.awardingBody === 'Jain' ? 'Jain University' : program.awardingBody],['Entry', program.entryRequirements || 'Contact admissions for entry requirements.'],['Format', 'Live online + LMS'],['Progression', program.progressionRoute || 'Contact admissions for progression options.']].map(([k, v], i, arr) => (
                 <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-muted)' }}>{k}</span>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600 }}>{v}</span>
@@ -83,8 +64,8 @@ export default function ProgramDetail({ program, related }: { program: Program; 
         </div>
 
         {/* Tabs */}
-        <div className="sx" style={{ borderBottom: '1px solid var(--border)', padding: '0', overflowX: 'auto' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', gap: 0 }}>
+        <div className="program-detail-tabs-shell">
+          <div className="sx program-detail-tabs">
             {TABS.map(tab => (
               <button
                 key={tab}
@@ -124,7 +105,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
           {activeTab === 'Curriculum' && (
             <div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 700, margin: '0 0 12px' }}>Curriculum</h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink-soft)', marginBottom: 32 }}>{PROGRESS[program.level]} on completion.</p>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--ink-soft)', marginBottom: 32 }}>{program.progressionRoute || 'Contact admissions for progression options.'}</p>
               {program.topics && program.topics.length > 0 ? (
                 <div className="rg-3" style={{ gap: 16 }}>
                   {[...program.topics].sort((a,b) => a.order - b.order).map((t,i) => (
@@ -223,3 +204,4 @@ export default function ProgramDetail({ program, related }: { program: Program; 
     </div>
   )
 }
+
