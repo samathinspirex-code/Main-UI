@@ -50,7 +50,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             </div>
           </div>
           <div>
-            <img src={heroImg} alt={program.title} style={{ width: '100%', borderRadius: 10, border: '1px solid var(--border)', aspectRatio: '16/9', objectFit: 'cover' }} />
+            <img className="programme-detail-banner" src={heroImg} alt={program.title} />
             <div style={{ marginTop: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 20 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', color: 'var(--accent)', marginBottom: 14 }}>AT A GLANCE</div>
               {[['Awarding body', program.awardingBody === 'Jain' ? 'Jain University' : program.awardingBody],['Entry', program.entryRequirements || 'Contact admissions for entry requirements.'],['Format', 'Live online + LMS'],['Progression', program.progressionRoute || 'Contact admissions for progression options.']].map(([k, v], i, arr) => (
@@ -64,8 +64,8 @@ export default function ProgramDetail({ program, related }: { program: Program; 
         </div>
 
         {/* Tabs */}
-        <div className="sx" style={{ borderBottom: '1px solid var(--border)', padding: '0', overflowX: 'auto' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', gap: 0 }}>
+        <div className="program-detail-tabs-shell">
+          <div className="sx program-detail-tabs">
             {TABS.map(tab => (
               <button
                 key={tab}
@@ -204,3 +204,4 @@ export default function ProgramDetail({ program, related }: { program: Program; 
     </div>
   )
 }
+

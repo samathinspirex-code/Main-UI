@@ -216,6 +216,7 @@ input, select, textarea { font: inherit; color: inherit; }
   border-radius: 12px;
   background: var(--accent-dim);
 }
+.programme-catalogue-top { scroll-margin-top: 76px; }
 .catalogue-select {
   width: 100%;
   min-height: 48px;
@@ -234,6 +235,152 @@ input, select, textarea { font: inherit; color: inherit; }
 .catalogue-select:hover { border-color: var(--border-accent); }
 .catalogue-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 .catalogue-select:disabled { cursor: not-allowed; opacity: .58; background-color: var(--surface-lt); }
+
+.programme-card-grid { gap: 24px; }
+.programme-image-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  padding: 14px;
+  border: 2px solid var(--border-accent);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+}
+.programme-card-cover {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1450 / 750;
+  border-radius: 9px;
+  background: var(--accent-dim);
+}
+.programme-card-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .35s ease;
+}
+.programme-image-card:hover .programme-card-cover img { transform: scale(1.035); }
+.programme-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 23px 16px 16px;
+}
+.programme-card-meta {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 21px;
+}
+.programme-card-meta > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 17px;
+  border: 1px solid var(--border-accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.programme-card-meta small {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-align: right;
+}
+.programme-card-content h3 {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 25px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.programme-card-content > p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0 0 25px;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.programme-card-footer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.programme-card-footer > strong {
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+.programme-read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: color .2s ease, transform .2s ease;
+}
+.programme-image-card:hover .programme-read-more { color: var(--accent-lt); transform: translateX(3px); }
+
+.programme-detail-banner {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1450 / 750;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.program-detail-tabs-shell {
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.program-detail-tabs-shell::-webkit-scrollbar { display: none; }
+.program-detail-tabs {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.program-detail-tabs button { flex: 0 0 auto; }
+.home-programme-card .programme-card-content h3 { font-size: 21px; }
+
+@media (max-width: 600px) {
+  .programme-card-content { padding: 20px 10px 12px; }
+  .programme-card-footer { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .programme-image-card { padding: 10px; }
+  .programme-card-meta { align-items: flex-start; margin-bottom: 16px; }
+  .programme-card-meta > span { min-height: 30px; padding: 0 12px; }
+  .programme-card-content h3, .home-programme-card .programme-card-content h3 { font-size: 21px; }
+  .program-detail-tabs { width: max-content; min-width: 100%; }
+  .program-detail-tabs button { padding: 13px 18px !important; }
+}
 
 @media (max-width: 900px) {
   .rg-4       { grid-template-columns: repeat(2, 1fr); }
@@ -507,3 +654,4 @@ input, select, textarea { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+

@@ -4,11 +4,24 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
-import { Tag } from '../ui/Tag'
 import { Icon } from '../ui/Icon'
-import { formatLKR, type Program } from '../../data/programs'
+import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
 const PAGE_SIZE = 6
+const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
+const canonicalBody = (value: string) => {
+  const normalized = value.trim().toLowerCase()
+  if (normalized.includes('athe')) return 'ATHE'
+  if (normalized.includes('cpd')) return 'CPD'
+  if (normalized.includes('winc')) return 'WINC'
+  if (normalized.includes('lsbf')) return 'LSBF'
+  if (normalized.includes('jain')) return 'Jain University'
+  return value.trim()
+}
+const bodyRank = (value: string) => {
+  const index = AWARDING_BODY_ORDER.indexOf(canonicalBody(value))
+  return index < 0 ? AWARDING_BODY_ORDER.length : index
+}
 
 function toggle<T>(set: Set<T>, value: T): Set<T> {
   const next = new Set(set)
@@ -48,19 +61,22 @@ function FilterGroup({ title, items, selected, onToggle }: { title: string; item
   )
 }
 
-export default function Programs({ programs, initialQuery = '', initialBody = '' }: { programs: Program[]; initialQuery?: string; initialBody?: string }) {
+export default function Programs({ programs, initialQuery = '', initialBody = '', initialSchool = '', initialProgramme = '' }: { programs: Program[]; initialQuery?: string; initialBody?: string; initialSchool?: string; initialProgramme?: string }) {
   const [query, setQuery] = useState(initialQuery)
   const [programmes, setProgrammes] = useState<Set<string>>(new Set())
   const [schools, setSchools] = useState<Set<string>>(new Set())
-  const [bodies, setBodies] = useState<Set<string>>(new Set(initialBody ? [initialBody] : []))
+  const [bodies, setBodies] = useState<Set<string>>(new Set())
   const [sort, setSort] = useState<'popularity'|'price-asc'|'price-desc'>('popularity')
   const [page, setPage] = useState(1)
   const [showFilters, setShowFilters] = useState(false)
-  const [guidedSchool, setGuidedSchool] = useState('')
-  const [programme, setProgramme] = useState('')
+  const [guidedBody, setGuidedBody] = useState(canonicalBody(initialBody))
+  const [guidedSchool, setGuidedSchool] = useState(initialSchool)
+  const [programme, setProgramme] = useState(initialProgramme)
 
-  const guidedSchools = useMemo(() => [...new Set(programs.map(p => p.schoolName ?? p.school))].sort(), [programs])
-  const schoolCourses = useMemo(() => programs.filter(p => !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [programs, guidedSchool])
+  const guidedBodies = useMemo(() => [...new Set(programs.map(p => canonicalBody(p.awardingBody)))].sort((a, b) => bodyRank(a) - bodyRank(b) || a.localeCompare(b)), [programs])
+  const bodyCourses = useMemo(() => programs.filter(p => !guidedBody || canonicalBody(p.awardingBody) === guidedBody), [programs, guidedBody])
+  const guidedSchools = useMemo(() => [...new Set(bodyCourses.map(p => p.schoolName ?? p.school))].sort(), [bodyCourses])
+  const schoolCourses = useMemo(() => bodyCourses.filter(p => !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [bodyCourses, guidedSchool])
   const programmeOptions = useMemo(() => [...new Set(schoolCourses.map(p => p.programmeName ?? p.level))].sort(), [schoolCourses])
 
   const counts = useMemo(() => {
@@ -70,31 +86,37 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
       const schoolName = p.schoolName ?? p.school
       lc.set(programmeName, (lc.get(programmeName) ?? 0) + 1)
       sc.set(schoolName, (sc.get(schoolName) ?? 0) + 1)
-      bc.set(p.awardingBody, (bc.get(p.awardingBody) ?? 0) + 1)
+      const body = canonicalBody(p.awardingBody)
+      bc.set(body, (bc.get(body) ?? 0) + 1)
     }
     return { lc, sc, bc }
   }, [programs])
   const programmeFilters = useMemo(() => [...counts.lc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
   const schoolFilters = useMemo(() => [...counts.sc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
-  const bodyFilters = useMemo(() => [...counts.bc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
+  const bodyFilters = useMemo(() => [...counts.bc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => bodyRank(a.value) - bodyRank(b.value) || a.label.localeCompare(b.label)), [counts])
 
   const filtered = useMemo(() => {
     let list = programs.filter(p => {
       if (programme && (p.programmeName ?? p.level) !== programme) return false
       if (guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
+      if (guidedBody && canonicalBody(p.awardingBody) !== guidedBody) return false
       if (programmes.size && !programmes.has(p.programmeName ?? p.level)) return false
       if (schools.size && !schools.has(p.schoolName ?? p.school)) return false
-      if (bodies.size && !bodies.has(p.awardingBody)) return false
+      if (bodies.size && !bodies.has(canonicalBody(p.awardingBody))) return false
       if (query.trim() && !p.title.toLowerCase().includes(query.trim().toLowerCase())) return false
       return true
     })
     list = [...list].sort((a, b) => sort === 'price-asc' ? a.priceFrom - b.priceFrom : sort === 'price-desc' ? b.priceFrom - a.priceFrom : b.popularity - a.popularity)
     return list
-  }, [programs, programmes, schools, bodies, query, sort, programme, guidedSchool])
+  }, [programs, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const cur = Math.min(page, pageCount)
   const items = filtered.slice((cur - 1) * PAGE_SIZE, cur * PAGE_SIZE)
+  const changePage = (nextPage: number) => {
+    setPage(nextPage)
+    window.requestAnimationFrame(() => document.getElementById('programme-catalogue-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
 
   return (
     <div>
@@ -109,9 +131,10 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
           </div>
         </div>
 
-        <div className="sx" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
+        <div id="programme-catalogue-top" className="sx programme-catalogue-top" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
           <div className="catalogue-pathway-selects">
-            <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select className="catalogue-select" aria-label="Awarding body" value={guidedBody} onChange={e => { setGuidedBody(e.target.value); setGuidedSchool(''); setProgramme(''); setPage(1) }}><option value="">Awarding body · All awarding bodies</option>{guidedBodies.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>
             <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedSchool}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
           </div>
         </div>
@@ -125,8 +148,8 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
             <div style={{ position: 'sticky', top: 88 }} className={showFilters ? undefined : 'sidebar-collapsed'}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>Filters</div>
-                {(programmes.size || schools.size || bodies.size || query) ? (
-                  <button onClick={() => { setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setQuery(''); setPage(1) }} style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--accent)', cursor: 'pointer' }}>
+                {(programmes.size || schools.size || bodies.size || query || guidedBody || guidedSchool || programme) ? (
+                  <button onClick={() => { setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setGuidedBody(''); setGuidedSchool(''); setProgramme(''); setQuery(''); setPage(1) }} style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--accent)', cursor: 'pointer' }}>
                     Clear all
                   </button>
                 ) : null}
@@ -138,9 +161,9 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
                 placeholder="Search programs…"
                 style={{ width: '100%', padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)', outline: 'none', marginBottom: 24 }}
               />
+              <FilterGroup title="Awarding Body" items={bodyFilters} selected={bodies} onToggle={v => { setBodies(toggle(bodies, v)); setPage(1) }} />
               <FilterGroup title="School" items={schoolFilters} selected={schools} onToggle={v => { setSchools(toggle(schools, v)); setPage(1) }} />
               <FilterGroup title="Programme" items={programmeFilters} selected={programmes} onToggle={v => { setProgrammes(toggle(programmes, v)); setPage(1) }} />
-              <FilterGroup title="Awarding Body" items={bodyFilters} selected={bodies} onToggle={v => { setBodies(toggle(bodies, v)); setPage(1) }} />
             </div>
           </div>
 
@@ -162,28 +185,33 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
                 No programs match your filters. Try clearing a few.
               </div>
             ) : (
-              <div className="rg-2" style={{ gap: 16 }}>
+              <div className="rg-2 programme-card-grid">
                 {items.map((p) => (
                   <Link
                     key={p.slug}
                     href={`/programs/${p.slug}`}
-                    className="card-hover"
-                    style={{ display: 'block', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 24, textDecoration: 'none' }}
+                    className="programme-image-card card-hover"
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 8, background: 'var(--accent-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon kind={p.icon} size={18} color="var(--accent)" />
+                    <div className="programme-card-cover">
+                      <img
+                        src={p.imageUrl || getProgramImage(p.imageLabel)}
+                        alt={`${p.title} course cover`}
+                        loading="lazy"
+                        onError={(event) => { event.currentTarget.src = getProgramImage(p.imageLabel) }}
+                      />
+                    </div>
+                    <div className="programme-card-content">
+                      <div className="programme-card-meta">
+                        <span>{canonicalBody(p.awardingBody)}</span>
+                        <small>{p.duration}</small>
                       </div>
-                      {p.tag && <Tag accent>{p.tag}</Tag>}
+                      <h3>{p.title}</h3>
+                      <p>{p.blurb}</p>
+                      <div className="programme-card-footer">
+                        <strong>From {formatLKR(p.priceFrom)}</strong>
+                        <span className="programme-read-more">Read more <Icon kind="arrow" size={14} /></span>
+                      </div>
                     </div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-muted)', marginBottom: 6 }}>{p.code} · {p.duration}</div>
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, margin: '0 0 10px', lineHeight: 1.3 }}>{p.title}</h3>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6, margin: '0 0 16px' }}>{p.blurb}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid var(--border)' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 600, color: 'var(--accent)' }}>From {formatLKR(p.priceFrom)}</span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--ink-muted)' }}>Details <Icon kind="arrow" size={13} /></span>
-                    </div>
-                    <div style={{ marginTop: 12, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-muted)', letterSpacing: '.03em' }}>{p.duration} · {formatLKR(p.priceFrom)}</div>
                   </Link>
                 ))}
               </div>
@@ -194,7 +222,7 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
                 <button
                   type="button"
                   aria-label="Previous programs"
-                  onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                  onClick={() => changePage(Math.max(1, cur - 1))}
                   disabled={cur === 1}
                   style={{ width: 42, height: 42, borderRadius: 8, border: '1px solid var(--border)', background: cur === 1 ? 'var(--surface)' : 'var(--accent)', color: cur === 1 ? 'var(--ink-muted)' : '#FFFFFF', cursor: cur === 1 ? 'not-allowed' : 'pointer', fontSize: 24, lineHeight: 1 }}
                 >‹</button>
@@ -204,7 +232,7 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
                 <button
                   type="button"
                   aria-label="Next programs"
-                  onClick={() => { setPage(p => Math.min(pageCount, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                  onClick={() => changePage(Math.min(pageCount, cur + 1))}
                   disabled={cur === pageCount}
                   style={{ width: 42, height: 42, borderRadius: 8, border: '1px solid var(--border)', background: cur === pageCount ? 'var(--surface)' : 'var(--accent)', color: cur === pageCount ? 'var(--ink-muted)' : '#FFFFFF', cursor: cur === pageCount ? 'not-allowed' : 'pointer', fontSize: 24, lineHeight: 1 }}
                 >›</button>
@@ -217,3 +245,4 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
     </div>
   )
 }
+
