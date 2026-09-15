@@ -30,7 +30,8 @@ export default function VideoTestimonials({ items }: { items: Testimonial[] }) {
   const move = (direction: number) => {
     const element = rail.current;
     if (!element) return;
-    element.scrollBy({ left: direction * ((element.firstElementChild as HTMLElement)?.offsetWidth + 28 || element.clientWidth), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    const gap = Number.parseFloat(getComputedStyle(element).gap) || 0;
+    element.scrollBy({ left: direction * ((element.firstElementChild as HTMLElement)?.offsetWidth + gap || element.clientWidth), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   };
 
   if (!items.length) return null;
@@ -43,7 +44,7 @@ export default function VideoTestimonials({ items }: { items: Testimonial[] }) {
       <div className="student-stories-rail" ref={rail} role="region" aria-label="Student testimonial carousel" tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1); } }} onScroll={() => {
         const element = rail.current;
         if (!element) return;
-        const width = (element.firstElementChild as HTMLElement)?.offsetWidth + 28;
+        const width = (element.firstElementChild as HTMLElement)?.offsetWidth + (Number.parseFloat(getComputedStyle(element).gap) || 0);
         setIndex(element.scrollLeft + element.clientWidth >= element.scrollWidth - 4 ? items.length - 1 : Math.round(element.scrollLeft / width));
       }}>
         {items.map((item) => <article className="student-story-card" key={item.testimonial_id}>
