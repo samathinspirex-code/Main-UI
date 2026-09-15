@@ -4,7 +4,7 @@ const API_URL = (process.env.API_URL || "http://127.0.0.1:8000").replace(/\/+$/,
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const response = await fetch(`${API_URL}/api/v1/public/programme-enrolments`, {
+  const response = await fetch(`${API_URL}/api/v1/public/admission-applications`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

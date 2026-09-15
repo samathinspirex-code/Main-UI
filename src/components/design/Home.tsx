@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
+import VideoTestimonials from './VideoTestimonials'
+import type { Testimonial } from '../../data/testimonials'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useCounter } from '../../hooks/useCounter'
 import { Button } from '../ui/Button'
@@ -85,7 +87,7 @@ function Orb({ style }: { style: React.CSSProperties }) {
   )
 }
 
-export default function Home({ programs, news }: { programs: Program[]; news: NewsItem[] }) {
+export default function Home({ programs, news, testimonials = [] }: { programs: Program[]; news: NewsItem[]; testimonials?: Testimonial[] }) {
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
   const latestNews = [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
@@ -407,6 +409,7 @@ export default function Home({ programs, news }: { programs: Program[]; news: Ne
         </section>
 
         {/* Student story + news */}
+        <VideoTestimonials items={testimonials} />
         <section className="sx" style={{ padding: '96px 0' }}>
           <div className="home-story-news" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 40, alignItems: 'start' }}>
             {/* Story card */}
@@ -519,4 +522,3 @@ function StatBlockLight({ target, suffix, label }: { target: number; suffix?: st
     </div>
   )
 }
-
