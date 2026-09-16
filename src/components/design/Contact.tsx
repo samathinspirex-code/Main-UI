@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
@@ -26,7 +26,35 @@ export default function Contact() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
   const [focused, setFocused] = useState<string | null>(null)
+
+  async function submitContactForm(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setBusy(true)
+    setError('')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name: name, email, message }),
+      })
+      const payload = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        const detail = payload?.error?.message || payload?.detail
+        throw new Error(typeof detail === 'string' ? detail : 'We could not send your message. Please try again.')
+      }
+
+      setSent(true)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'We could not send your message. Please try again.')
+    } finally {
+      setBusy(false)
+    }
+  }
 
   if (sent) {
     return (
@@ -57,7 +85,7 @@ export default function Contact() {
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 12 }}>HOME / CONTACT</div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>Talk to an advisor</h1>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-soft)', margin: 0 }}>Mon–Fri · 8:30 AM – 5:00 PM · we usually reply within one business day.</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-soft)', margin: 0 }}>Mon–Fri · 8:30 AM – 5:30 PM · we usually reply within one business day.</p>
           </div>
         </div>
 
@@ -96,7 +124,7 @@ export default function Contact() {
           {/* Form */}
           <form
             className="reveal reveal-delay-2"
-            onSubmit={(e) => { e.preventDefault(); setSent(true) }}
+            onSubmit={submitContactForm}
             style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 32, display: 'flex', flexDirection: 'column', gap: 20 }}
           >
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, margin: 0 }}>Send us a message</h2>
@@ -115,7 +143,12 @@ export default function Contact() {
               <textarea style={{ ...inputStyle, minHeight: 130, resize: 'vertical', borderColor: focused === 'message' ? 'var(--accent)' : 'var(--border)' }} required value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we help?"
                 onFocus={() => setFocused('message')} onBlur={() => setFocused(null)} />
             </div>
-            <Button variant="primary" type="submit" fullWidth>Send message →</Button>
+            {error && (
+              <div role="alert" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#a11b1b', background: '#fff3f3', border: '1px solid #efcaca', borderRadius: 6, padding: '10px 12px' }}>
+                {error}
+              </div>
+            )}
+            <Button variant="primary" type="submit" fullWidth disabled={busy}>{busy ? 'Sending…' : 'Send message →'}</Button>
           </form>
         </div>
       </main>

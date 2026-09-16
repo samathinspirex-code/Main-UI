@@ -5,10 +5,12 @@ import Link from 'next/link'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
 import { Icon } from '../ui/Icon'
-import { formatLKR, getProgramImage, type Program } from '../../data/programs'
+import { formatLKR, getProgramImage, type Program, type ProgrammeNode } from '../../data/programs'
 
 const PAGE_SIZE = 6
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
+const JAIN_PROGRAMMES = new Set(['BCOM', 'BBA', 'BCA', 'MBA', 'MCA'])
+const programmeCode = (value: string) => value.toUpperCase().replace(/[^A-Z]/g, '')
 const canonicalBody = (value: string) => {
   const normalized = value.trim().toLowerCase()
   if (normalized.includes('athe')) return 'ATHE'
@@ -61,9 +63,9 @@ function FilterGroup({ title, items, selected, onToggle }: { title: string; item
   )
 }
 
-export default function Programs({ programs, initialQuery = '', initialBody = '', initialSchool = '', initialProgramme = '' }: { programs: Program[]; initialQuery?: string; initialBody?: string; initialSchool?: string; initialProgramme?: string }) {
+export default function Programs({ programs, programmeNodes = [], initialQuery = '', initialBody = '', initialSchool = '', initialProgramme = '', initialLevel = '' }: { programs: Program[]; programmeNodes?: ProgrammeNode[]; initialQuery?: string; initialBody?: string; initialSchool?: string; initialProgramme?: string; initialLevel?: string }) {
   const [query, setQuery] = useState(initialQuery)
-  const [programmes, setProgrammes] = useState<Set<string>>(new Set())
+  const [programmes, setProgrammes] = useState<Set<string>>(new Set(initialLevel ? [initialLevel] : []))
   const [schools, setSchools] = useState<Set<string>>(new Set())
   const [bodies, setBodies] = useState<Set<string>>(new Set())
   const [sort, setSort] = useState<'popularity'|'price-asc'|'price-desc'>('popularity')
@@ -72,11 +74,12 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
   const [guidedBody, setGuidedBody] = useState(canonicalBody(initialBody))
   const [guidedSchool, setGuidedSchool] = useState(initialSchool)
   const [programme, setProgramme] = useState(initialProgramme)
+  const jainSelected = guidedBody === 'Jain University'
 
   const guidedBodies = useMemo(() => [...new Set(programs.map(p => canonicalBody(p.awardingBody)))].sort((a, b) => bodyRank(a) - bodyRank(b) || a.localeCompare(b)), [programs])
-  const bodyCourses = useMemo(() => programs.filter(p => !guidedBody || canonicalBody(p.awardingBody) === guidedBody), [programs, guidedBody])
+  const bodyCourses = useMemo(() => programs.filter(p => (!guidedBody || canonicalBody(p.awardingBody) === guidedBody) && (!jainSelected || JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level)))), [programs, guidedBody, jainSelected])
   const guidedSchools = useMemo(() => [...new Set(bodyCourses.map(p => p.schoolName ?? p.school))].sort(), [bodyCourses])
-  const schoolCourses = useMemo(() => bodyCourses.filter(p => !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [bodyCourses, guidedSchool])
+  const schoolCourses = useMemo(() => bodyCourses.filter(p => jainSelected || !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [bodyCourses, guidedSchool, jainSelected])
   const programmeOptions = useMemo(() => [...new Set(schoolCourses.map(p => p.programmeName ?? p.level))].sort(), [schoolCourses])
 
   const counts = useMemo(() => {
@@ -91,14 +94,29 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
     }
     return { lc, sc, bc }
   }, [programs])
-  const programmeFilters = useMemo(() => [...counts.lc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
-  const schoolFilters = useMemo(() => [...counts.sc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label)), [counts])
+  const programmeFilters = useMemo(() => {
+    const names = new Set([...programmeNodes.map((node) => node.name), ...counts.lc.keys()])
+    return [...names]
+      .map((label) => ({ label, value: label, count: counts.lc.get(label) ?? 0 }))
+      .filter((item) => item.count > 0)
+      .sort((a, b) => a.label.localeCompare(b.label))
+  }, [counts, programmeNodes])
+  const schoolFilters = useMemo(() => {
+    const visibleSchoolCounts = new Map<string, number>()
+    for (const program of programs) {
+      const school = program.schoolName ?? program.school
+      if (canonicalBody(program.awardingBody) === 'Jain University' || canonicalBody(school) === 'Jain University') continue
+      visibleSchoolCounts.set(school, (visibleSchoolCounts.get(school) ?? 0) + 1)
+    }
+    return [...visibleSchoolCounts].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label))
+  }, [programs])
   const bodyFilters = useMemo(() => [...counts.bc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => bodyRank(a.value) - bodyRank(b.value) || a.label.localeCompare(b.label)), [counts])
 
   const filtered = useMemo(() => {
     let list = programs.filter(p => {
       if (programme && (p.programmeName ?? p.level) !== programme) return false
-      if (guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
+      if (jainSelected && !JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level))) return false
+      if (!jainSelected && guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
       if (guidedBody && canonicalBody(p.awardingBody) !== guidedBody) return false
       if (programmes.size && !programmes.has(p.programmeName ?? p.level)) return false
       if (schools.size && !schools.has(p.schoolName ?? p.school)) return false
@@ -108,7 +126,7 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
     })
     list = [...list].sort((a, b) => sort === 'price-asc' ? a.priceFrom - b.priceFrom : sort === 'price-desc' ? b.priceFrom - a.priceFrom : b.popularity - a.popularity)
     return list
-  }, [programs, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody])
+  }, [programs, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody, jainSelected])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const cur = Math.min(page, pageCount)
@@ -134,8 +152,8 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
         <div id="programme-catalogue-top" className="sx programme-catalogue-top" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
           <div className="catalogue-pathway-selects">
             <select className="catalogue-select" aria-label="Awarding body" value={guidedBody} onChange={e => { setGuidedBody(e.target.value); setGuidedSchool(''); setProgramme(''); setPage(1) }}><option value="">Awarding body · All awarding bodies</option>{guidedBodies.map(value => <option key={value} value={value}>{value}</option>)}</select>
-            <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>
-            <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedSchool}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            {!jainSelected && <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>}
+            <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedBody || (!jainSelected && !guidedSchool)}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
           </div>
         </div>
 
@@ -201,8 +219,7 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
                       />
                     </div>
                     <div className="programme-card-content">
-                      <div className="programme-card-meta">
-                        <span>{canonicalBody(p.awardingBody)}</span>
+                      <div className="programme-card-meta" style={{ justifyContent: 'flex-end' }}>
                         <small>{p.duration}</small>
                       </div>
                       <h3>{p.title}</h3>
@@ -245,4 +262,3 @@ export default function Programs({ programs, initialQuery = '', initialBody = ''
     </div>
   )
 }
-

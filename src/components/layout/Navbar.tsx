@@ -9,6 +9,7 @@ import { Icon } from '../ui/Icon'
 const LOGO = 'https://inspirecollege.lk/wp-content/uploads/2025/09/LeadHype-300-x-80-px-1.png'
 
 const NAV = [
+  { label: 'Home', href: '/' },
   { label: 'Programs', href: '/programs' },
   { label: 'Admissions', href: '/admissions' },
   { label: 'About Us', href: '/about' },
@@ -64,7 +65,7 @@ export function Navbar() {
             <Link
               key={n.href}
               href={n.href}
-              className={`nav-link ${pathname.startsWith(n.href) ? 'active' : ''}`}
+              className={`nav-link ${pathname === n.href || (n.href !== '/' && pathname.startsWith(n.href)) ? 'active' : ''}`}
             >
               {n.label}
             </Link>

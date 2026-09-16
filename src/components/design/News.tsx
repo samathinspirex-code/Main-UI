@@ -21,7 +21,6 @@ export default function NewsPage({ items }: { items: NewsItem[] }) {
               <h1>News &amp; events</h1>
               <p>Discover college announcements, partnerships, student opportunities, and upcoming events.</p>
             </div>
-            <div className="news-page-mark" aria-hidden="true">N<span>°</span></div>
           </div>
         </div>
 
