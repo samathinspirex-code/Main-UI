@@ -62,12 +62,12 @@ export const NEWS: NewsItem[] = [
   {
     slug: "first-50-hnd-cohort",
     date: "2026-06-02",
-    title: "First 50 HND students enroll at ₨295,000",
+    title: "First 50 HND students enroll at Rs 295,000",
     category: "Admissions",
     image: IC("2025/12/build-your-future-with-inspire-collage-and-WINC-1024x532.png"),
-    excerpt: "A limited-time offer for the first 50 HND students, before the fee returns to ₨400,000.",
+    excerpt: "A limited-time offer for the first 50 HND students, before the fee returns to Rs 400,000.",
     body: [
-      "The first 50 students to enroll in any ATHE-validated HND program will lock in a fee of ₨295,000 — a ₨105,000 saving on the regular ₨400,000 fee.",
+      "The first 50 students to enroll in any ATHE-validated HND program will lock in a fee of Rs 295,000 — a Rs 105,000 saving on the regular Rs 400,000 fee.",
       "Seats are allocated on a first-come, first-served basis once an application is confirmed by an advisor.",
     ],
   },

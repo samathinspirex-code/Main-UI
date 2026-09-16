@@ -58,7 +58,7 @@ export default function About() {
           {/* Board */}
           <section id="board" className="sx" style={{ padding: '80px 0', background: 'var(--bg-soft)', borderTop: '1px solid var(--border)' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 48 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, marginBottom: 48 }}>
                 <h2 className="reveal" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,4vw,48px)', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>Visionary leaders</h2>
                 <div className="reveal" style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)' }}>BOARD OF DIRECTORS</div>
               </div>
@@ -80,7 +80,7 @@ export default function About() {
           {/* Leadership */}
           <section className="sx" style={{ padding: '80px 0' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-              <h2 className="reveal" style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, margin: '0 0 32px', letterSpacing: '-0.02em' }}>Leadership team</h2>
+              <h2 className="reveal" style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, margin: '0 0 32px', letterSpacing: '-0.02em', textAlign: 'center' }}>Leadership team</h2>
               <div className="rg-2" style={{ gap: 24 }}>
                 {LEADERSHIP.map((p, i) => (
                   <div key={p.name} className={`reveal reveal-delay-${i + 1} profile-card`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', display: 'grid', gridTemplateColumns: '160px 1fr' }}>
@@ -99,7 +99,7 @@ export default function About() {
           {/* Faculty */}
           <section className="sx" style={{ padding: '0 0 80px' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-              <div style={{ marginBottom: 32 }}>
+              <div style={{ marginBottom: 32, textAlign: 'center' }}>
                 <h2 className="reveal" style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, margin: '0 0 8px', letterSpacing: '-0.02em' }}>Meet the minds behind your success</h2>
                 <p className="reveal" style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink-soft)', margin: 0 }}>Learn from experts who inspire, guide and empower your journey.</p>
               </div>

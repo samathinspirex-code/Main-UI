@@ -22,11 +22,11 @@ const STREAMS: { label: string; value: School }[] = [
 ]
 
 const WHY_NOW = [
-  { label: 'First 50 seats', value: 'HND at ₨295,000' },
-  { label: 'Regular fee', value: '₨400,000' },
-  { label: 'You save', value: '₨105,000' },
-  { label: 'Foundation from', value: '₨125,000' },
-  { label: 'Short courses', value: 'from ₨15,000' },
+  { label: 'First 50 seats', value: 'HND at Rs 295,000' },
+  { label: 'Regular fee', value: 'Rs 400,000' },
+  { label: 'You save', value: 'Rs 105,000' },
+  { label: 'Foundation from', value: 'Rs 125,000' },
+  { label: 'Short courses', value: 'from Rs 15,000' },
 ]
 
 const PERKS = [
@@ -357,7 +357,7 @@ export default function Admissions({ programs, initialProgramSlug = '' }: { prog
               <Icon kind="chat" size={24} color="var(--accent)" />
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, marginTop: 14, marginBottom: 8 }}>Need a hand?</div>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-soft)', margin: '0 0 16px', lineHeight: 1.65 }}>
-                Mon–Fri · 8:30 AM – 5:00 PM<br />
+                Mon–Fri · 8:30 AM – 5:30 PM<br />
                 Level 01, Shangri-La, Colombo 2
               </p>
               <a href="tel:+94711993331" style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>

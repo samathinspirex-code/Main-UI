@@ -288,11 +288,11 @@ export function AdmissionsForm({ programs, initialProgramSlug = "" }: { programs
           <div style={{ border: `1.5px solid ${SK.ink}`, borderRadius: 4, padding: 20, background: "#fff" }}>
             <div style={{ fontFamily: "var(--sk-hand)", fontSize: 15, fontWeight: 700 }}>Why act now</div>
             {[
-              ["First 50", "HND at ₨295,000"],
-              ["Regular fee", "₨400,000"],
-              ["You save", "₨105,000"],
-              ["Foundation from", "₨125,000"],
-              ["Short courses", "from ₨15,000"],
+              ["First 50", "HND at Rs 295,000"],
+              ["Regular fee", "Rs 400,000"],
+              ["You save", "Rs 105,000"],
+              ["Foundation from", "Rs 125,000"],
+              ["Short courses", "from Rs 15,000"],
             ].map(([d, t], i) => (
               <div key={i} style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: i < 4 ? `1px dashed ${SK.inkSoft}` : "none", fontFamily: "var(--sk-hand)", fontSize: 13 }}>
                 <div style={{ width: 100, color: SK.accent, fontWeight: 700 }}>{d}</div>
@@ -304,7 +304,7 @@ export function AdmissionsForm({ programs, initialProgramSlug = "" }: { programs
             <SkIcon kind="chat" size={22} color={SK.paper} />
             <div style={{ fontFamily: "var(--sk-hand)", fontSize: 17, fontWeight: 700, marginTop: 10 }}>Need a hand?</div>
             <div style={{ fontFamily: "var(--sk-hand)", fontSize: 13, opacity: 0.85, marginTop: 4, lineHeight: 1.5 }}>
-              Mon–Fri · 8:30 AM – 5:00 PM<br />Level 01, Shangri la, Colombo 2
+              Mon–Fri · 8:30 AM – 5:30 PM<br />Level 01, Shangri la, Colombo 2
             </div>
             <a href="tel:+94711993331" style={{ display: "block", marginTop: 12, fontFamily: "var(--sk-hand)", fontSize: 13, textDecoration: "underline" }}>
               +94 71 199 3331 →

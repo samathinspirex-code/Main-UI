@@ -5,7 +5,6 @@ import Link from 'next/link'
 import VideoTestimonials from './VideoTestimonials'
 import type { Testimonial } from '../../data/testimonials'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
-import { useCounter } from '../../hooks/useCounter'
 import { Button } from '../ui/Button'
 import { Tag } from '../ui/Tag'
 import { Icon } from '../ui/Icon'
@@ -25,29 +24,17 @@ const canonicalBody = (value: string) => {
 }
 
 const PATH_CARDS = [
-  { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From ₨125,000', href: '/programs?level=Foundation', delay: 0 },
-  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From ₨295,000', href: '/programs?level=HND', delay: 100 },
-  { icon: 'brush', title: 'Short Courses', blurb: 'Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.', tag: 'From ₨15,000', href: '/programs?level=Short+Course', delay: 200 },
+  { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From Rs 125,000', href: '/programs?level=Foundation', delay: 0 },
+  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From Rs 295,000', href: '/programs?level=HND', delay: 100 },
+  { icon: 'brush', title: 'Short Courses', blurb: 'Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.', tag: 'From Rs 15,000', href: '/programs?level=Short+Course', delay: 200 },
 ]
 
-/* ── Animated stat counter ── */
-function StatBlock({ target, suffix, label }: { target: number; suffix?: string; label: string }) {
-  const { count, ref } = useCounter(target)
-  return (
-    <div ref={ref} style={{ textAlign: 'center' }}>
-      <div style={{
-        fontFamily: 'var(--font-display)', fontSize: 'clamp(40px,5vw,60px)',
-        fontWeight: 700, lineHeight: 1, color: 'var(--accent)',
-        marginBottom: 8,
-      }}>
-        {count.toLocaleString()}{suffix}
-      </div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.12em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>
-        {label}
-      </div>
-    </div>
-  )
-}
+const PARTNERS = [
+  { name: 'ATHE — Awards for Training and Higher Education', logo: '/partners/athe.png', className: 'athe' },
+  { name: 'CPD Certification Service', logo: '/partners/cpd-member.png', className: 'cpd' },
+  { name: 'London School of Business & Finance', logo: '/partners/lsbf.png', className: 'lsbf' },
+  { name: 'Western International College Online', logo: '/partners/winc-online.png', className: 'winc' },
+]
 
 /* ── Floating cursor-reactive dot grid ── */
 function DotGrid() {
@@ -249,7 +236,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               animation: 'float 3.5s ease-in-out infinite',
             }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Seats filling fast</div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>First 50 at ₨295K</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>First 20 at Rs 250K</div>
             </div>
             {/* Online badge */}
             <div style={{
@@ -279,19 +266,25 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       {/* ══ SCROLL SECTIONS ══ */}
       <div ref={revealRef}>
 
-        {/* Stats strip */}
-        <section className="sx" style={{ background: 'var(--accent)', padding: '56px 0' }}>
-          <div className="home-stats-grid" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 32 }}>
-            {[
-              { target: 100, suffix: '%', label: 'Online — learn anywhere' },
-              { target: 4, label: 'UK & Indian partners' },
-              { target: programs.length, label: 'Courses available' },
-              { target: 50, label: 'First-50 HND seats' },
-            ].map((s, i) => (
-              <div key={i} ref={undefined} style={{ textAlign: 'center', borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.2)' : 'none', paddingLeft: i > 0 ? 32 : 0 }}>
-                <StatBlockLight target={s.target} suffix={s.suffix} label={s.label} />
-              </div>
-            ))}
+        {/* Partner marquee */}
+        <section className="home-partners" aria-labelledby="home-partners-title">
+          <div className="home-partners-heading sx reveal">
+            <Tag>Academic network</Tag>
+            <h2 id="home-partners-title">Our partners</h2>
+            <p>Recognised awarding bodies and education partners supporting globally relevant learning.</p>
+          </div>
+          <div className="home-partners-marquee" aria-label="Our education partners">
+            <div className="home-partners-track">
+              {[0, 1, 2, 3, 4, 5].map((copy) => (
+                <div className="home-partners-set" aria-hidden={copy === 1} key={copy}>
+                  {PARTNERS.map((partner) => (
+                    <div className={`home-partner-logo home-partner-logo--${partner.className}`} key={`${copy}-${partner.name}`}>
+                      <img src={partner.logo} alt={copy === 0 ? partner.name : ''} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -391,8 +384,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     />
                   </div>
                   <div className="programme-card-content">
-                    <div className="programme-card-meta">
-                      <span>{p.awardingBody === 'Jain' ? 'Jain University' : p.awardingBody}</span>
+                    <div className="programme-card-meta" style={{ justifyContent: 'flex-end' }}>
                       <small>{p.duration}</small>
                     </div>
                     <h3>{p.title}</h3>
@@ -481,10 +473,10 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.65)', marginBottom: 14, textTransform: 'uppercase' }}>Limited offer</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px,4vw,50px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.1 }}>
-                First 50 HND students<br />at <span style={{ color: '#c6b8f0' }}>₨295,000</span>
+                First 20 students receive a<br /><span style={{ color: '#c6b8f0' }}>Rs 200,000 scholarship</span>
               </h2>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.6 }}>
-                Regular fee ₨400,000 — save ₨105,000 by reserving today.
+                Registration fee starting from Rs 9,900.
               </p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flexShrink: 0, position: 'relative', zIndex: 1 }}>
@@ -503,21 +495,6 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
             </div>
           </div>
         </section>
-      </div>
-    </div>
-  )
-}
-
-/* White-text stat for the purple stats strip */
-function StatBlockLight({ target, suffix, label }: { target: number; suffix?: string; label: string }) {
-  const { count, ref } = useCounter(target)
-  return (
-    <div ref={ref}>
-      <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,4vw,56px)', fontWeight: 700, lineHeight: 1, color: '#fff', marginBottom: 6 }}>
-        {count.toLocaleString()}{suffix}
-      </div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase' }}>
-        {label}
       </div>
     </div>
   )
