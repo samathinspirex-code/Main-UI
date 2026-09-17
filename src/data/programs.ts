@@ -127,7 +127,7 @@ export const PROGRAMS: Program[] = [
     title: "HND in Business Management",
     level: "HND", school: "Business", awardingBody: "ATHE",
     code: "ATHE · L5", duration: "12–18 months", priceFrom: 295000,
-    tag: "First 50 · Rs 295K", icon: "building", imageLabel: "program 2·1",
+    tag: "First 50 · LKR 295K", icon: "building", imageLabel: "program 2·1",
     blurb: "Core management, marketing, finance and operations — a broad business foundation that progresses straight into a UK Top-Up degree.",
     popularity: 85,
   },
@@ -228,7 +228,7 @@ export function getProgramBySlug(slug: string): Program | undefined {
 }
 
 export function formatLKR(amount: number): string {
-  return `Rs ${amount.toLocaleString("en-LK")}`;
+  return `LKR ${amount.toLocaleString("en-LK")}`;
 }
 
 interface ApiProgram {

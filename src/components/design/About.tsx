@@ -16,25 +16,24 @@ export default function About() {
       <Navbar />
       <main style={{ paddingTop: 68 }}>
         {/* Hero */}
-        <section className="mesh-bg sx" style={{ padding: '80px 0 64px', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>
-          <div style={{ maxWidth: 900, margin: '0 auto' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 16 }}>ABOUT INSPIRE COLLEGE</div>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px,6vw,80px)', fontWeight: 700, margin: '0 0 20px', letterSpacing: '-0.02em', lineHeight: 1.05 }}>
-              Explore our diverse range of programs designed to prepare you for{' '}
-              <span className="text-gold">global success.</span>
-            </h1>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 18, color: 'var(--ink-soft)', lineHeight: 1.65, maxWidth: 620, margin: '0 auto 32px' }}>
-              Sri Lanka's pioneering fully online higher education provider, bridging the gap between traditional learning and the digital future.
-            </p>
-            <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center' }}>
-              <img src={AB_IMG.heroFigure} alt="Inspire College" style={{ height: 300, objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))' }} />
+        <section className="about-hero sx">
+          <div className="about-hero-inner">
+            <div className="about-hero-copy">
+              <span>About Inspire College</span>
+              <h1>Education designed for <strong>global success.</strong></h1>
+              <i aria-hidden="true" />
+              <p>Explore flexible, globally aligned programmes created to prepare ambitious learners for tomorrow’s opportunities.</p>
+              <small>Sri Lanka’s pioneering fully online higher education provider.</small>
+            </div>
+            <div className="about-hero-visual">
+              <img src={AB_IMG.heroFigure} alt="Inspire College students" />
             </div>
           </div>
         </section>
 
         <div ref={revealRef}>
           {/* Who We Are */}
-          <section className="sx rg-2" style={{ padding: '80px 0', maxWidth: 1200, margin: '0 auto', gap: 64, alignItems: 'center' }}>
+          <section className="sx rg-2 about-intro-section" style={{ padding: '36px 0 80px', maxWidth: 1200, margin: '0 auto', gap: 64, alignItems: 'center' }}>
             <div className="reveal">
               <img src={AB_IMG.whoWeAre} alt="Who we are" style={{ width: '100%', borderRadius: 12, border: '1px solid var(--border)' }} />
             </div>
@@ -65,7 +64,7 @@ export default function About() {
               <div className="rg-4" style={{ gap: 20 }}>
                 {BOARD.map((p, i) => (
                   <div key={p.name} className={`card-hover reveal reveal-delay-${i + 1}`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                    <img src={p.img} alt={p.name} style={{ width: '100%', height: 240, objectFit: 'cover' }} />
+                    <img src={p.img} alt={p.name} style={{ width: '100%', height: 260, objectFit: 'contain', objectPosition: 'center bottom', padding: '14px 10px 0', background: 'linear-gradient(145deg, #b7a6e5, #c9b9eb)' }} />
                     <div style={{ padding: 20 }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{p.name}</div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--accent)', marginBottom: 12 }}>{p.role.toUpperCase()}</div>
@@ -83,8 +82,8 @@ export default function About() {
               <h2 className="reveal" style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, margin: '0 0 32px', letterSpacing: '-0.02em', textAlign: 'center' }}>Leadership team</h2>
               <div className="rg-2" style={{ gap: 24 }}>
                 {LEADERSHIP.map((p, i) => (
-                  <div key={p.name} className={`reveal reveal-delay-${i + 1} profile-card`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', display: 'grid', gridTemplateColumns: '160px 1fr' }}>
-                    <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: 200 }} />
+                  <div key={p.name} className={`reveal reveal-delay-${i + 1} profile-card leadership-card`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', display: 'grid', gridTemplateColumns: '160px 1fr' }}>
+                    <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', minHeight: 200, background: 'linear-gradient(145deg, #b7a6e5, #c9b9eb)' }} />
                     <div style={{ padding: 24 }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, marginBottom: 4 }}>{p.name}</div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--accent)', marginBottom: 14 }}>{p.role.toUpperCase()}</div>

@@ -13,8 +13,8 @@ export default function NewsPage({ items }: { items: NewsItem[] }) {
   return (
     <div>
       <Navbar />
-      <main className="news-page" style={{ paddingTop: 68 }}>
-        <div className="news-page-hero sx">
+      <main className="news-page page-load" style={{ paddingTop: 68 }}>
+        <div className="news-page-hero sx page-load-hero">
           <div className="news-page-hero-inner">
             <div>
               <div className="news-eyebrow">INSPIRE COLLEGE JOURNAL</div>
@@ -24,7 +24,7 @@ export default function NewsPage({ items }: { items: NewsItem[] }) {
           </div>
         </div>
 
-        <div className="news-page-content sx">
+        <div className="news-page-content sx page-load-main">
           <div className="news-section-heading">
             <div>
               <span>Latest updates</span>
