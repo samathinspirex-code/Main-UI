@@ -22,11 +22,11 @@ const STREAMS: { label: string; value: School }[] = [
 ]
 
 const WHY_NOW = [
-  { label: 'First 50 seats', value: 'HND at Rs 295,000' },
-  { label: 'Regular fee', value: 'Rs 400,000' },
-  { label: 'You save', value: 'Rs 105,000' },
-  { label: 'Foundation from', value: 'Rs 125,000' },
-  { label: 'Short courses', value: 'from Rs 15,000' },
+  { label: 'First 50 seats', value: 'HND at LKR 295,000' },
+  { label: 'Regular fee', value: 'LKR 400,000' },
+  { label: 'You save', value: 'LKR 105,000' },
+  { label: 'Foundation from', value: 'LKR 125,000' },
+  { label: 'Short courses', value: 'from LKR 15,000' },
 ]
 
 const PERKS = [
@@ -103,10 +103,10 @@ export default function Admissions({ programs, initialProgramSlug = '' }: { prog
   return (
     <div>
       <Navbar />
-      <main style={{ paddingTop: 68 }}>
+      <main className="page-load admissions-page" style={{ paddingTop: 68 }}>
 
         {/* Page header */}
-        <div className="sx" style={{ padding: '64px 0 40px', borderBottom: '1px solid var(--border)' }}>
+        <div className="sx page-load-hero" style={{ padding: '64px 0 40px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div style={{ marginBottom: 18 }}>
               <Tag accent>RESERVE YOUR SEAT</Tag>
@@ -122,7 +122,7 @@ export default function Admissions({ programs, initialProgramSlug = '' }: { prog
         </div>
 
         {/* Stepper */}
-        <div className="sx" style={{ padding: '40px 0 0' }}>
+        <div className="sx page-load-secondary" style={{ padding: '40px 0 0' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div className="rg-4" style={{ gap: 0 }}>
               {STEPS.map((s, i) => {
@@ -160,7 +160,7 @@ export default function Admissions({ programs, initialProgramSlug = '' }: { prog
         </div>
 
         {/* Form + Sidebar */}
-        <div className="sx rg-form" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0 100px' }}>
+        <div className="sx rg-form page-load-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0 100px' }}>
 
           {/* ── FORM (left, dominant) ── */}
           <div className="admissions-form-card" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '44px 48px', minHeight: 480 }}>

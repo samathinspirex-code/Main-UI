@@ -11,7 +11,7 @@ import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
-const HERO_IMG = 'https://inspirecollege.lk/wp-content/uploads/2025/10/Home-page-image-3.png'
+const HERO_IMG = '/home-hero-banner.png'
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
 const canonicalBody = (value: string) => {
   const normalized = value.trim().toLowerCase()
@@ -24,9 +24,9 @@ const canonicalBody = (value: string) => {
 }
 
 const PATH_CARDS = [
-  { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From Rs 125,000', href: '/programs?level=Foundation', delay: 0 },
-  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From Rs 295,000', href: '/programs?level=HND', delay: 100 },
-  { icon: 'brush', title: 'Short Courses', blurb: 'Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.', tag: 'From Rs 15,000', href: '/programs?level=Short+Course', delay: 200 },
+  { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From LKR 125,000', href: '/programs?level=Foundation', delay: 0 },
+  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From LKR 295,000', href: '/programs?level=HND', delay: 100 },
+  { icon: 'brush', title: 'Short Courses', blurb: 'Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.', tag: 'From LKR 15,000', href: '/programs?level=Short+Course', delay: 200 },
 ]
 
 const PARTNERS = [
@@ -139,91 +139,76 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               </Tag>
             </div>
 
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(44px, 6.5vw, 88px)',
-              fontWeight: 700, lineHeight: 1.04,
+            <h1 className="home-hero-title" style={{
+              fontFamily: 'var(--font-poppins)',
+              fontSize: 'clamp(36px, 3.3vw, 48px)',
+              fontWeight: 600, lineHeight: 1.08,
               letterSpacing: '-0.025em',
-              margin: '0 0 6px',
+              margin: '0 0 18px',
               color: 'var(--ink)',
               opacity: heroVisible ? 1 : 0,
               transform: heroVisible ? 'none' : 'translateY(36px)',
               transition: tv(150),
             }}>
-              Your online
+              Your Online <span className="text-gold" style={{ display: 'inline-block' }}>University</span>
             </h1>
-            <h1 className="text-gold" style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(44px, 6.5vw, 88px)',
-              fontWeight: 700, fontStyle: 'italic',
-              lineHeight: 1.15, letterSpacing: '-0.025em',
-              margin: '0 0 20px',
-              paddingBottom: 8,
+            <h2 style={{
+              fontFamily: 'var(--font-poppins)',
+              fontSize: 'clamp(16px, 1.55vw, 21px)',
+              fontWeight: 600, lineHeight: 1.35,
+              letterSpacing: '-0.01em',
+              color: 'var(--ink-soft)',
+              margin: '0 0 22px',
+              whiteSpace: 'normal',
               opacity: heroVisible ? 1 : 0,
               transform: heroVisible ? 'none' : 'translateY(36px)',
               transition: tv(280),
             }}>
-              university.
-            </h1>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(18px, 2.4vw, 34px)',
-              fontWeight: 400, lineHeight: 1.2,
-              letterSpacing: '-0.01em',
-              color: 'var(--ink-soft)',
-              margin: '0 0 28px',
-              whiteSpace: 'normal',
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(36px)',
-              transition: tv(400),
-            }}>
-              Foundation · HND · Degree · Master's
+              Foundation · HND · Degree · Master’s · CPD
             </h2>
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: 17,
               color: 'var(--ink-soft)', maxWidth: 460, lineHeight: 1.7,
-              marginBottom: 36,
+              marginBottom: 22,
               opacity: heroVisible ? 1 : 0,
               transition: tv(520),
             }}>
-              Globally recognised qualifications validated by ATHE, WINC, LSBF and Jain University — delivered fully online from Colombo.
+              100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.
             </p>
 
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: tv(640) }}>
-              <Button variant="primary" size="lg" href="/admissions">Reserve your seat →</Button>
-              <Button variant="outline" size="lg" href="/contact">Talk to an advisor</Button>
-            </div>
-
-            {/* Trust badges */}
-            <div style={{ marginTop: 40, display: 'flex', gap: 20, alignItems: 'center', opacity: heroVisible ? 1 : 0, transition: tv(760), flexWrap: 'wrap' }}>
-              {['ATHE Validated', 'WINC Accredited', 'Jain University', 'LSBF Partner'].map((b) => (
+            {/* Study benefits */}
+            <div style={{ marginBottom: 24, display: 'flex', gap: 20, alignItems: 'center', opacity: heroVisible ? 1 : 0, transition: tv(640), flexWrap: 'wrap' }}>
+              {['100% Online', 'Flexible', 'Globally Recognised'].map((b) => (
                 <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
                   {b}
                 </div>
               ))}
             </div>
+
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: tv(760) }}>
+              <Button variant="primary" size="lg" href="/admissions">Reserve your seat →</Button>
+              <Button variant="outline" size="lg" href="/contact">Talk to an advisor</Button>
+            </div>
           </div>
 
           {/* Right: hero image card */}
-          <div style={{
+          <div className="home-hero-art" style={{
             position: 'relative',
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible ? 'none' : 'translateX(48px)',
             transition: tv(300),
           }}>
-            {/* Decorative frame */}
-            <div style={{ position: 'absolute', inset: -16, border: '2px solid rgba(63,0,124,0.18)', borderRadius: 24, pointerEvents: 'none', zIndex: 0 }} />
-            <div style={{ position: 'absolute', inset: -8, background: 'linear-gradient(135deg, rgba(198,184,240,0.35), rgba(123,62,200,0.15))', borderRadius: 20, zIndex: 0 }} />
             <img
               src={HERO_IMG}
-              alt="Inspire College students"
+              alt="Inspire College student beginning his pathway to a global qualification"
               style={{
                 position: 'relative', zIndex: 1,
-                width: '100%', borderRadius: 16,
-                objectFit: 'cover', display: 'block',
-                boxShadow: '0 32px 80px rgba(63,0,124,0.18)',
+                width: '100%',
+                objectFit: 'contain', display: 'block',
+                WebkitMaskImage: 'radial-gradient(ellipse 69% 73% at center, #000 44%, rgba(0,0,0,.78) 60%, rgba(0,0,0,.32) 79%, transparent 100%)',
+                maskImage: 'radial-gradient(ellipse 69% 73% at center, #000 44%, rgba(0,0,0,.78) 60%, rgba(0,0,0,.32) 79%, transparent 100%)',
               }}
             />
             {/* Floating achievement badge */}
@@ -235,8 +220,8 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               border: '1px solid rgba(63,0,124,0.12)',
               animation: 'float 3.5s ease-in-out infinite',
             }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Seats filling fast</div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>First 20 at Rs 250K</div>
+              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Seats filling fast</div>
+              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>First 20 at LKR 250K</div>
             </div>
             {/* Online badge */}
             <div style={{
@@ -269,7 +254,6 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         {/* Partner marquee */}
         <section className="home-partners" aria-labelledby="home-partners-title">
           <div className="home-partners-heading sx reveal">
-            <Tag>Academic network</Tag>
             <h2 id="home-partners-title">Our partners</h2>
             <p>Recognised awarding bodies and education partners supporting globally relevant learning.</p>
           </div>
@@ -361,7 +345,6 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 52 }}>
               <div>
-                <div className="reveal" style={{ marginBottom: 10 }}><Tag>All Programs</Tag></div>
                 <h2 className="reveal reveal-delay-1" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,3.5vw,48px)', fontWeight: 700, margin: 0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
                   Popular programs
                 </h2>
@@ -400,55 +383,36 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
           </div>
         </section>
 
-        {/* Student story + news */}
+        {/* Student stories */}
         <VideoTestimonials items={testimonials} />
-        <section className="sx" style={{ padding: '96px 0' }}>
-          <div className="home-story-news" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 40, alignItems: 'start' }}>
-            {/* Story card */}
-            <div className="reveal card-hover home-story-card" style={{ background: '#fff', border: '1.5px solid rgba(63,0,124,0.12)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(63,0,124,0.08)', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-              <div style={{ position: 'relative', minHeight: 320, overflow: 'hidden' }}>
-                <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=600&fit=crop&auto=format"
-                  alt="Student"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
-                  className="story-img"
-                />
+        <section className="sx home-latest-news">
+          <div className="home-latest-news-inner">
+            <div className="home-latest-news-heading reveal">
+              <div>
+                <span>News &amp; events</span>
+                <h2>Latest from Inspire College</h2>
+                <p>College news, partnerships, events and opportunities—all in one place.</p>
               </div>
-              <div style={{ padding: 32, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--accent)', marginBottom: 16, textTransform: 'uppercase' }}>HND · Software Engineering</div>
-                <blockquote style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600, margin: '0 0 14px', lineHeight: 1.4, fontStyle: 'italic', color: 'var(--ink)' }}>
-                  "I started with no coding background. Now I'm a software developer."
-                </blockquote>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-muted)', marginBottom: 24, lineHeight: 1.6 }}>— Graduate, HND Computing</p>
-                <Button variant="outline" size="sm" href="/programs/hnd-computing-software-engineering">Read her story →</Button>
-              </div>
+              <Button variant="ghost" size="sm" href="/news">All news →</Button>
             </div>
-
-            {/* Latest news */}
-            <div className="reveal reveal-delay-2">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, margin: 0, color: 'var(--ink)' }}>Latest news</h2>
-                <Button variant="ghost" size="sm" href="/news">All news →</Button>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {latestNews.map((item, i) => (
-                  <Link
-                    key={item.slug}
-                    href={`/news/${item.slug}`}
-                    className="card-hover"
-                    style={{ display: 'flex', gap: 16, padding: '18px 20px', background: '#fff', borderRadius: 10, border: '1.5px solid rgba(63,0,124,0.10)', textDecoration: 'none', boxShadow: '0 2px 8px rgba(63,0,124,0.04)', transition: 'all 0.25s ease' }}
-                  >
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--accent)', width: 44, flexShrink: 0, paddingTop: 2, letterSpacing: '0.03em' }}>
-                      {formatNewsDate(item.date)}
+            <div className="home-news-grid reveal reveal-delay-1">
+              {latestNews.map((item) => (
+                <Link key={item.slug} href={`/news/${item.slug}`} className="home-news-card card-hover">
+                  <div className="home-news-card-media">
+                    <img src={item.image} alt="" loading="lazy" />
+                  </div>
+                  <div className="home-news-card-body">
+                    <div className="home-news-card-meta">
+                      <Tag accent>{item.category}</Tag>
+                      <span>{formatNewsDate(item.date)}</span>
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <Tag accent style={{ marginBottom: 8 }}>{item.category}</Tag>
-                      <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500, lineHeight: 1.45, color: 'var(--ink)' }}>{item.title}</div>
-                    </div>
-                    <Icon kind="arrow" size={15} color="var(--ink-muted)" style={{ marginTop: 4, flexShrink: 0 }} />
-                  </Link>
-                ))}
-              </div>
+                    <h3>{item.title}</h3>
+                    <p>{item.excerpt}</p>
+                    <span className="home-news-read-more">Read more <Icon kind="arrow" size={14} /></span>
+                  </div>
+                </Link>
+              ))}
+              {!latestNews.length && <div className="news-empty">No published news yet.</div>}
             </div>
           </div>
         </section>
@@ -473,10 +437,10 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.65)', marginBottom: 14, textTransform: 'uppercase' }}>Limited offer</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px,4vw,50px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.1 }}>
-                First 20 students receive a<br /><span style={{ color: '#c6b8f0' }}>Rs 200,000 scholarship</span>
+                First 20 students receive a<br /><span style={{ color: '#c6b8f0' }}>LKR 200,000 scholarship</span>
               </h2>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.6 }}>
-                Registration fee starting from Rs 9,900.
+                Registration fee starting from LKR 9,900.
               </p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flexShrink: 0, position: 'relative', zIndex: 1 }}>

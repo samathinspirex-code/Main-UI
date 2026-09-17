@@ -11,16 +11,16 @@ import { NEWS, formatNewsDate } from "@/data/news";
 
 
 const PATH_CARDS = [
-  { icon: "grad", title: "Foundation", blurb: "Build essential knowledge and skills for further study and a successful academic journey.", tag: "From Rs 125,000", href: "/programs?level=Foundation" },
-  { icon: "book", title: "HND & Degrees", blurb: "Strong foundation of knowledge and practical skills with HND, Top-Up Degrees and Postgraduate routes.", tag: "From Rs 250,000", href: "/programs?level=HND" },
-  { icon: "brush", title: "Short Courses", blurb: "Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.", tag: "From Rs 15,000", href: "/programs?level=Short+Course" },
+  { icon: "grad", title: "Foundation", blurb: "Build essential knowledge and skills for further study and a successful academic journey.", tag: "From LKR 125,000", href: "/programs?level=Foundation" },
+  { icon: "book", title: "HND & Degrees", blurb: "Strong foundation of knowledge and practical skills with HND, Top-Up Degrees and Postgraduate routes.", tag: "From LKR 250,000", href: "/programs?level=HND" },
+  { icon: "brush", title: "Short Courses", blurb: "Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.", tag: "From LKR 15,000", href: "/programs?level=Short+Course" },
 ] as const;
 
 const STATS = [
   ["100%", "online"],
   ["4", "UK & Indian partners"],
-  ["from Rs 15K", "short courses"],
-  ["from Rs 125K", "foundation"],
+  ["from LKR 15K", "short courses"],
+  ["from LKR 125K", "foundation"],
 ] as const;
 
 const LEVEL_OPTIONS = ["Foundation", "HND", "Higher Diploma", "Diploma", "Top-Up Degree", "Postgraduate", "Short Course"];

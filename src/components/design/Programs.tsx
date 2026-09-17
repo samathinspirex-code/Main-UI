@@ -139,9 +139,9 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
   return (
     <div>
       <Navbar />
-      <main style={{ paddingTop: 68 }}>
+      <main className="page-load programs-page" style={{ paddingTop: 68 }}>
         {/* Header */}
-        <div className="sx" style={{ padding: '56px 0 32px', borderBottom: '1px solid var(--border)' }}>
+        <div className="sx page-load-hero" style={{ padding: '56px 0 32px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 12 }}>HOME / PROGRAMS</div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>Find your program</h1>
@@ -149,7 +149,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
           </div>
         </div>
 
-        <div id="programme-catalogue-top" className="sx programme-catalogue-top" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
+        <div id="programme-catalogue-top" className="sx programme-catalogue-top page-load-secondary" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
           <div className="catalogue-pathway-selects">
             <select className="catalogue-select" aria-label="Awarding body" value={guidedBody} onChange={e => { setGuidedBody(e.target.value); setGuidedSchool(''); setProgramme(''); setPage(1) }}><option value="">Awarding body · All awarding bodies</option>{guidedBodies.map(value => <option key={value} value={value}>{value}</option>)}</select>
             {!jainSelected && <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>}
@@ -157,7 +157,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
           </div>
         </div>
 
-        <div className="sx rg-sidebar" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0 80px', gap: 48 }}>
+        <div className="sx rg-sidebar page-load-main" style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 0 80px', gap: 48 }}>
           {/* Sidebar */}
           <div>
             <button className="filter-toggle-btn" onClick={() => setShowFilters(f => !f)}>

@@ -288,11 +288,11 @@ export function AdmissionsForm({ programs, initialProgramSlug = "" }: { programs
           <div style={{ border: `1.5px solid ${SK.ink}`, borderRadius: 4, padding: 20, background: "#fff" }}>
             <div style={{ fontFamily: "var(--sk-hand)", fontSize: 15, fontWeight: 700 }}>Why act now</div>
             {[
-              ["First 50", "HND at Rs 295,000"],
-              ["Regular fee", "Rs 400,000"],
-              ["You save", "Rs 105,000"],
-              ["Foundation from", "Rs 125,000"],
-              ["Short courses", "from Rs 15,000"],
+              ["First 50", "HND at LKR 295,000"],
+              ["Regular fee", "LKR 400,000"],
+              ["You save", "LKR 105,000"],
+              ["Foundation from", "LKR 125,000"],
+              ["Short courses", "from LKR 15,000"],
             ].map(([d, t], i) => (
               <div key={i} style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: i < 4 ? `1px dashed ${SK.inkSoft}` : "none", fontFamily: "var(--sk-hand)", fontSize: 13 }}>
                 <div style={{ width: 100, color: SK.accent, fontWeight: 700 }}>{d}</div>

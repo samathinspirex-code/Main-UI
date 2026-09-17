@@ -57,7 +57,7 @@ export const LEADERSHIP: Person[] = [
   },
   {
     name: "Sumaiya Iqbal",
-    role: "Academic Head",
+    role: "Chief Academic Officer",
     img: AB_IMG.sumaiya,
     bio: "Education and development expert with global experience in youth empowerment, mental health and digital learning.",
   },
