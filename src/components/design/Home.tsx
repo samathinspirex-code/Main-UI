@@ -11,7 +11,7 @@ import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
-const HERO_IMG = '/home-hero-banner.png'
+const HERO_IMG = '/home-hero-cutout-v2.png'
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
 const canonicalBody = (value: string) => {
   const normalized = value.trim().toLowerCase()
@@ -207,8 +207,8 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                 position: 'relative', zIndex: 1,
                 width: '100%',
                 objectFit: 'contain', display: 'block',
-                WebkitMaskImage: 'radial-gradient(ellipse 69% 73% at center, #000 44%, rgba(0,0,0,.78) 60%, rgba(0,0,0,.32) 79%, transparent 100%)',
-                maskImage: 'radial-gradient(ellipse 69% 73% at center, #000 44%, rgba(0,0,0,.78) 60%, rgba(0,0,0,.32) 79%, transparent 100%)',
+                filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
+                animation: 'home-hero-art-float 6s ease-in-out infinite',
               }}
             />
             {/* Floating achievement badge */}
