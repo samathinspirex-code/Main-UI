@@ -140,7 +140,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
             </div>
 
             <h1 className="home-hero-title" style={{
-              fontFamily: 'var(--font-poppins)',
+              fontFamily: 'var(--font-display)',
               fontSize: 'clamp(36px, 3.3vw, 48px)',
               fontWeight: 600, lineHeight: 1.08,
               letterSpacing: '-0.025em',

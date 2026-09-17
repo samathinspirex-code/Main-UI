@@ -123,7 +123,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .about-hero-copy > :nth-child(4) { animation-delay: .32s; }
 .about-hero-copy > :nth-child(5) { animation-delay: .4s; }
 .about-hero-copy > span { color: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-.about-hero-copy h1 { margin: 14px 0 20px; color: var(--ink); font-family: var(--font-poppins); font-size: clamp(28px, 2.7vw, 36px); font-weight: 600; letter-spacing: -.04em; line-height: 1.12; white-space: nowrap; }
+.about-hero-copy h1 { margin: 14px 0 20px; color: var(--ink); font-family: var(--font-display); font-size: clamp(36px, 4vw, 48px); font-weight: 700; letter-spacing: -.035em; line-height: 1.08; white-space: nowrap; }
 .about-hero-copy h1 strong { color: var(--accent); font-weight: 600; }
 .about-hero-copy > i { display: block; width: 64px; height: 2px; margin-bottom: 24px; background: var(--ink); }
 .about-hero-copy p { max-width: 540px; margin: 0 0 14px; color: var(--ink-soft); font-size: 17px; line-height: 1.7; }
@@ -704,7 +704,7 @@ input, select, textarea { font: inherit; color: inherit; }
     linear-gradient(180deg, var(--bg) 0%, #f7f4fd 20%, #fbfafe 50%, #f7f4fd 80%, var(--bg) 100%);
 }
 .home-partners-heading { width: min(1200px, 100%); margin: 0 auto 34px; text-align: center; }
-.home-partners-heading h2 { margin: 0 0 7px; color: var(--ink); font-family: var(--font-poppins); font-size: clamp(32px, 4vw, 48px); font-weight: 600; letter-spacing: -.035em; }
+.home-partners-heading h2 { margin: 0 0 7px; color: var(--ink); font-family: var(--font-display); font-size: clamp(32px, 4vw, 48px); font-weight: 700; letter-spacing: -.025em; }
 .home-partners-heading p { max-width: 650px; margin: 0 auto; color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
 .home-partners-marquee { position: relative; overflow: hidden; width: 100%; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 .home-partners-track { display: flex; width: max-content; animation: partner-marquee 25s linear infinite; will-change: transform; }
