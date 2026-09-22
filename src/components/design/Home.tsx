@@ -25,7 +25,7 @@ const canonicalBody = (value: string) => {
 
 const PATH_CARDS = [
   { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From LKR 125,000', href: '/programs?level=Foundation', delay: 0 },
-  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From LKR 295,000', href: '/programs?level=HND', delay: 100 },
+  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From LKR 250,000', href: '/programs?level=HND', delay: 100 },
   { icon: 'brush', title: 'Short Courses', blurb: 'Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.', tag: 'From LKR 15,000', href: '/programs?level=Short+Course', delay: 200 },
 ]
 
