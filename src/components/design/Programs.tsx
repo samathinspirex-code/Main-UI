@@ -95,12 +95,17 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
     return { lc, sc, bc }
   }, [programs])
   const programmeFilters = useMemo(() => {
-    const names = new Set([...programmeNodes.map((node) => node.name), ...counts.lc.keys()])
-    return [...names]
-      .map((label) => ({ label, value: label, count: counts.lc.get(label) ?? 0 }))
+    return programmeNodes
+      .map((node) => {
+        const normalizedName = node.name.trim().toLowerCase()
+        const count = programs.filter((program) =>
+          program.programmeId === node.programme_id ||
+          (program.programmeId == null && (program.programmeName ?? program.level).trim().toLowerCase() === normalizedName)
+        ).length
+        return { label: node.name, value: node.name, count }
+      })
       .filter((item) => item.count > 0)
-      .sort((a, b) => a.label.localeCompare(b.label))
-  }, [counts, programmeNodes])
+  }, [programs, programmeNodes])
   const schoolFilters = useMemo(() => {
     const visibleSchoolCounts = new Map<string, number>()
     for (const program of programs) {
@@ -181,7 +186,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
               />
               <FilterGroup title="Awarding Body" items={bodyFilters} selected={bodies} onToggle={v => { setBodies(toggle(bodies, v)); setPage(1) }} />
               <FilterGroup title="School" items={schoolFilters} selected={schools} onToggle={v => { setSchools(toggle(schools, v)); setPage(1) }} />
-              <FilterGroup title="Programme" items={programmeFilters} selected={programmes} onToggle={v => { setProgrammes(toggle(programmes, v)); setPage(1) }} />
+              {programmeFilters.length > 0 && <FilterGroup title="Programme" items={programmeFilters} selected={programmes} onToggle={v => { setProgrammes(toggle(programmes, v)); setPage(1) }} />}
             </div>
           </div>
 
