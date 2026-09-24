@@ -17,15 +17,17 @@ function RealPhoto({
   h = 200,
   radius = 4,
   fit = "cover",
+  border = true,
 }: {
   src: string;
   w?: number | string;
   h?: number;
   radius?: number;
   fit?: "cover" | "contain";
+  border?: boolean;
 }) {
   return (
-    <div style={{ position: "relative", width: w, height: h, borderRadius: radius, overflow: "hidden", border: `1.3px solid ${SK.ink}` }}>
+    <div style={{ position: "relative", width: w, height: h, borderRadius: radius, overflow: "hidden", border: border ? `1.3px solid ${SK.ink}` : "none" }}>
       <Image src={src} alt="" fill sizes="100vw" style={{ objectFit: fit }} />
     </div>
   );
@@ -59,7 +61,7 @@ export function AboutA() {
       {/* Who We Are */}
       <div style={{ padding: "48px 48px", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 40, alignItems: "center" }}>
         <Dood dood={[{ kind: "asterisk", pos: "tr", size: 24, offset: -6 }, { kind: "dots", pos: "bl", size: 32, offset: -10 }]}>
-          <RealPhoto src={AB_IMG.whoWeAre} h={420} fit="contain" />
+          <RealPhoto src={AB_IMG.whoWeAre} h={420} fit="contain" border={false} />
         </Dood>
         <div>
           <div style={{ fontFamily: "var(--sk-mono)", fontSize: 11, letterSpacing: 2, color: SK.accent }}>WHO WE ARE</div>

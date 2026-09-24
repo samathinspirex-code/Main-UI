@@ -2,7 +2,7 @@ const IC = (path: string) => `https://inspirecollege.lk/wp-content/uploads/${pat
 
 export const AB_IMG = {
   heroFigure: IC("2025/10/Gemini_Generated_Image_vwcqbzvwcqbzvwcq-Photoroom.png"),
-  whoWeAre: IC("2025/10/About-us-image-1-1.png"),
+  whoWeAre: "/about-us-graduates.jpeg",
   steven: IC("2025/09/steven-600x606-1.jpg"),
   dinesh: IC("2025/09/dinesh-600x606-1.jpg"),
   bhanuka: IC("2025/09/bhanuka-600x606-1.jpg"),
