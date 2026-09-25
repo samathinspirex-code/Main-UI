@@ -9,8 +9,8 @@ export const AB_IMG = {
   tim: IC("2025/09/tim-600x606-1.jpg"),
   kanishka: IC("2025/09/kanishka-1.png"),
   sumaiya: IC("2025/09/enfk.png"),
-  nishadie: IC("2025/12/Inspire-Portratis-14-819x1024.jpg"),
-  leandra: IC("2025/12/Inspire-Portratis-4-819x1024.jpg"),
+  nishadie: "/team/nishadie-gunathilaka.jpeg",
+  leandra: "/team/leandra-joseph.jpeg",
 } as const;
 
 export interface Person {
