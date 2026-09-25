@@ -74,6 +74,66 @@ function Orb({ style }: { style: React.CSSProperties }) {
   )
 }
 
+interface HeroSlide {
+  tag: string
+  title: string
+  titleHighlight: string
+  subtitle: string
+  description: string
+  benefits: string[]
+  primaryBtn: { label: string; href: string }
+  secondaryBtn: { label: string; href: string }
+  image: string
+  imageAlt: string
+  badgeTop: { label: string }
+  badgeBottom: { eyebrow: string; value: string }
+}
+
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    tag: "· Sri Lanka's First Online University ·",
+    title: 'Your Online ',
+    titleHighlight: 'University',
+    subtitle: 'Foundation · HND · Degree · Master’s · CPD',
+    description: '100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.',
+    benefits: ['100% Online', 'Flexible', 'Globally Recognised'],
+    primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
+    secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
+    image: '/home-hero-handshake.png',
+    imageAlt: 'Inspire College student beginning his pathway to a global qualification',
+    badgeTop: { label: '100% ONLINE' },
+    badgeBottom: { eyebrow: 'Seats filling fast', value: 'First 20 at LKR 250K' },
+  },
+  {
+    tag: '· Globally Accredited Portfolio ·',
+    title: 'Explore Academic ',
+    titleHighlight: 'Programmes',
+    subtitle: 'Foundation · HND Pathways · Top-Up Degrees · Short Courses',
+    description: 'Discover career-ready diplomas, UK-validated HND pathways, Top-Up degrees and AI-powered short courses. Learn anytime, anywhere with interactive live classes and self-paced LMS.',
+    benefits: ['Foundation', 'HND & Degrees', 'Short Courses', 'AI Mastery'],
+    primaryBtn: { label: 'Explore all programmes →', href: '/programs' },
+    secondaryBtn: { label: 'Check entry criteria', href: '/admissions' },
+    image: '/home-hero-programmes.png',
+    imageAlt: 'Inspire College student exploring academic programmes',
+    badgeTop: { label: 'UK ACCREDITED' },
+    badgeBottom: { eyebrow: 'Flexible Learning', value: 'Study From Anywhere' },
+  },
+  {
+    tag: '· Empowering Ambitious Minds ·',
+    title: 'Transforming ',
+    titleHighlight: 'Higher Education',
+    subtitle: 'World-Class Curriculum · Global Faculty · Dedicated Mentorship',
+    description: 'Inspire College is on a mission to make world-class British qualifications accessible across Sri Lanka and beyond through cutting-edge digital learning and student-first academic support.',
+    benefits: ['Expert Faculty', 'Dedicated Mentors', 'Global Community'],
+    primaryBtn: { label: 'Learn more about us →', href: '/about' },
+    secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
+    image: '/home-hero-about.png',
+    imageAlt: 'Inspire College graduate celebrating success with family',
+    badgeTop: { label: 'SINCE 2020' },
+    badgeBottom: { eyebrow: 'Student Success', value: '98% Satisfaction' },
+  },
+]
+
 export default function Home({ programs, news, testimonials = [] }: { programs: Program[]; news: NewsItem[]; testimonials?: Testimonial[] }) {
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
@@ -92,18 +152,34 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
   const programmeOptions = useMemo(() => [...new Set(schoolPrograms.map((program) => program.programmeName ?? program.level))].sort(), [schoolPrograms])
 
   const [heroVisible, setHeroVisible] = useState(false)
-  useEffect(() => { const t = setTimeout(() => setHeroVisible(true), 80); return () => clearTimeout(t) }, [])
-
-  /* Subtle parallax on hero orbs */
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
   const [scrollY, setScrollY] = useState(0)
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeroVisible(true), 80)
+    return () => clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Auto-advance hero carousel
+  useEffect(() => {
+    if (isHovered) return
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
+    }, 6500)
+    return () => clearInterval(timer)
+  }, [isHovered])
+
   const tv = (delay: number, extra?: string) =>
     `opacity 0.75s ease ${delay}ms, transform 0.75s ease ${delay}ms${extra ? `, ${extra}` : ''}`
+
+  const slide = HERO_SLIDES[currentSlide]
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
@@ -111,6 +187,8 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       {/* ══ HERO ══ */}
       <section
         ref={heroRef}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 68 }}
       >
         {/* Orb container — overflow hidden lives here, not on the section, so text is never clipped */}
@@ -127,7 +205,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         <div className="sx home-hero-grid" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 48, padding: '80px 0' }}>
 
           {/* Left: text */}
-          <div>
+          <div key={`slide-text-${currentSlide}`} style={{ animation: 'fade-in-up 0.5s ease' }}>
             <div style={{
               opacity: heroVisible ? 1 : 0,
               transform: heroVisible ? 'none' : 'translateY(-14px)',
@@ -135,7 +213,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               marginBottom: 20, display: 'inline-block',
             }}>
               <Tag accent style={{ animation: heroVisible ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
-                · Sri Lanka's First Online University ·
+                {slide.tag}
               </Tag>
             </div>
 
@@ -150,7 +228,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               transform: heroVisible ? 'none' : 'translateY(36px)',
               transition: tv(150),
             }}>
-              Your Online <span className="text-gold" style={{ display: 'inline-block' }}>University</span>
+              {slide.title}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
             </h1>
             <h2 style={{
               fontFamily: 'var(--font-poppins)',
@@ -164,7 +242,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               transform: heroVisible ? 'none' : 'translateY(36px)',
               transition: tv(280),
             }}>
-              Foundation · HND · Degree · Master’s · CPD
+              {slide.subtitle}
             </h2>
 
             <p style={{
@@ -174,12 +252,12 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               opacity: heroVisible ? 1 : 0,
               transition: tv(520),
             }}>
-              100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.
+              {slide.description}
             </p>
 
             {/* Study benefits */}
-            <div style={{ marginBottom: 24, display: 'flex', gap: 20, alignItems: 'center', opacity: heroVisible ? 1 : 0, transition: tv(640), flexWrap: 'wrap' }}>
-              {['100% Online', 'Flexible', 'Globally Recognised'].map((b) => (
+            <div style={{ marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center', opacity: heroVisible ? 1 : 0, transition: tv(640), flexWrap: 'wrap' }}>
+              {slide.benefits.map((b) => (
                 <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
                   {b}
@@ -188,21 +266,22 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
             </div>
 
             <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: tv(760) }}>
-              <Button variant="primary" size="lg" href="/admissions">Reserve your seat →</Button>
-              <Button variant="outline" size="lg" href="/contact">Talk to an advisor</Button>
+              <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
+              <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
             </div>
           </div>
 
           {/* Right: hero image card */}
-          <div className="home-hero-art" style={{
+          <div className="home-hero-art" key={`slide-art-${currentSlide}`} style={{
             position: 'relative',
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible ? 'none' : 'translateX(48px)',
             transition: tv(300),
+            animation: 'fade-in-up 0.6s ease',
           }}>
             <img
-              src={HERO_IMG}
-              alt="Inspire College student beginning his pathway to a global qualification"
+              src={slide.image}
+              alt={slide.imageAlt}
               style={{
                 position: 'relative', zIndex: 1,
                 width: '100%',
@@ -220,10 +299,10 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               border: '1px solid rgba(63,0,124,0.12)',
               animation: 'float 3.5s ease-in-out infinite',
             }}>
-              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Seats filling fast</div>
-              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>First 20 at LKR 250K</div>
+              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
+              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
             </div>
-            {/* Online badge */}
+            {/* Top right badge */}
             <div style={{
               position: 'absolute', top: -20, right: -20, zIndex: 2,
               background: 'var(--accent)', borderRadius: 12,
@@ -231,20 +310,38 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
               animation: 'float 4.5s ease-in-out infinite 1s',
             }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>100% ONLINE</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
             </div>
           </div>
         </div>
 
-        {/* Scroll cue */}
+        {/* Carousel Pill Indicators */}
         <div style={{
-          position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-          opacity: heroVisible ? 0.55 : 0, transition: 'opacity 1s ease 1.2s',
-          animation: 'float 2.2s ease-in-out infinite',
+          position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+          display: 'flex', alignItems: 'center', gap: 10, zIndex: 10,
         }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>Scroll</div>
-          <Icon kind="chevron_down" size={16} color="var(--ink-muted)" />
+          {HERO_SLIDES.map((_, idx) => {
+            const active = idx === currentSlide
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                style={{
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  height: 9,
+                  width: active ? 28 : 9,
+                  borderRadius: 999,
+                  background: active ? 'var(--accent, #3F007C)' : 'rgba(63,0,124,0.22)',
+                  boxShadow: active ? '0 2px 8px rgba(63,0,124,0.35)' : 'none',
+                  transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              />
+            )
+          })}
         </div>
       </section>
 
