@@ -167,12 +167,12 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Auto-advance hero carousel
+  // Auto-advance hero carousel every 5 seconds
   useEffect(() => {
     if (isHovered) return
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
-    }, 6500)
+    }, 5000)
     return () => clearInterval(timer)
   }, [isHovered])
 
@@ -318,7 +318,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         {/* Carousel Pill Indicators */}
         <div style={{
           position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', alignItems: 'center', gap: 10, zIndex: 10,
+          display: 'flex', alignItems: 'center', gap: 12, zIndex: 10,
         }}>
           {HERO_SLIDES.map((_, idx) => {
             const active = idx === currentSlide
@@ -332,12 +332,13 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   border: 'none',
                   padding: 0,
                   cursor: 'pointer',
-                  height: 9,
-                  width: active ? 28 : 9,
+                  height: 13,
+                  width: active ? 44 : 13,
                   borderRadius: 999,
-                  background: active ? 'var(--accent, #3F007C)' : 'rgba(63,0,124,0.22)',
-                  boxShadow: active ? '0 2px 8px rgba(63,0,124,0.35)' : 'none',
+                  background: active ? 'var(--accent, #3F007C)' : 'rgba(63,0,124,0.28)',
+                  boxShadow: active ? '0 3px 12px rgba(63,0,124,0.42)' : 'none',
                   transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                  outline: 'none',
                 }}
               />
             )
