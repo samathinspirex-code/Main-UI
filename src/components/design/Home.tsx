@@ -241,8 +241,9 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     {slide.subtitle}
                   </h2>
 
-                  <p style={{
+                  <p className="home-hero-desc" style={{
                     fontFamily: 'var(--font-body)', fontSize: 17,
+                    fontWeight: 300,
                     color: 'var(--ink-soft)', maxWidth: 460, lineHeight: 1.7,
                     marginBottom: 22,
                   }}>

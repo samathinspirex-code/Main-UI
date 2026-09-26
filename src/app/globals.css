@@ -238,6 +238,7 @@ input, select, textarea { font: inherit; color: inherit; }
   background-size: 24px 24px;
 }
 .home-hero-title { white-space: nowrap; }
+.home-hero-desc { font-weight: 300; }
 .home-hero-art { position: relative; }
 @keyframes home-hero-art-float { 0%, 100% { transform: translate3d(0,0,0) rotate(-.25deg); } 50% { transform: translate3d(0,-12px,0) rotate(.35deg); } }
 
