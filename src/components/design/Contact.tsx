@@ -24,6 +24,7 @@ export default function Contact() {
   const revealRef = useScrollReveal()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -37,29 +38,30 @@ export default function Contact() {
     try {
       const trimmedName = name.trim()
       const trimmedEmail = email.trim()
+      const trimmedPhone = phone.trim()
       const trimmedMessage = message.trim()
 
-      if (!trimmedName || !trimmedEmail || !trimmedMessage) {
-        throw new Error('Please fill in your name, email, and message.')
+      if (!trimmedName || !trimmedEmail || !trimmedPhone || !trimmedMessage) {
+        throw new Error('Please fill in your name, email, phone number, and message.')
       }
 
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, message: trimmedMessage }),
+        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage }),
       })
       const payload = await response.json().catch(() => null)
 
       if (!response.ok) {
         let msg = 'We could not send your message. Please try again.'
         if (payload?.error?.details && Array.isArray(payload.error.details) && payload.error.details.length > 0) {
-          msg = payload.error.details.map((d: any) => d.issue || d.msg || `${d.field}: invalid`).join('. ')
+          msg = payload.error.details.map((d: { issue?: string; msg?: string; field?: string }) => d.issue || d.msg || `${d.field}: invalid`).join('. ')
         } else if (typeof payload?.error?.message === 'string') {
           msg = payload.error.message
         } else if (typeof payload?.detail === 'string') {
           msg = payload.detail
         } else if (Array.isArray(payload?.detail) && payload.detail.length > 0) {
-          msg = payload.detail.map((d: any) => d.msg || 'Invalid input').join('. ')
+          msg = payload.detail.map((d: { msg?: string }) => d.msg || 'Invalid input').join('. ')
         }
         throw new Error(msg)
       }
@@ -153,6 +155,11 @@ export default function Contact() {
               <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>EMAIL</label>
               <input style={{ ...inputStyle, borderColor: focused === 'email' ? 'var(--accent)' : 'var(--border)' }} required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
                 onFocus={() => setFocused('email')} onBlur={() => setFocused(null)} />
+            </div>
+            <div>
+              <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>PHONE NUMBER</label>
+              <input style={{ ...inputStyle, borderColor: focused === 'phone' ? 'var(--accent)' : 'var(--border)' }} required type="tel" inputMode="tel" autoComplete="tel" minLength={5} maxLength={50} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+94 77 123 4567"
+                onFocus={() => setFocused('phone')} onBlur={() => setFocused(null)} />
             </div>
             <div>
               <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>MESSAGE</label>
