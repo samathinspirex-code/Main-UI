@@ -260,7 +260,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     ))}
                   </div>
 
-                  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                  <div className="home-hero-actions" style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                     <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
                     <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
                   </div>
@@ -298,26 +298,30 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     }}
                   />
                   {/* Floating achievement badge */}
-                  <div style={{
-                    position: 'absolute', bottom: -24, left: -24, zIndex: 2,
-                    background: '#fff', borderRadius: 14,
-                    padding: '14px 18px',
-                    boxShadow: '0 12px 40px rgba(63,0,124,0.16)',
-                    border: '1px solid rgba(63,0,124,0.12)',
-                    animation: 'float 3.5s ease-in-out infinite',
-                  }}
+                  <div
+                    className="home-hero-badge-bottom"
+                    style={{
+                      position: 'absolute', bottom: -24, left: -24, zIndex: 2,
+                      background: '#fff', borderRadius: 14,
+                      padding: '14px 18px',
+                      boxShadow: '0 12px 40px rgba(63,0,124,0.16)',
+                      border: '1px solid rgba(63,0,124,0.12)',
+                      animation: 'float 3.5s ease-in-out infinite',
+                    }}
                   >
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
                   </div>
                   {/* Top right badge */}
-                  <div style={{
-                    position: 'absolute', top: -20, right: -20, zIndex: 2,
-                    background: 'var(--accent)', borderRadius: 12,
-                    padding: '10px 16px',
-                    boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
-                    animation: 'float 4.5s ease-in-out infinite 1s',
-                  }}
+                  <div
+                    className="home-hero-badge-top"
+                    style={{
+                      position: 'absolute', top: -20, right: -20, zIndex: 2,
+                      background: 'var(--accent)', borderRadius: 12,
+                      padding: '10px 16px',
+                      boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
+                      animation: 'float 4.5s ease-in-out infinite 1s',
+                    }}
                   >
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
                   </div>
@@ -547,7 +551,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.65)', marginBottom: 14, textTransform: 'uppercase' }}>Limited offer</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px,4vw,50px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.1 }}>
-                First 20 students receive a<br /><span style={{ color: '#c6b8f0' }}>LKR 200,000 scholarship</span>
+                First 20 students receive a<br className="cta-br" /><span style={{ color: '#c6b8f0' }}>LKR 200,000 scholarship</span>
               </h2>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.6 }}>
                 Registration fee starting from LKR 9,900.
