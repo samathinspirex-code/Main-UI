@@ -84,7 +84,7 @@ interface HeroSlide {
   secondaryBtn: { label: string; href: string }
   image: string
   imageAlt: string
-  badgeTop: { label: string }
+  badgeTop?: { label: string }
   badgeBottom: { eyebrow: string; value: string }
 }
 
@@ -128,8 +128,7 @@ const HERO_SLIDES: HeroSlide[] = [
     secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
     image: '/home-hero-about.png',
     imageAlt: 'Inspire College graduate celebrating success with family',
-    badgeTop: { label: 'SINCE 2020' },
-    badgeBottom: { eyebrow: 'Student Success', value: '98% Satisfaction' },
+    badgeBottom: { eyebrow: 'Student Success', value: '100% Satisfaction' },
   },
 ]
 
@@ -313,18 +312,20 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
                   </div>
                   {/* Top right badge */}
-                  <div
-                    className="home-hero-badge-top"
-                    style={{
-                      position: 'absolute', top: -20, right: -20, zIndex: 2,
-                      background: 'var(--accent)', borderRadius: 12,
-                      padding: '10px 16px',
-                      boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
-                      animation: 'float 4.5s ease-in-out infinite 1s',
-                    }}
-                  >
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
-                  </div>
+                  {slide.badgeTop && (
+                    <div
+                      className="home-hero-badge-top"
+                      style={{
+                        position: 'absolute', top: -20, right: -20, zIndex: 2,
+                        background: 'var(--accent)', borderRadius: 12,
+                        padding: '10px 16px',
+                        boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
+                        animation: 'float 4.5s ease-in-out infinite 1s',
+                      }}
+                    >
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
+                    </div>
+                  )}
                 </div>
               )
             })}
