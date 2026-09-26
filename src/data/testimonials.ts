@@ -22,20 +22,8 @@ export async function fetchTestimonials(): Promise<Testimonial[]> {
     const response = await fetch(`${base}/api/v1/public/testimonials`, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(`Testimonials API: ${response.status}`);
     const payload = await response.json();
-    if (!Array.isArray(payload.data) || !payload.data.length) return bundledTestimonials;
-
-    const apiItems = payload.data as Testimonial[];
-    const normalizedName = (name: string) => name.trim().toLowerCase();
-    const apiByName = new Map(apiItems.map((item) => [normalizedName(item.name), item]));
-    const bundledNames = new Set(bundledTestimonials.map((item) => normalizedName(item.name)));
-    const managed = bundledTestimonials.map((fallback) => {
-      const remote = apiByName.get(normalizedName(fallback.name));
-      return remote
-        ? { ...fallback, ...remote, thumbnail_url: fallback.thumbnail_url, position: fallback.position }
-        : fallback;
-    });
-    return [...managed, ...apiItems.filter((item) => !bundledNames.has(normalizedName(item.name)))]
-      .sort((a, b) => a.position - b.position);
+    if (!Array.isArray(payload.data)) throw new Error('Testimonials API returned an invalid payload');
+    return (payload.data as Testimonial[]).sort((a, b) => a.position - b.position);
   } catch (error) {
     console.error('Could not load testimonials', error);
     return bundledTestimonials;
