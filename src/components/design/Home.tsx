@@ -177,7 +177,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
   }, [currentSlide])
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+    <div className="home-page" style={{ minHeight: '100vh', background: 'var(--bg)' }}>
 
       {/* ══ HERO ══ */}
       <section
@@ -391,7 +391,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         {/* Program search */}
         <section className="sx" style={{ padding: '96px 0 72px' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <div className="reveal" style={{ marginBottom: 10 }}><Tag>Find your path</Tag></div>
+            <div className="reveal home-program-search-label" style={{ marginBottom: 10 }}><Tag>Find your path</Tag></div>
             <h2 className="reveal reveal-delay-1" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px,4vw,52px)', fontWeight: 700, margin: '0 0 44px', letterSpacing: '-0.02em', color: 'var(--ink)' }}>
               Choose your program
             </h2>
@@ -459,7 +459,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         {/* Featured programs */}
         <section className="sx" style={{ padding: '96px 0', background: 'rgba(63,0,124,0.04)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 52 }}>
+            <div className="home-featured-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 52 }}>
               <div>
                 <h2 className="reveal reveal-delay-1" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,3.5vw,48px)', fontWeight: 700, margin: 0, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
                   Popular programs
