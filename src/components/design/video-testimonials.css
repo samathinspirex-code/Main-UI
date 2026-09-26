@@ -1,6 +1,321 @@
-.student-stories{padding:64px 24px 48px;background:linear-gradient(150deg,#e8e0f8 0%,#f6f1ff 65%,#eee6f8 100%);border-block:1px solid var(--border);color:var(--ink)}
-.student-stories-inner{max-width:1200px;margin:auto}.student-stories-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}.student-stories-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--accent)}.student-stories-heading h2{font-family:var(--font-display);font-size:clamp(30px,3vw,42px);line-height:1.12;margin:9px 0}.student-stories-heading p{color:var(--ink-soft);margin:0;font-size:15px;line-height:1.55}
-.student-stories-controls{display:flex;gap:8px}.student-stories-controls button{border:1px solid #cab9df;border-radius:50%;width:42px;height:42px;display:grid;place-items:center;padding:0;background:#fff;color:var(--accent);cursor:pointer}.student-stories-controls button:disabled{opacity:.35;cursor:default}.student-stories-rail{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:3px 2px 16px}.student-stories-rail::-webkit-scrollbar{display:none}.student-story-card{flex:0 0 calc((100% - 40px)/3);min-width:0;scroll-snap-align:start;border:1px solid #e4dbee;border-radius:18px;overflow:hidden;background:white;box-shadow:0 10px 24px #32135b0a}.student-story-poster{display:block;border:0;padding:0;position:relative;isolation:isolate;width:100%;aspect-ratio:16/10;background:#27153f;cursor:pointer;overflow:hidden;text-align:left;color:white}.student-story-poster img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .4s}.student-story-poster:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#16072c38,transparent 42%,#180b3275);z-index:0;pointer-events:none}.student-story-poster:hover img{transform:scale(1.03)}.student-story-label,.student-story-watch,.student-story-play{position:absolute;z-index:1}.student-story-label{top:15px;left:17px;right:17px;font-size:9px;letter-spacing:.16em;font-weight:700;display:flex;justify-content:space-between}.student-story-play{left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:56px;display:grid;place-items:center;border:2px solid #fffe;border-radius:50%;background:#29113b7d;font-size:19px;padding-left:3px;box-shadow:0 4px 24px #0002}.student-story-watch{bottom:16px;left:18px;right:18px;display:flex;justify-content:space-between;font-size:12px;font-weight:600}.student-story-copy{padding:20px 22px 22px}.student-story-copy>span{font-size:10.5px;color:var(--accent);font-weight:700}.student-story-copy h3{font-family:var(--font-display);font-size:21px;margin:7px 0 11px}.student-story-copy p{border-top:1px solid #eee7f5;padding-top:12px;font-size:13px;line-height:1.55;color:var(--ink-soft);margin:0}.student-stories-foot{display:flex;justify-content:space-between;gap:15px;color:var(--ink-soft);font-size:11px;margin-top:5px}.student-story-dialog{border:0;background:transparent;padding:20px;max-width:min(1000px,96vw);width:100%;max-height:95dvh;color:white}.student-story-dialog::backdrop{background:#11091ce8}.student-story-player{background:#17101f;border:1px solid #ffffff20;border-radius:18px;overflow:hidden}.student-story-player header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;gap:20px}.student-story-player header span{color:#ccb0e8;font-size:12px}.student-story-player h3{margin:5px 0 0;font-size:20px}.student-story-player header button{background:#ffffff15;color:#fff;border:1px solid #ffffff30;border-radius:50%;width:40px;height:40px;cursor:pointer}.student-story-player video{display:block;width:100%;max-height:65dvh;background:black}.student-story-player>p{padding:0 24px;line-height:1.6;color:#ddd0e9}.student-story-player a{color:white}.student-stories button:focus-visible,.student-stories-rail:focus-visible{outline:3px solid #9d64da;outline-offset:4px}
-@media(max-width:900px){.student-story-card{flex-basis:calc((100% - 20px)/2)}}
-@media(max-width:650px){.student-stories{padding:52px 20px 38px}.student-stories-heading{align-items:start;gap:12px}.student-stories-controls{padding-top:20px}.student-stories-controls button{width:36px;height:36px;font-size:20px}.student-story-card{flex-basis:86%}.student-stories-rail{gap:16px}.student-story-copy{padding:18px}.student-stories-foot>span:first-child{max-width:220px}.student-story-dialog{padding:8px}.student-story-poster{aspect-ratio:4/3}}
-@media(prefers-reduced-motion:reduce){.student-story-poster img{transition:none}}
+.student-stories {
+  overflow: hidden;
+  padding: 82px 0 70px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #f4effd, #ece4fa);
+}
+
+.student-stories-inner {
+  width: min(1260px, 100%);
+  margin: auto;
+  padding: 0 42px;
+}
+
+.student-stories-heading {
+  max-width: 980px;
+  margin: 0 auto 26px;
+  text-align: center;
+}
+
+.student-stories-eyebrow {
+  display: block;
+  margin-bottom: 13px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .15em;
+}
+
+.student-stories-heading h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.4vw, 62px);
+  line-height: 1.03;
+  letter-spacing: -.04em;
+}
+
+.student-stories-heading p {
+  margin: 13px 0 0;
+  color: var(--ink-soft);
+  font-size: 17px;
+}
+
+.student-stories-stage {
+  position: relative;
+  height: 560px;
+  outline: none;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  perspective: 1400px;
+}
+
+.student-stories-stage:active { cursor: grabbing; }
+.student-stories-stage:focus-visible {
+  border-radius: 22px;
+  outline: 3px solid #9d64da;
+  outline-offset: 5px;
+}
+
+.student-story-card {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  z-index: 1;
+  width: min(560px, calc(100vw - 170px));
+  overflow: hidden;
+  border: 1px solid #ded3eb;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 20px 48px rgba(40, 17, 71, .14);
+  opacity: 0;
+  filter: blur(3px);
+  pointer-events: none;
+  transform: translate3d(-50%, 22px, -180px) scale(.78);
+  transition:
+    transform 1.05s cubic-bezier(.22, .74, .18, 1),
+    opacity .72s ease,
+    filter .72s ease,
+    box-shadow .72s ease;
+  will-change: transform, opacity, filter;
+}
+
+.student-story-card.is-before,
+.student-story-card.is-after {
+  z-index: 3;
+  opacity: .43;
+  filter: blur(2px);
+  pointer-events: auto;
+}
+
+.student-story-card.is-before {
+  transform: translate3d(-94%, 42px, -100px) scale(.84) rotateY(3deg);
+}
+
+.student-story-card.is-after {
+  transform: translate3d(-6%, 42px, -100px) scale(.84) rotateY(-3deg);
+}
+
+.student-story-card.is-active {
+  z-index: 10;
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;
+  transform: translate3d(-50%, 0, 0) scale(1);
+  box-shadow: 0 30px 68px rgba(40, 17, 71, .24);
+}
+
+.student-story-card.is-hidden { pointer-events: none; }
+
+.student-story-poster {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  aspect-ratio: 16 / 10;
+  background: #27153f;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.student-story-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .55s ease;
+}
+
+.student-story-poster::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22, 7, 44, .2), transparent 42%, rgba(24, 11, 50, .55));
+  content: '';
+  pointer-events: none;
+}
+
+.student-story-card.is-active .student-story-poster:hover img { transform: scale(1.025); }
+
+.student-story-label,
+.student-story-watch,
+.student-story-play {
+  position: absolute;
+  z-index: 1;
+}
+
+.student-story-label {
+  top: 17px;
+  right: 19px;
+  left: 19px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .16em;
+}
+
+.student-story-play {
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 66px;
+  height: 66px;
+  padding-left: 4px;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, .94);
+  border-radius: 50%;
+  background: rgba(41, 17, 59, .46);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
+  font-size: 20px;
+  transform: translate(-50%, -50%);
+}
+
+.student-story-watch {
+  right: 20px;
+  bottom: 18px;
+  left: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.student-story-copy {
+  min-height: 148px;
+  padding: 19px 23px 21px;
+  text-align: center;
+}
+
+.student-story-copy > span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.student-story-copy h3 {
+  margin: 7px 0 12px;
+  font-family: var(--font-display);
+  font-size: 25px;
+  letter-spacing: -.02em;
+}
+
+.student-story-copy p {
+  margin: 0;
+  padding-top: 13px;
+  border-top: 1px solid #eee7f5;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.student-stories-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.student-stories-controls button {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #bda7d8;
+  border-radius: 50%;
+  background: white;
+  color: var(--accent);
+  cursor: pointer;
+  transition: transform .25s ease, background .25s ease, color .25s ease;
+}
+
+.student-stories-controls button:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.student-stories-controls span {
+  min-width: 68px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  letter-spacing: .09em;
+  text-align: center;
+}
+
+.student-stories-hint {
+  margin: 15px 0 0;
+  color: var(--ink-muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+.student-story-dialog {
+  width: 100%;
+  max-width: min(1000px, 96vw);
+  max-height: 95dvh;
+  padding: 20px;
+  border: 0;
+  background: transparent;
+  color: white;
+}
+
+.student-story-dialog::backdrop { background: rgba(17, 9, 28, .91); }
+.student-story-player { overflow: hidden; border: 1px solid rgba(255, 255, 255, .13); border-radius: 18px; background: #17101f; }
+.student-story-player header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 24px; }
+.student-story-player header span { color: #ccb0e8; font-size: 12px; }
+.student-story-player h3 { margin: 5px 0 0; font-size: 20px; }
+.student-story-player header button { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, .19); border-radius: 50%; background: rgba(255, 255, 255, .08); color: white; cursor: pointer; }
+.student-story-player video { display: block; width: 100%; max-height: 65dvh; background: black; }
+.student-story-player > p { padding: 0 24px; color: #ddd0e9; line-height: 1.6; }
+.student-story-player a { color: white; }
+
+@media (max-width: 800px) {
+  .student-stories { padding: 62px 0 54px; }
+  .student-stories-inner { padding: 0 20px; }
+  .student-stories-heading { margin-bottom: 20px; }
+  .student-stories-heading h2 { font-size: clamp(34px, 10vw, 48px); }
+  .student-stories-heading p { font-size: 15px; }
+  .student-stories-stage { height: 480px; }
+  .student-story-card {
+    top: 28px;
+    width: min(390px, calc(100vw - 58px));
+    border-radius: 18px;
+  }
+  .student-story-card.is-before { transform: translate3d(-82%, 35px, -100px) scale(.82); }
+  .student-story-card.is-after { transform: translate3d(-18%, 35px, -100px) scale(.82); }
+  .student-story-copy { min-height: 145px; }
+}
+
+@media (max-width: 520px) {
+  .student-stories-inner { padding: 0 14px; }
+  .student-stories-stage { height: 425px; }
+  .student-story-card {
+    top: 24px;
+    width: min(350px, calc(100vw - 46px));
+    border-radius: 16px;
+  }
+  .student-story-card.is-before { transform: translate3d(-77%, 28px, -100px) scale(.8); }
+  .student-story-card.is-after { transform: translate3d(-23%, 28px, -100px) scale(.8); }
+  .student-story-play { width: 54px; height: 54px; font-size: 17px; }
+  .student-story-copy { min-height: 132px; padding: 15px 17px 16px; }
+  .student-story-copy h3 { margin-bottom: 8px; font-size: 21px; }
+  .student-story-copy p { padding-top: 9px; font-size: 12px; }
+  .student-story-label { top: 13px; right: 14px; left: 14px; }
+  .student-story-watch { right: 15px; bottom: 13px; left: 15px; }
+  .student-stories-controls button { width: 46px; height: 46px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .student-story-card,
+  .student-story-poster img,
+  .student-stories-controls button { transition: none; }
+}

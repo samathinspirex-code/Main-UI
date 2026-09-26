@@ -139,7 +139,7 @@ export default function Contact() {
 
           {/* Form */}
           <form
-            className="reveal reveal-delay-2"
+            className="reveal reveal-delay-2 contact-form-card"
             onSubmit={submitContactForm}
             style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 32, display: 'flex', flexDirection: 'column', gap: 20 }}
           >

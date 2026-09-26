@@ -28,6 +28,22 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    if (open) {
+      document.body.style.overflow = 'hidden'
+      window.addEventListener('keydown', onKeyDown)
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
   return (
     <>
       <nav
@@ -76,50 +92,115 @@ export function Navbar() {
           <span className="desktop-apply"><Button variant="primary" size="sm" href="/admissions">Apply Now</Button></span>
           <button
             onClick={() => setOpen((v) => !v)}
-            style={{ color: 'var(--ink)', padding: 4 }}
-            aria-label="Menu"
+            style={{ color: 'var(--ink)', padding: '8px', minWidth: 44, minHeight: 44, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
             className="hamburger"
           >
-            <Icon kind={open ? 'x' : 'menu'} size={22} />
+            <Icon kind={open ? 'x' : 'menu'} size={24} />
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile backdrop */}
       {open && (
         <div
-          style={{
-            position: 'fixed',
-            top: 68,
-            left: 0,
-            right: 0,
-            zIndex: 99,
-            background: 'rgba(240,235,251,0.97)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid var(--border)',
-            padding: '24px 32px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 20,
-            boxShadow: '0 8px 32px rgba(63,0,124,0.10)',
-          }}
-        >
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              style={{ fontFamily: 'var(--font-body)', fontSize: 18, color: 'var(--ink)', fontWeight: 500 }}
-            >
-              {n.label}
-            </Link>
-          ))}
-          <Button variant="primary" href="/admissions">Apply Now</Button>
+          onClick={() => setOpen(false)}
+          className="mobile-nav-backdrop"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile menu */}
+      {open && (
+        <div className="mobile-nav-menu">
+          {NAV.map((n) => {
+            const active = pathname === n.href || (n.href !== '/' && pathname.startsWith(n.href))
+            return (
+              <Link
+                key={n.href}
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className={`mobile-nav-item ${active ? 'active' : ''}`}
+              >
+                <span>{n.label}</span>
+                {active && <span className="mobile-nav-dot" />}
+              </Link>
+            )
+          })}
+          <div style={{ paddingTop: 8 }}>
+            <Button variant="primary" fullWidth href="/admissions" onClick={() => setOpen(false)}>Apply Now</Button>
+          </div>
         </div>
       )}
 
       <style>{`
         .hamburger { display: none; }
+        .mobile-nav-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 98;
+          background: rgba(26, 8, 64, 0.4);
+          backdrop-filter: blur(2px);
+          -webkit-backdrop-filter: blur(2px);
+          animation: fade-in 0.2s ease;
+        }
+        .mobile-nav-menu {
+          position: fixed;
+          top: 68px;
+          left: 0;
+          right: 0;
+          z-index: 99;
+          background: rgba(240, 235, 251, 0.98);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border-bottom: 1px solid var(--border);
+          padding: 20px 24px 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          max-height: calc(100vh - 68px);
+          overflow-y: auto;
+          box-shadow: 0 16px 40px rgba(63, 0, 124, 0.14);
+          animation: nav-slide-down 0.22s ease-out;
+        }
+        .mobile-nav-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 14px;
+          border-radius: 8px;
+          font-family: var(--font-body);
+          font-size: 17px;
+          font-weight: 550;
+          color: var(--ink);
+          text-decoration: none;
+          transition: background 0.15s, color 0.15s;
+          min-height: 44px;
+        }
+        .mobile-nav-item:active, .mobile-nav-item:hover {
+          background: var(--accent-dim);
+          color: var(--accent);
+        }
+        .mobile-nav-item.active {
+          color: var(--accent);
+          background: var(--accent-dim);
+          font-weight: 650;
+        }
+        .mobile-nav-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--accent);
+        }
+        @keyframes nav-slide-down {
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
         @media (max-width: 900px) {
           .hamburger { display: flex !important; }
           nav > div:nth-child(2) { display: none !important; }
@@ -127,8 +208,13 @@ export function Navbar() {
         }
         @media (max-width: 520px) {
           nav { height: 62px !important; padding: 0 16px !important; }
-          nav img { height: 29px !important; max-width: 170px; }
+          nav img { height: 28px !important; max-width: 160px; }
           .desktop-apply { display: none !important; }
+          .mobile-nav-menu {
+            top: 62px !important;
+            max-height: calc(100vh - 62px) !important;
+            padding: 16px 16px 24px !important;
+          }
         }
       `}</style>
     </>
