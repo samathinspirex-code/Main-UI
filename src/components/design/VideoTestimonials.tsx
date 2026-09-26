@@ -52,7 +52,6 @@ export default function VideoTestimonials({ items }: { items: Testimonial[] }) {
   };
   const beginDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     dragStart.current = event.clientX;
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
   const finishDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (dragStart.current === null) return;
