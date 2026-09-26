@@ -246,8 +246,8 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
                   aria-label="Previous programs"
                   onClick={() => changePage(Math.max(1, cur - 1))}
                   disabled={cur === 1}
-                  style={{ width: 42, height: 42, borderRadius: 8, border: '1px solid var(--border)', background: cur === 1 ? 'var(--surface)' : 'var(--accent)', color: cur === 1 ? 'var(--ink-muted)' : '#FFFFFF', cursor: cur === 1 ? 'not-allowed' : 'pointer', fontSize: 24, lineHeight: 1 }}
-                >‹</button>
+                  style={{ width: 42, height: 42, display: 'grid', placeItems: 'center', padding: 0, borderRadius: 8, border: '1px solid var(--border)', background: cur === 1 ? 'var(--surface)' : 'var(--accent)', color: cur === 1 ? 'var(--ink-muted)' : '#FFFFFF', cursor: cur === 1 ? 'not-allowed' : 'pointer' }}
+                ><Icon kind="arrow_left" size={18} /></button>
                 <span style={{ minWidth: 88, textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-soft)', letterSpacing: '0.06em' }}>
                   {cur} / {pageCount}
                 </span>
@@ -256,8 +256,8 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
                   aria-label="Next programs"
                   onClick={() => changePage(Math.min(pageCount, cur + 1))}
                   disabled={cur === pageCount}
-                  style={{ width: 42, height: 42, borderRadius: 8, border: '1px solid var(--border)', background: cur === pageCount ? 'var(--surface)' : 'var(--accent)', color: cur === pageCount ? 'var(--ink-muted)' : '#FFFFFF', cursor: cur === pageCount ? 'not-allowed' : 'pointer', fontSize: 24, lineHeight: 1 }}
-                >›</button>
+                  style={{ width: 42, height: 42, display: 'grid', placeItems: 'center', padding: 0, borderRadius: 8, border: '1px solid var(--border)', background: cur === pageCount ? 'var(--surface)' : 'var(--accent)', color: cur === pageCount ? 'var(--ink-muted)' : '#FFFFFF', cursor: cur === pageCount ? 'not-allowed' : 'pointer' }}
+                ><Icon kind="arrow_right" size={18} /></button>
               </nav>
             )}
           </div>

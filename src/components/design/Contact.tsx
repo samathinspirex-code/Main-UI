@@ -34,18 +34,34 @@ export default function Contact() {
     event.preventDefault()
     setBusy(true)
     setError('')
-
     try {
+      const trimmedName = name.trim()
+      const trimmedEmail = email.trim()
+      const trimmedMessage = message.trim()
+
+      if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+        throw new Error('Please fill in your name, email, and message.')
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: name, email, message }),
+        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, message: trimmedMessage }),
       })
       const payload = await response.json().catch(() => null)
 
       if (!response.ok) {
-        const detail = payload?.error?.message || payload?.detail
-        throw new Error(typeof detail === 'string' ? detail : 'We could not send your message. Please try again.')
+        let msg = 'We could not send your message. Please try again.'
+        if (payload?.error?.details && Array.isArray(payload.error.details) && payload.error.details.length > 0) {
+          msg = payload.error.details.map((d: any) => d.issue || d.msg || `${d.field}: invalid`).join('. ')
+        } else if (typeof payload?.error?.message === 'string') {
+          msg = payload.error.message
+        } else if (typeof payload?.detail === 'string') {
+          msg = payload.detail
+        } else if (Array.isArray(payload?.detail) && payload.detail.length > 0) {
+          msg = payload.detail.map((d: any) => d.msg || 'Invalid input').join('. ')
+        }
+        throw new Error(msg)
       }
 
       setSent(true)
@@ -95,7 +111,7 @@ export default function Contact() {
             {[
               { icon: 'pin', label: 'Visit us', value: 'Level 01, Shangri la, Colombo 2', href: undefined },
               { icon: 'chat', label: 'Call or WhatsApp', value: '+94 71 199 3331', href: 'tel:+94711993331' },
-              { icon: 'mail', label: 'Email', value: 'info@inspirecollege.lk', href: 'mailto:info@inspirecollege.lk' },
+              { icon: 'mail', label: 'Email', value: 'enrol@inspire.college', href: 'mailto:enrol@inspire.college' },
             ].map((c) => (
               <div key={c.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 20, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                 <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--accent-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

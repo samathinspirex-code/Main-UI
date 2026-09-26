@@ -12,9 +12,11 @@
   --border: rgba(63, 0, 124, 0.12);
   --border-accent: rgba(63, 0, 124, 0.32);
   --radius: 6px;
-  --font-display: var(--font-playfair), Georgia, serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jbmono), monospace;
+  --font-display: var(--font-nohemi), Arial, sans-serif;
+  --font-body: var(--font-nohemi), Arial, sans-serif;
+  --font-mono: var(--font-nohemi), Arial, sans-serif;
+  /* Licensed MD Nichrome webfonts can replace the first family in this slot. */
+  --font-banner: var(--font-nohemi), Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -30,6 +32,15 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+/* Display slot for hero and campaign banners. It currently falls back to
+   Nohemi until licensed MD Nichrome webfont files are supplied. */
+[class*="hero"] h1,
+[class*="hero"] h2,
+[class*="banner"] h1,
+[class*="banner"] h2 {
+  font-family: var(--font-banner);
 }
 
 img { max-width: 100%; }
@@ -51,6 +62,11 @@ img { max-width: 100%; }
   justify-content: space-between;
   gap: 24px;
 }
+.footer-socials { display: flex; gap: 10px; margin-top: 22px; }
+.footer-socials a { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; color: #fff; background: rgba(255,255,255,.08); transition: transform .25s ease, background-color .25s ease, border-color .25s ease; }
+.footer-socials a:hover { transform: translateY(-3px); border-color: #fff; background: #5d1596; }
+.footer-socials svg { width: 19px; height: 19px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.footer-socials .social-fill { fill: currentColor; stroke: none; }
 
 @media (max-width: 900px) {
   .site-footer-grid {
@@ -697,6 +713,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* Homepage partner marquee */
 .home-partners {
+  scroll-margin-top: 76px;
   overflow: hidden;
   padding: 64px 0 58px;
   background:

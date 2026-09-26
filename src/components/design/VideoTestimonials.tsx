@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { Testimonial } from '../../data/testimonials';
+import { Icon } from '../ui/Icon';
 import './video-testimonials.css';
 
 export default function VideoTestimonials({ items }: { items: Testimonial[] }) {
@@ -39,7 +40,7 @@ export default function VideoTestimonials({ items }: { items: Testimonial[] }) {
     <div className="student-stories-inner">
       <header className="student-stories-heading">
         <div><span className="student-stories-eyebrow">THE INSPIRE EXPERIENCE</span><h2 id="student-stories-heading">Real students. Their stories.</h2><p>A closer look at learning with Inspire, from the people living it.</p></div>
-        {items.length > 1 && <div className="student-stories-controls"><button type="button" onClick={() => move(-1)} disabled={index === 0} aria-label="Previous testimonials">←</button><button type="button" onClick={() => move(1)} disabled={index >= items.length - 1} aria-label="Next testimonials">→</button></div>}
+        {items.length > 1 && <div className="student-stories-controls"><button type="button" onClick={() => move(-1)} disabled={index === 0} aria-label="Previous testimonials"><Icon kind="arrow_left" size={18} /></button><button type="button" onClick={() => move(1)} disabled={index >= items.length - 1} aria-label="Next testimonials"><Icon kind="arrow_right" size={18} /></button></div>}
       </header>
       <div className="student-stories-rail" ref={rail} role="region" aria-label="Student testimonial carousel" tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1); } }} onScroll={() => {
         const element = rail.current;

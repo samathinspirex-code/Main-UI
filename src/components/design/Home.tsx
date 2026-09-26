@@ -11,7 +11,6 @@ import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
-const HERO_IMG = '/home-hero-cutout-v2.png'
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
 const canonicalBody = (value: string) => {
   const normalized = value.trim().toLowerCase()
@@ -134,6 +133,9 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ]
 
+const HERO_SLIDE_INTERVAL_MS = 7000
+const HERO_SLIDE_TRANSITION = 'opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)'
+
 export default function Home({ programs, news, testimonials = [] }: { programs: Program[]; news: NewsItem[]; testimonials?: Testimonial[] }) {
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
@@ -153,7 +155,6 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
 
   const [heroVisible, setHeroVisible] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
   const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
@@ -167,19 +168,14 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Auto-advance hero carousel every 5 seconds
+  // Keep one steady seven-second loop. Manual selection starts a fresh full
+  // interval so a chosen slide is never replaced immediately afterwards.
   useEffect(() => {
-    if (isHovered) return
-    const timer = setInterval(() => {
+    const timer = window.setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [isHovered])
-
-  const tv = (delay: number, extra?: string) =>
-    `opacity 0.75s ease ${delay}ms, transform 0.75s ease ${delay}ms${extra ? `, ${extra}` : ''}`
-
-  const slide = HERO_SLIDES[currentSlide]
+    }, HERO_SLIDE_INTERVAL_MS)
+    return () => window.clearTimeout(timer)
+  }, [currentSlide])
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
@@ -187,8 +183,6 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       {/* ══ HERO ══ */}
       <section
         ref={heroRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 68 }}
       >
         {/* Orb container — overflow hidden lives here, not on the section, so text is never clipped */}
@@ -204,114 +198,132 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         {/* Content */}
         <div className="sx home-hero-grid" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 48, padding: '80px 0' }}>
 
-          {/* Left: text */}
-          <div key={`slide-text-${currentSlide}`} style={{ animation: 'fade-in-up 0.5s ease' }}>
-            <div style={{
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(-14px)',
-              transition: tv(0),
-              marginBottom: 20, display: 'inline-block',
-            }}>
-              <Tag accent style={{ animation: heroVisible ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
-                {slide.tag}
-              </Tag>
-            </div>
+          {/* Left: text stack for continuous smooth looping */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+            {HERO_SLIDES.map((slide, idx) => {
+              const active = idx === currentSlide
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    gridArea: '1 / 1',
+                    opacity: heroVisible && active ? 1 : 0,
+                    transform: heroVisible && active ? 'none' : 'translateY(18px)',
+                    pointerEvents: active ? 'auto' : 'none',
+                    transition: HERO_SLIDE_TRANSITION,
+                  }}
+                >
+                  <div style={{ marginBottom: 20, display: 'inline-block' }}>
+                    <Tag accent style={{ animation: heroVisible && active ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
+                      {slide.tag}
+                    </Tag>
+                  </div>
 
-            <h1 className="home-hero-title" style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(36px, 3.3vw, 48px)',
-              fontWeight: 600, lineHeight: 1.08,
-              letterSpacing: '-0.025em',
-              margin: '0 0 18px',
-              color: 'var(--ink)',
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(36px)',
-              transition: tv(150),
-            }}>
-              {slide.title}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
-            </h1>
-            <h2 style={{
-              fontFamily: 'var(--font-poppins)',
-              fontSize: 'clamp(16px, 1.55vw, 21px)',
-              fontWeight: 600, lineHeight: 1.35,
-              letterSpacing: '-0.01em',
-              color: 'var(--ink-soft)',
-              margin: '0 0 22px',
-              whiteSpace: 'normal',
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(36px)',
-              transition: tv(280),
-            }}>
-              {slide.subtitle}
-            </h2>
+                  <h1 className="home-hero-title" style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(36px, 3.3vw, 48px)',
+                    fontWeight: 600, lineHeight: 1.08,
+                    letterSpacing: '-0.025em',
+                    margin: '0 0 18px',
+                    color: 'var(--ink)',
+                  }}>
+                    {slide.title}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
+                  </h1>
 
-            <p style={{
-              fontFamily: 'var(--font-body)', fontSize: 17,
-              color: 'var(--ink-soft)', maxWidth: 460, lineHeight: 1.7,
-              marginBottom: 22,
-              opacity: heroVisible ? 1 : 0,
-              transition: tv(520),
-            }}>
-              {slide.description}
-            </p>
+                  <h2 style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'clamp(16px, 1.55vw, 21px)',
+                    fontWeight: 600, lineHeight: 1.35,
+                    letterSpacing: '-0.01em',
+                    color: 'var(--ink-soft)',
+                    margin: '0 0 22px',
+                    whiteSpace: 'normal',
+                  }}>
+                    {slide.subtitle}
+                  </h2>
 
-            {/* Study benefits */}
-            <div style={{ marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center', opacity: heroVisible ? 1 : 0, transition: tv(640), flexWrap: 'wrap' }}>
-              {slide.benefits.map((b) => (
-                <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-                  {b}
+                  <p style={{
+                    fontFamily: 'var(--font-body)', fontSize: 17,
+                    color: 'var(--ink-soft)', maxWidth: 460, lineHeight: 1.7,
+                    marginBottom: 22,
+                  }}>
+                    {slide.description}
+                  </p>
+
+                  {/* Study benefits */}
+                  <div style={{ marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                    {slide.benefits.map((b) => (
+                      <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+                        {b}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                    <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
+                    <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: tv(760) }}>
-              <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
-              <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
-            </div>
+              )
+            })}
           </div>
 
-          {/* Right: hero image card */}
-          <div className="home-hero-art" key={`slide-art-${currentSlide}`} style={{
-            position: 'relative',
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? 'none' : 'translateX(48px)',
-            transition: tv(300),
-            animation: 'fade-in-up 0.6s ease',
-          }}>
-            <img
-              src={slide.image}
-              alt={slide.imageAlt}
-              style={{
-                position: 'relative', zIndex: 1,
-                width: '100%',
-                objectFit: 'contain', display: 'block',
-                filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
-                animation: 'home-hero-art-float 6s ease-in-out infinite',
-              }}
-            />
-            {/* Floating achievement badge */}
-            <div style={{
-              position: 'absolute', bottom: -24, left: -24, zIndex: 2,
-              background: '#fff', borderRadius: 14,
-              padding: '14px 18px',
-              boxShadow: '0 12px 40px rgba(63,0,124,0.16)',
-              border: '1px solid rgba(63,0,124,0.12)',
-              animation: 'float 3.5s ease-in-out infinite',
-            }}>
-              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
-              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
-            </div>
-            {/* Top right badge */}
-            <div style={{
-              position: 'absolute', top: -20, right: -20, zIndex: 2,
-              background: 'var(--accent)', borderRadius: 12,
-              padding: '10px 16px',
-              boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
-              animation: 'float 4.5s ease-in-out infinite 1s',
-            }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
-            </div>
+          {/* Right: hero image stack for continuous smooth looping */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', position: 'relative' }}>
+            {HERO_SLIDES.map((slide, idx) => {
+              const active = idx === currentSlide
+              return (
+                <div
+                  key={idx}
+                  className="home-hero-art"
+                  style={{
+                    gridArea: '1 / 1',
+                    position: 'relative',
+                    opacity: heroVisible && active ? 1 : 0,
+                    transform: heroVisible && active ? 'none' : 'translateX(28px) scale(0.96)',
+                    pointerEvents: active ? 'auto' : 'none',
+                    transition: HERO_SLIDE_TRANSITION,
+                  }}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.imageAlt}
+                    style={{
+                      position: 'relative', zIndex: 1,
+                      width: '100%',
+                      objectFit: 'contain', display: 'block',
+                      filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
+                      animation: 'home-hero-art-float 6s ease-in-out infinite',
+                    }}
+                  />
+                  {/* Floating achievement badge */}
+                  <div style={{
+                    position: 'absolute', bottom: -24, left: -24, zIndex: 2,
+                    background: '#fff', borderRadius: 14,
+                    padding: '14px 18px',
+                    boxShadow: '0 12px 40px rgba(63,0,124,0.16)',
+                    border: '1px solid rgba(63,0,124,0.12)',
+                    animation: 'float 3.5s ease-in-out infinite',
+                  }}
+                  >
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
+                  </div>
+                  {/* Top right badge */}
+                  <div style={{
+                    position: 'absolute', top: -20, right: -20, zIndex: 2,
+                    background: 'var(--accent)', borderRadius: 12,
+                    padding: '10px 16px',
+                    boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
+                    animation: 'float 4.5s ease-in-out infinite 1s',
+                  }}
+                  >
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 
@@ -337,7 +349,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   borderRadius: 999,
                   background: active ? 'var(--accent, #3F007C)' : 'rgba(63,0,124,0.28)',
                   boxShadow: active ? '0 3px 12px rgba(63,0,124,0.42)' : 'none',
-                  transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: 'width 0.6s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.6s ease, box-shadow 0.6s ease',
                   outline: 'none',
                 }}
               />
@@ -350,7 +362,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       <div ref={revealRef}>
 
         {/* Partner marquee */}
-        <section className="home-partners" aria-labelledby="home-partners-title">
+        <section id="partners" className="home-partners" aria-labelledby="home-partners-title">
           <div className="home-partners-heading sx reveal">
             <h2 id="home-partners-title">Our partners</h2>
             <p>Recognised awarding bodies and education partners supporting globally relevant learning.</p>

@@ -1,30 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Playfair_Display, Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
+const nohemi = localFont({
+  src: "./fonts/Nohemi-Variable.ttf",
+  variable: "--font-nohemi",
+  weight: "100 900",
+  style: "normal",
   display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-poppins",
-  display: "swap",
-});
-
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jbmono",
-  display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -37,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${poppins.variable} ${jetBrainsMono.variable}`}>
+    <html lang="en" className={nohemi.variable}>
       <body>{children}</body>
     </html>
   );

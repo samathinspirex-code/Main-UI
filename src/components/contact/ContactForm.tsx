@@ -1,8 +1,6 @@
 "use client";
 
-// Simple dummy contact form: no backend/CMS wired up yet, so submitting
-// just shows a confirmation state client-side instead of making a request.
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { SK } from "@/components/sketch/tokens";
 import { Heading, SkBtn, SkIcon } from "@/components/sketch/primitives";
 
@@ -22,6 +20,50 @@ export function ContactForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function submitContactForm(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const trimmedName = name.trim();
+      const trimmedEmail = email.trim();
+      const trimmedMessage = message.trim();
+
+      if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+        throw new Error("Please fill in your name, email, and message.");
+      }
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, message: trimmedMessage }),
+      });
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        let msg = "We could not send your message. Please try again.";
+        if (payload?.error?.details && Array.isArray(payload.error.details) && payload.error.details.length > 0) {
+          msg = payload.error.details.map((d: any) => d.issue || d.msg || `${d.field}: invalid`).join(". ");
+        } else if (typeof payload?.error?.message === "string") {
+          msg = payload.error.message;
+        } else if (typeof payload?.detail === "string") {
+          msg = payload.detail;
+        } else if (Array.isArray(payload?.detail) && payload.detail.length > 0) {
+          msg = payload.detail.map((d: any) => d.msg || "Invalid input").join(". ");
+        }
+        throw new Error(msg);
+      }
+
+      setSent(true);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "We could not send your message. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   if (sent) {
     return (
@@ -37,10 +79,7 @@ export function ContactForm() {
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSent(true);
-      }}
+      onSubmit={submitContactForm}
       style={{ border: `1.5px solid ${SK.ink}`, borderRadius: 4, padding: 28, background: "#fff", display: "flex", flexDirection: "column", gap: 16 }}
     >
       <Heading size={24}>Send us a message</Heading>
@@ -62,7 +101,12 @@ export function ContactForm() {
           placeholder="How can we help?"
         />
       </div>
-      <SkBtn primary arrow type="submit">Send message</SkBtn>
+      {error && (
+        <div role="alert" style={{ fontFamily: "var(--sk-hand)", fontSize: 13, color: "#a11b1b", background: "#fff3f3", border: "1px solid #efcaca", borderRadius: 4, padding: "10px 12px" }}>
+          {error}
+        </div>
+      )}
+      <SkBtn primary arrow type="submit" disabled={busy}>{busy ? "Sending…" : "Send message"}</SkBtn>
     </form>
   );
 }
