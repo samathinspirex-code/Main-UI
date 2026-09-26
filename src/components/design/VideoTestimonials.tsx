@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { Testimonial } from '../../data/testimonials';
@@ -105,7 +106,9 @@ export default function VideoTestimonials({ items }: { items: Testimonial[] }) {
                 setSelected(item);
               }}
             >
-              <img src={item.thumbnail_url} alt="" draggable={false} />
+              {item.thumbnail_url.startsWith('/')
+                ? <Image src={item.thumbnail_url} alt="" draggable={false} fill sizes="(max-width: 730px) calc(100vw - 170px), 560px" />
+                : <img src={item.thumbnail_url} alt="" draggable={false} loading="lazy" decoding="async" />}
               <span className="student-story-label">STUDENT STORY <span>↗</span></span>
               <span className="student-story-play" aria-hidden="true">▶</span>
               <span className="student-story-watch">Watch the story <span>↗</span></span>

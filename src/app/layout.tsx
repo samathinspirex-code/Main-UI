@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SiteAssistant } from "@/components/layout/SiteAssistant";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 
 const nohemi = localFont({
   src: "./fonts/Nohemi-Variable.ttf",
@@ -22,7 +24,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={nohemi.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <WhatsAppButton />
+        <SiteAssistant />
+      </body>
     </html>
   );
 }

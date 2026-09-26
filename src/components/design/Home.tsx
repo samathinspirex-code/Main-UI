@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import VideoTestimonials from './VideoTestimonials'
 import type { Testimonial } from '../../data/testimonials'
@@ -152,20 +153,9 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
   const schoolPrograms = useMemo(() => bodyPrograms.filter((program) => !selectedSchool || (program.schoolName ?? program.school) === selectedSchool), [bodyPrograms, selectedSchool])
   const programmeOptions = useMemo(() => [...new Set(schoolPrograms.map((program) => program.programmeName ?? program.level))].sort(), [schoolPrograms])
 
-  const [heroVisible, setHeroVisible] = useState(false)
+  // The first slide is visible in the server HTML (its entrance is a CSS animation),
+  // so the hero paints without waiting for JavaScript.
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const t = setTimeout(() => setHeroVisible(true), 80)
-    return () => clearTimeout(t)
-  }, [])
-
-  useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   // Keep one steady seven-second loop. Manual selection starts a fresh full
   // interval so a chosen slide is never replaced immediately afterwards.
@@ -186,8 +176,8 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       >
         {/* Orb container — overflow hidden lives here, not on the section, so text is never clipped */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-          <Orb style={{ width: 600, height: 600, background: 'rgba(198,184,240,0.55)', top: -120, left: -100, animation: 'orb-drift-a 14s ease-in-out infinite', transform: `translateY(${scrollY * 0.12}px)` }} />
-          <Orb style={{ width: 400, height: 400, background: 'rgba(123,62,200,0.20)', bottom: 0, right: '10%', animation: 'orb-drift-b 18s ease-in-out infinite', transform: `translateY(${scrollY * -0.08}px)` }} />
+          <Orb style={{ width: 600, height: 600, background: 'rgba(198,184,240,0.55)', top: -120, left: -100, animation: 'orb-drift-a 14s ease-in-out infinite' }} />
+          <Orb style={{ width: 400, height: 400, background: 'rgba(123,62,200,0.20)', bottom: 0, right: '10%', animation: 'orb-drift-b 18s ease-in-out infinite' }} />
           <Orb style={{ width: 250, height: 250, background: 'rgba(63,0,124,0.12)', top: '30%', right: '30%', animation: 'orb-drift-a 22s ease-in-out infinite reverse' }} />
         </div>
 
@@ -195,7 +185,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         <DotGrid />
 
         {/* Content */}
-        <div className="sx home-hero-grid" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 48, padding: '80px 0' }}>
+        <div className="sx home-hero-grid home-hero-enter" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 48, padding: '80px 0' }}>
 
           {/* Left: text stack for continuous smooth looping */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
@@ -206,14 +196,14 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   key={idx}
                   style={{
                     gridArea: '1 / 1',
-                    opacity: heroVisible && active ? 1 : 0,
-                    transform: heroVisible && active ? 'none' : 'translateY(18px)',
+                    opacity: active ? 1 : 0,
+                    transform: active ? 'none' : 'translateY(18px)',
                     pointerEvents: active ? 'auto' : 'none',
                     transition: HERO_SLIDE_TRANSITION,
                   }}
                 >
                   <div style={{ marginBottom: 20, display: 'inline-block' }}>
-                    <Tag accent style={{ animation: heroVisible && active ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
+                    <Tag accent style={{ animation: active ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
                       {slide.tag}
                     </Tag>
                   </div>
@@ -280,18 +270,24 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   style={{
                     gridArea: '1 / 1',
                     position: 'relative',
-                    opacity: heroVisible && active ? 1 : 0,
-                    transform: heroVisible && active ? 'none' : 'translateX(28px) scale(0.96)',
+                    opacity: active ? 1 : 0,
+                    transform: active ? 'none' : 'translateX(28px) scale(0.96)',
                     pointerEvents: active ? 'auto' : 'none',
                     transition: HERO_SLIDE_TRANSITION,
                   }}
                 >
-                  <img
+                  <Image
                     src={slide.image}
                     alt={slide.imageAlt}
+                    width={2048}
+                    height={2048}
+                    sizes="(max-width: 900px) 92vw, 600px"
+                    preload={idx === 0}
+                    fetchPriority={idx === 0 ? 'high' : 'low'}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
                     style={{
                       position: 'relative', zIndex: 1,
-                      width: '100%',
+                      width: '100%', height: 'auto',
                       objectFit: 'contain', display: 'block',
                       filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
                       animation: 'home-hero-art-float 6s ease-in-out infinite',
