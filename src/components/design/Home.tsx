@@ -11,7 +11,6 @@ import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
-const HERO_IMG = '/home-hero-cutout-v2.png'
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
 const canonicalBody = (value: string) => {
   const normalized = value.trim().toLowerCase()
@@ -74,6 +73,69 @@ function Orb({ style }: { style: React.CSSProperties }) {
   )
 }
 
+interface HeroSlide {
+  tag: string
+  title: string
+  titleHighlight: string
+  subtitle: string
+  description: string
+  benefits: string[]
+  primaryBtn: { label: string; href: string }
+  secondaryBtn: { label: string; href: string }
+  image: string
+  imageAlt: string
+  badgeTop: { label: string }
+  badgeBottom: { eyebrow: string; value: string }
+}
+
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    tag: "· Sri Lanka's First Online University ·",
+    title: 'Your Online ',
+    titleHighlight: 'University',
+    subtitle: 'Foundation · HND · Degree · Master’s · CPD',
+    description: '100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.',
+    benefits: ['100% Online', 'Flexible', 'Globally Recognised'],
+    primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
+    secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
+    image: '/home-hero-handshake.png',
+    imageAlt: 'Inspire College student beginning his pathway to a global qualification',
+    badgeTop: { label: '100% ONLINE' },
+    badgeBottom: { eyebrow: 'Seats filling fast', value: 'First 20 at LKR 250K' },
+  },
+  {
+    tag: '· Globally Accredited Portfolio ·',
+    title: 'Explore Academic ',
+    titleHighlight: 'Programmes',
+    subtitle: 'Foundation · HND Pathways · Top-Up Degrees · Short Courses',
+    description: 'Discover career-ready diplomas, UK-validated HND pathways, Top-Up degrees and AI-powered short courses. Learn anytime, anywhere with interactive live classes and self-paced LMS.',
+    benefits: ['Foundation', 'HND & Degrees', 'Short Courses', 'AI Mastery'],
+    primaryBtn: { label: 'Explore all programmes →', href: '/programs' },
+    secondaryBtn: { label: 'Check entry criteria', href: '/admissions' },
+    image: '/home-hero-programmes.png',
+    imageAlt: 'Inspire College student exploring academic programmes',
+    badgeTop: { label: 'UK ACCREDITED' },
+    badgeBottom: { eyebrow: 'Flexible Learning', value: 'Study From Anywhere' },
+  },
+  {
+    tag: '· Empowering Ambitious Minds ·',
+    title: 'Transforming ',
+    titleHighlight: 'Higher Education',
+    subtitle: 'World-Class Curriculum · Global Faculty · Dedicated Mentorship',
+    description: 'Inspire College is on a mission to make world-class British qualifications accessible across Sri Lanka and beyond through cutting-edge digital learning and student-first academic support.',
+    benefits: ['Expert Faculty', 'Dedicated Mentors', 'Global Community'],
+    primaryBtn: { label: 'Learn more about us →', href: '/about' },
+    secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
+    image: '/home-hero-about.png',
+    imageAlt: 'Inspire College graduate celebrating success with family',
+    badgeTop: { label: 'SINCE 2020' },
+    badgeBottom: { eyebrow: 'Student Success', value: '98% Satisfaction' },
+  },
+]
+
+const HERO_SLIDE_INTERVAL_MS = 7000
+const HERO_SLIDE_TRANSITION = 'opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)'
+
 export default function Home({ programs, news, testimonials = [] }: { programs: Program[]; news: NewsItem[]; testimonials?: Testimonial[] }) {
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
@@ -92,18 +154,28 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
   const programmeOptions = useMemo(() => [...new Set(schoolPrograms.map((program) => program.programmeName ?? program.level))].sort(), [schoolPrograms])
 
   const [heroVisible, setHeroVisible] = useState(false)
-  useEffect(() => { const t = setTimeout(() => setHeroVisible(true), 80); return () => clearTimeout(t) }, [])
-
-  /* Subtle parallax on hero orbs */
+  const [currentSlide, setCurrentSlide] = useState(0)
   const [scrollY, setScrollY] = useState(0)
+
+  useEffect(() => {
+    const t = setTimeout(() => setHeroVisible(true), 80)
+    return () => clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const tv = (delay: number, extra?: string) =>
-    `opacity 0.75s ease ${delay}ms, transform 0.75s ease ${delay}ms${extra ? `, ${extra}` : ''}`
+  // Keep one steady seven-second loop. Manual selection starts a fresh full
+  // interval so a chosen slide is never replaced immediately afterwards.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
+    }, HERO_SLIDE_INTERVAL_MS)
+    return () => window.clearTimeout(timer)
+  }, [currentSlide])
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
@@ -126,125 +198,163 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
         {/* Content */}
         <div className="sx home-hero-grid" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 48, padding: '80px 0' }}>
 
-          {/* Left: text */}
-          <div>
-            <div style={{
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(-14px)',
-              transition: tv(0),
-              marginBottom: 20, display: 'inline-block',
-            }}>
-              <Tag accent style={{ animation: heroVisible ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
-                · Sri Lanka's First Online University ·
-              </Tag>
-            </div>
+          {/* Left: text stack for continuous smooth looping */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+            {HERO_SLIDES.map((slide, idx) => {
+              const active = idx === currentSlide
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    gridArea: '1 / 1',
+                    opacity: heroVisible && active ? 1 : 0,
+                    transform: heroVisible && active ? 'none' : 'translateY(18px)',
+                    pointerEvents: active ? 'auto' : 'none',
+                    transition: HERO_SLIDE_TRANSITION,
+                  }}
+                >
+                  <div style={{ marginBottom: 20, display: 'inline-block' }}>
+                    <Tag accent style={{ animation: heroVisible && active ? 'tag-bounce 0.7s ease forwards' : 'none' }}>
+                      {slide.tag}
+                    </Tag>
+                  </div>
 
-            <h1 className="home-hero-title" style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(36px, 3.3vw, 48px)',
-              fontWeight: 600, lineHeight: 1.08,
-              letterSpacing: '-0.025em',
-              margin: '0 0 18px',
-              color: 'var(--ink)',
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(36px)',
-              transition: tv(150),
-            }}>
-              Your Online <span className="text-gold" style={{ display: 'inline-block' }}>University</span>
-            </h1>
-            <h2 style={{
-              fontFamily: 'var(--font-poppins)',
-              fontSize: 'clamp(16px, 1.55vw, 21px)',
-              fontWeight: 600, lineHeight: 1.35,
-              letterSpacing: '-0.01em',
-              color: 'var(--ink-soft)',
-              margin: '0 0 22px',
-              whiteSpace: 'normal',
-              opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'none' : 'translateY(36px)',
-              transition: tv(280),
-            }}>
-              Foundation · HND · Degree · Master’s · CPD
-            </h2>
+                  <h1 className="home-hero-title" style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(36px, 3.3vw, 48px)',
+                    fontWeight: 600, lineHeight: 1.08,
+                    letterSpacing: '-0.025em',
+                    margin: '0 0 18px',
+                    color: 'var(--ink)',
+                  }}>
+                    {slide.title}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
+                  </h1>
 
-            <p style={{
-              fontFamily: 'var(--font-body)', fontSize: 17,
-              color: 'var(--ink-soft)', maxWidth: 460, lineHeight: 1.7,
-              marginBottom: 22,
-              opacity: heroVisible ? 1 : 0,
-              transition: tv(520),
-            }}>
-              100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.
-            </p>
+                  <h2 style={{
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'clamp(16px, 1.55vw, 21px)',
+                    fontWeight: 600, lineHeight: 1.35,
+                    letterSpacing: '-0.01em',
+                    color: 'var(--ink-soft)',
+                    margin: '0 0 22px',
+                    whiteSpace: 'normal',
+                  }}>
+                    {slide.subtitle}
+                  </h2>
 
-            {/* Study benefits */}
-            <div style={{ marginBottom: 24, display: 'flex', gap: 20, alignItems: 'center', opacity: heroVisible ? 1 : 0, transition: tv(640), flexWrap: 'wrap' }}>
-              {['100% Online', 'Flexible', 'Globally Recognised'].map((b) => (
-                <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-                  {b}
+                  <p style={{
+                    fontFamily: 'var(--font-body)', fontSize: 17,
+                    color: 'var(--ink-soft)', maxWidth: 460, lineHeight: 1.7,
+                    marginBottom: 22,
+                  }}>
+                    {slide.description}
+                  </p>
+
+                  {/* Study benefits */}
+                  <div style={{ marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                    {slide.benefits.map((b) => (
+                      <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+                        {b}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                    <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
+                    <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', opacity: heroVisible ? 1 : 0, transition: tv(760) }}>
-              <Button variant="primary" size="lg" href="/admissions">Reserve your seat →</Button>
-              <Button variant="outline" size="lg" href="/contact">Talk to an advisor</Button>
-            </div>
+              )
+            })}
           </div>
 
-          {/* Right: hero image card */}
-          <div className="home-hero-art" style={{
-            position: 'relative',
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? 'none' : 'translateX(48px)',
-            transition: tv(300),
-          }}>
-            <img
-              src={HERO_IMG}
-              alt="Inspire College student beginning his pathway to a global qualification"
-              style={{
-                position: 'relative', zIndex: 1,
-                width: '100%',
-                objectFit: 'contain', display: 'block',
-                filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
-                animation: 'home-hero-art-float 6s ease-in-out infinite',
-              }}
-            />
-            {/* Floating achievement badge */}
-            <div style={{
-              position: 'absolute', bottom: -24, left: -24, zIndex: 2,
-              background: '#fff', borderRadius: 14,
-              padding: '14px 18px',
-              boxShadow: '0 12px 40px rgba(63,0,124,0.16)',
-              border: '1px solid rgba(63,0,124,0.12)',
-              animation: 'float 3.5s ease-in-out infinite',
-            }}>
-              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Seats filling fast</div>
-              <div style={{ fontFamily: 'var(--font-poppins)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>First 20 at LKR 250K</div>
-            </div>
-            {/* Online badge */}
-            <div style={{
-              position: 'absolute', top: -20, right: -20, zIndex: 2,
-              background: 'var(--accent)', borderRadius: 12,
-              padding: '10px 16px',
-              boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
-              animation: 'float 4.5s ease-in-out infinite 1s',
-            }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>100% ONLINE</div>
-            </div>
+          {/* Right: hero image stack for continuous smooth looping */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', position: 'relative' }}>
+            {HERO_SLIDES.map((slide, idx) => {
+              const active = idx === currentSlide
+              return (
+                <div
+                  key={idx}
+                  className="home-hero-art"
+                  style={{
+                    gridArea: '1 / 1',
+                    position: 'relative',
+                    opacity: heroVisible && active ? 1 : 0,
+                    transform: heroVisible && active ? 'none' : 'translateX(28px) scale(0.96)',
+                    pointerEvents: active ? 'auto' : 'none',
+                    transition: HERO_SLIDE_TRANSITION,
+                  }}
+                >
+                  <img
+                    src={slide.image}
+                    alt={slide.imageAlt}
+                    style={{
+                      position: 'relative', zIndex: 1,
+                      width: '100%',
+                      objectFit: 'contain', display: 'block',
+                      filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
+                      animation: 'home-hero-art-float 6s ease-in-out infinite',
+                    }}
+                  />
+                  {/* Floating achievement badge */}
+                  <div style={{
+                    position: 'absolute', bottom: -24, left: -24, zIndex: 2,
+                    background: '#fff', borderRadius: 14,
+                    padding: '14px 18px',
+                    boxShadow: '0 12px 40px rgba(63,0,124,0.16)',
+                    border: '1px solid rgba(63,0,124,0.12)',
+                    animation: 'float 3.5s ease-in-out infinite',
+                  }}
+                  >
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
+                  </div>
+                  {/* Top right badge */}
+                  <div style={{
+                    position: 'absolute', top: -20, right: -20, zIndex: 2,
+                    background: 'var(--accent)', borderRadius: 12,
+                    padding: '10px 16px',
+                    boxShadow: '0 8px 24px rgba(63,0,124,0.30)',
+                    animation: 'float 4.5s ease-in-out infinite 1s',
+                  }}
+                  >
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{slide.badgeTop.label}</div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 
-        {/* Scroll cue */}
+        {/* Carousel Pill Indicators */}
         <div style={{
-          position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-          opacity: heroVisible ? 0.55 : 0, transition: 'opacity 1s ease 1.2s',
-          animation: 'float 2.2s ease-in-out infinite',
+          position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+          display: 'flex', alignItems: 'center', gap: 12, zIndex: 10,
         }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>Scroll</div>
-          <Icon kind="chevron_down" size={16} color="var(--ink-muted)" />
+          {HERO_SLIDES.map((_, idx) => {
+            const active = idx === currentSlide
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                style={{
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  height: 13,
+                  width: active ? 44 : 13,
+                  borderRadius: 999,
+                  background: active ? 'var(--accent, #3F007C)' : 'rgba(63,0,124,0.28)',
+                  boxShadow: active ? '0 3px 12px rgba(63,0,124,0.42)' : 'none',
+                  transition: 'width 0.6s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.6s ease, box-shadow 0.6s ease',
+                  outline: 'none',
+                }}
+              />
+            )
+          })}
         </div>
       </section>
 
@@ -252,7 +362,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       <div ref={revealRef}>
 
         {/* Partner marquee */}
-        <section className="home-partners" aria-labelledby="home-partners-title">
+        <section id="partners" className="home-partners" aria-labelledby="home-partners-title">
           <div className="home-partners-heading sx reveal">
             <h2 id="home-partners-title">Our partners</h2>
             <p>Recognised awarding bodies and education partners supporting globally relevant learning.</p>

@@ -4,6 +4,7 @@ const PATHS: Record<string, ReactElement> = {
   search: <><circle cx="9" cy="9" r="6" /><path d="M14 14l5 5" /></>,
   menu: <path d="M3 6h18M3 12h18M3 18h18" />,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  arrow_left: <path d="M19 12H5m6 6-6-6 6-6" />,
   user: <><circle cx="12" cy="8" r="4" /><path d="M4 20c1-4 5-6 8-6s7 2 8 6" /></>,
   book: <path d="M4 5c3-1 6-1 8 0v14c-2-1-5-1-8 0V5zM20 5c-3-1-6-1-8 0v14c2-1 5-1 8 0V5z" />,
   pin: <><path d="M12 21s-6-6-6-11a6 6 0 1112 0c0 5-6 11-6 11z" /><circle cx="12" cy="10" r="2" /></>,
@@ -47,6 +48,7 @@ export function Icon({
       width={size}
       height={size}
       viewBox="0 0 24 24"
+      aria-hidden="true"
       style={{ display: 'inline-block', flexShrink: 0, ...style }}
     >
       <g {...common}>{PATHS[kind] ?? PATHS.star}</g>
