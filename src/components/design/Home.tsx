@@ -100,7 +100,7 @@ const HERO_SLIDES: HeroSlide[] = [
     benefits: ['100% Online', 'Flexible', 'Globally Recognised'],
     primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
     secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
-    image: '/home-hero-handshake.png',
+    image: '/hero-banner1.png',
     imageAlt: 'Inspire College student beginning his pathway to a global qualification',
     badgeTop: { label: '100% ONLINE' },
     badgeBottom: { eyebrow: 'Seats filling fast', value: 'First 20 at LKR 250K' },
@@ -294,6 +294,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   <Image
                     src={slide.image}
                     alt={slide.imageAlt}
+                    className={idx === 0 ? 'home-hero-image home-hero-image-first' : 'home-hero-image'}
                     width={1024}
                     height={1024}
                     sizes="(max-width: 900px) 92vw, 600px"
