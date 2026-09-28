@@ -835,7 +835,6 @@ input, select, textarea { font: inherit; color: inherit; }
   .about-hero-visual { min-height: 340px; }
   .about-hero-depth { right: 5%; bottom: 8%; width: 90%; height: 66%; border-radius: 28px; }
   .about-hero-visual img { right: auto; left: 50%; width: 100%; max-width: 430px; height: 370px; object-position: center bottom; animation: none; transform: translateX(-50%); }
-  .home-hero-grid > :last-child > div:first-child { inset: -8px !important; }
   .home-partners { padding: 44px 0 42px; }
   .home-partners-heading { margin-bottom: 24px; }
   .home-partners-heading p { font-size: 13px; }

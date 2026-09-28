@@ -276,7 +276,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
           </div>
 
           {/* Right: hero image stack for continuous smooth looping */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', position: 'relative' }}>
+          <div style={{ position: 'relative', aspectRatio: '1 / 1' }}>
             {HERO_SLIDES.map((slide, idx) => {
               const active = idx === currentSlide
               return (
@@ -284,8 +284,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   key={idx}
                   className="home-hero-art"
                   style={{
-                    gridArea: '1 / 1',
-                    position: 'relative',
+                    position: 'absolute', inset: 0,
                     opacity: active ? 1 : 0,
                     transform: active ? 'none' : 'translateX(28px) scale(0.96)',
                     pointerEvents: active ? 'auto' : 'none',
@@ -303,7 +302,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     loading={idx === 0 ? 'eager' : 'lazy'}
                     style={{
                       position: 'relative', zIndex: 1,
-                      width: '100%', height: 'auto',
+                      width: '100%', height: '100%',
                       objectFit: 'contain', display: 'block',
                       filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
                       animation: 'home-hero-art-float 6s ease-in-out infinite',
