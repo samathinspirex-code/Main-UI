@@ -86,6 +86,7 @@ interface HeroSlide {
   image: string
   imageAlt: string
   titleBreakBeforeHighlight?: boolean
+  titleSingleLine?: boolean
   badgeTop?: { label: string }
   badgeBottom: { eyebrow: string; value: string }
 }
@@ -104,6 +105,36 @@ const HERO_SLIDES: HeroSlide[] = [
     imageAlt: 'Inspire College student beginning his pathway to a global qualification',
     badgeTop: { label: '100% ONLINE' },
     badgeBottom: { eyebrow: 'Seats filling fast', value: 'First 20 at LKR 250K' },
+  },
+  {
+    tag: '· Your AI Journey ·',
+    title: 'From AI Student ',
+    titleHighlight: 'to AI Engineer',
+    titleSingleLine: true,
+    subtitle: 'Explore flexible learning pathways',
+    description: 'Learn practical AI skills online and build toward the career you want.',
+    benefits: ['Practical AI Skills', 'Flexible Learning', 'Career Growth'],
+    primaryBtn: { label: 'Explore Programs →', href: '/programs' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    image: '/ai-student-engineer-hero.png',
+    imageAlt: 'AI student progressing toward a career as an AI engineer',
+    badgeTop: { label: 'AI PATHWAY' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'AI Student → Engineer' },
+  },
+  {
+    tag: '· Your Business Journey ·',
+    title: 'From Business Student',
+    titleHighlight: 'to Business Professional',
+    titleBreakBeforeHighlight: true,
+    subtitle: 'Foundation · HND · Degree pathways',
+    description: 'Build practical business skills online and grow toward the career you want.',
+    benefits: ['Business Skills', 'Flexible Learning', 'Career Growth'],
+    primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    image: '/business-student-professional-hero.png',
+    imageAlt: 'Business student progressing toward a professional career',
+    badgeTop: { label: 'BUSINESS PATHWAY' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
   },
   {
     tag: '· Globally Accredited Portfolio ·',
@@ -131,21 +162,6 @@ const HERO_SLIDES: HeroSlide[] = [
     image: '/home-hero-about.png',
     imageAlt: 'Inspire College graduate celebrating success with family',
     badgeBottom: { eyebrow: 'Student Success', value: '100% Satisfaction' },
-  },
-  {
-    tag: '· Your Business Journey ·',
-    title: 'From Business Student',
-    titleHighlight: 'to Business Professional',
-    titleBreakBeforeHighlight: true,
-    subtitle: 'Foundation · HND · Degree pathways',
-    description: 'Build practical business skills online and grow toward the career you want.',
-    benefits: ['Business Skills', 'Flexible Learning', 'Career Growth'],
-    primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
-    image: '/business-student-professional-hero.png',
-    imageAlt: 'Business student progressing toward a professional career',
-    badgeTop: { label: 'BUSINESS PATHWAY' },
-    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
   },
 ]
 
@@ -224,7 +240,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     </Tag>
                   </div>
 
-                  <h1 className="home-hero-title" style={{
+                  <h1 className={slide.titleSingleLine ? 'home-hero-title home-hero-title-single' : 'home-hero-title'} style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: 'clamp(36px, 3.3vw, 48px)',
                     fontWeight: 600, lineHeight: 1.08,
