@@ -77,6 +77,7 @@ interface HeroSlide {
   tag: string
   title: string
   titleHighlight: string
+  titleBreakBeforeHighlight?: boolean
   subtitle: string
   description: string
   benefits: string[]
@@ -104,6 +105,35 @@ const HERO_SLIDES: HeroSlide[] = [
     badgeBottom: { eyebrow: 'Seats filling fast', value: 'First 20 at LKR 250K' },
   },
   {
+    tag: '· Practical AI Career Pathways ·',
+    title: 'From AI Student ',
+    titleHighlight: 'to AI Engineer',
+    subtitle: 'Explore flexible learning pathways',
+    description: 'Learn practical AI skills online and build toward the career you want.',
+    benefits: ['Practical AI Skills', 'Flexible Learning', 'Career Ready'],
+    primaryBtn: { label: 'Explore Programmes →', href: '/programs' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    image: '/ai-student-engineer-hero.png',
+    imageAlt: 'An AI student progressing toward a career as an AI engineer',
+    badgeTop: { label: 'AI CAREER PATHWAY' },
+    badgeBottom: { eyebrow: 'Build Your Future', value: 'AI Student → AI Engineer' },
+  },
+  {
+    tag: '· Your Business Journey ·',
+    title: 'From Business Student ',
+    titleHighlight: 'to Business Professional',
+    titleBreakBeforeHighlight: true,
+    subtitle: 'Foundation · HND · Degree pathways',
+    description: 'Build practical business skills online and grow toward the career you want.',
+    benefits: ['Business Skills', 'Flexible Learning', 'Career Growth'],
+    primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    image: '/business-student-professional-hero.png',
+    imageAlt: 'Business student progressing toward a business professional career',
+    badgeTop: { label: 'BUSINESS PATHWAY' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
+  },
+  {
     tag: '· Globally Accredited Portfolio ·',
     title: 'Explore Academic ',
     titleHighlight: 'Programmes',
@@ -112,20 +142,21 @@ const HERO_SLIDES: HeroSlide[] = [
     benefits: ['Foundation', 'HND & Degrees', 'Short Courses', 'AI Mastery'],
     primaryBtn: { label: 'Explore all programmes →', href: '/programs' },
     secondaryBtn: { label: 'Check entry criteria', href: '/admissions' },
-    image: '/home-hero-programmes.png',
-    imageAlt: 'Inspire College student exploring academic programmes',
+    image: '/hr-professional-hero.png',
+    imageAlt: 'Inspire College professional developing career-ready skills through online study',
     badgeTop: { label: 'UK ACCREDITED' },
     badgeBottom: { eyebrow: 'Flexible Learning', value: 'Study From Anywhere' },
   },
   {
-    tag: '· Empowering Ambitious Minds ·',
-    title: 'Transforming ',
-    titleHighlight: 'Higher Education',
-    subtitle: 'World-Class Curriculum · Global Faculty · Dedicated Mentorship',
-    description: 'Inspire College is on a mission to make world-class British qualifications accessible across Sri Lanka and beyond through cutting-edge digital learning and student-first academic support.',
-    benefits: ['Expert Faculty', 'Dedicated Mentors', 'Global Community'],
-    primaryBtn: { label: 'Learn more about us →', href: '/about' },
-    secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
+    tag: '· For Every Parent Who Believes ·',
+    title: 'Their Journey. ',
+    titleHighlight: 'Your Proud Moment.',
+    titleBreakBeforeHighlight: true,
+    subtitle: 'Foundation · HND · Degree pathways',
+    description: 'Help your child take the next step with flexible online learning and guidance throughout their studies.',
+    benefits: ['Foundation', 'HND', 'Degree pathways'],
+    primaryBtn: { label: 'Explore Programmes', href: '/programs' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/home-hero-about.png',
     imageAlt: 'Inspire College graduate celebrating success with family',
     badgeBottom: { eyebrow: 'Student Success', value: '100% Satisfaction' },
@@ -226,7 +257,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     margin: '0 0 18px',
                     color: 'var(--ink)',
                   }}>
-                    {slide.title}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
+                    {slide.title}{slide.titleBreakBeforeHighlight && <br />}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
                   </h1>
 
                   <h2 style={{
@@ -291,7 +322,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     alt={slide.imageAlt}
                     style={{
                       position: 'relative', zIndex: 1,
-                      width: '100%',
+                      width: '100%', aspectRatio: '1 / 1',
                       objectFit: 'contain', display: 'block',
                       filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
                       animation: 'home-hero-art-float 6s ease-in-out infinite',
