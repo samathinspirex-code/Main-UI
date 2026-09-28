@@ -115,7 +115,7 @@ const HERO_SLIDES: HeroSlide[] = [
     primaryBtn: { label: 'Explore all programmes →', href: '/programs' },
     secondaryBtn: { label: 'Check entry criteria', href: '/admissions' },
     image: '/home-hero-programmes.png',
-    imageAlt: 'Inspire College student exploring academic programmes',
+    imageAlt: 'Inspire College professional developing career-ready skills through online study',
     badgeTop: { label: 'UK ACCREDITED' },
     badgeBottom: { eyebrow: 'Flexible Learning', value: 'Study From Anywhere' },
   },
@@ -295,8 +295,8 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   <Image
                     src={slide.image}
                     alt={slide.imageAlt}
-                    width={2048}
-                    height={2048}
+                    width={1024}
+                    height={1024}
                     sizes="(max-width: 900px) 92vw, 600px"
                     preload={idx === 0}
                     fetchPriority={idx === 0 ? 'high' : 'low'}
