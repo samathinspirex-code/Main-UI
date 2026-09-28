@@ -85,6 +85,7 @@ interface HeroSlide {
   secondaryBtn: { label: string; href: string }
   image: string
   imageAlt: string
+  titleBreakBeforeHighlight?: boolean
   badgeTop?: { label: string }
   badgeBottom: { eyebrow: string; value: string }
 }
@@ -130,6 +131,21 @@ const HERO_SLIDES: HeroSlide[] = [
     image: '/home-hero-about.png',
     imageAlt: 'Inspire College graduate celebrating success with family',
     badgeBottom: { eyebrow: 'Student Success', value: '100% Satisfaction' },
+  },
+  {
+    tag: '· Your Business Journey ·',
+    title: 'From Business Student',
+    titleHighlight: 'to Business Professional',
+    titleBreakBeforeHighlight: true,
+    subtitle: 'Foundation · HND · Degree pathways',
+    description: 'Build practical business skills online and grow toward the career you want.',
+    benefits: ['Business Skills', 'Flexible Learning', 'Career Growth'],
+    primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    image: '/business-student-professional-hero.png',
+    imageAlt: 'Business student progressing toward a professional career',
+    badgeTop: { label: 'BUSINESS PATHWAY' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
   },
 ]
 
@@ -216,7 +232,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     margin: '0 0 18px',
                     color: 'var(--ink)',
                   }}>
-                    {slide.title}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
+                    {slide.title}{slide.titleBreakBeforeHighlight && <br />}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
                   </h1>
 
                   <h2 style={{
