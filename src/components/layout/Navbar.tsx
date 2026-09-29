@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from '../ui/Button'
 import { Icon } from '../ui/Icon'
 
-const LOGO = 'https://inspirecollege.lk/wp-content/uploads/2025/09/LeadHype-300-x-80-px-1.png'
+const LOGO = '/uploads/2025/09/LeadHype-300-x-80-px-1.png'
 
 const NAV = [
   { label: 'Home', href: '/' },

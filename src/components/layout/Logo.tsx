@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const LOGO_SRC = "https://inspirecollege.lk/wp-content/uploads/2025/09/LeadHype-300-x-80-px-1.png";
+const LOGO_SRC = "/uploads/2025/09/LeadHype-300-x-80-px-1.png";
 // Intrinsic size of the source asset (300×80) — next/image needs explicit
 // width/height, so the render width is derived from this aspect ratio to
 // reproduce the original's `height: X, width: auto` behavior exactly.
