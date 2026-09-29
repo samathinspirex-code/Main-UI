@@ -153,8 +153,8 @@ const HERO_SLIDES: HeroSlide[] = [
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/ai-student-engineer-hero.png',
     imageAlt: 'AI student progressing toward a career as an AI engineer',
-    badgeTop: { label: 'AI PATHWAY' },
-    badgeBottom: { eyebrow: 'Career Ready', value: 'AI Student → Engineer' },
+    badgeTop: { label: 'AI ENGINEER' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'AI Student' },
   },
   {
     tag: '· Your Business Journey ·',
@@ -168,8 +168,8 @@ const HERO_SLIDES: HeroSlide[] = [
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/business-student-professional-hero.png',
     imageAlt: 'Business student progressing toward a professional career',
-    badgeTop: { label: 'BUSINESS PATHWAY' },
-    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
+    badgeTop: { label: 'BUSINESS PROFESSIONAL' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student' },
   },
   {
     tag: '· Globally Accredited Portfolio ·',
