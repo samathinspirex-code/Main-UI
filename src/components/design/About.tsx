@@ -105,7 +105,7 @@ export default function About() {
               <div className="rg-2" style={{ gap: 24 }}>
                 {FACULTY.map((p, i) => (
                   <div key={p.name} className={`reveal reveal-delay-${i + 1} profile-card`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', display: 'grid', gridTemplateColumns: '200px 1fr' }}>
-                    <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: 260 }} />
+                    <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', minHeight: 260 }} />
                     <div style={{ padding: 24 }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{p.name}</div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--accent)', marginBottom: 18 }}>{p.role.toUpperCase()}</div>

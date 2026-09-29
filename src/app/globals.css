@@ -930,7 +930,7 @@ input, select, textarea { font: inherit; color: inherit; }
   .admissions-form-nav > div { display: grid !important; grid-template-columns: 1fr; }
   .admissions-form-nav button { width: 100%; justify-content: center; }
   .profile-card { grid-template-columns: 1fr !important; }
-  .profile-card > img { height: 240px !important; min-height: 0 !important; }
+  .profile-card > img { height: auto !important; min-height: 0 !important; aspect-ratio: 1 / 1; object-position: center 8% !important; }
   .leadership-card > img { object-fit: contain !important; object-position: center bottom !important; padding: 12px 10px 0; }
   .program-detail-cta { padding: 26px 20px !important; }
   .program-detail-cta a { width: 100%; justify-content: center; }
