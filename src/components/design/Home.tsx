@@ -78,7 +78,6 @@ interface HeroSlide {
   tag: string
   title: string
   titleHighlight: string
-  titleBreakBeforeHighlight?: boolean
   subtitle: string
   description: string
   benefits: string[]
@@ -86,6 +85,8 @@ interface HeroSlide {
   secondaryBtn: { label: string; href: string }
   image: string
   imageAlt: string
+  titleBreakBeforeHighlight?: boolean
+  titleSingleLine?: boolean
   badgeTop?: { label: string }
   badgeBottom: { eyebrow: string; value: string }
 }
@@ -100,28 +101,29 @@ const HERO_SLIDES: HeroSlide[] = [
     benefits: ['100% Online', 'Flexible', 'Globally Recognised'],
     primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
     secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
-    image: '/career-change.png',
-    imageAlt: 'Inspire College student progressing from education into a professional career',
+    image: '/hero-banner1.png',
+    imageAlt: 'Inspire College student beginning his pathway to a global qualification',
     badgeTop: { label: '100% ONLINE' },
     badgeBottom: { eyebrow: 'Seats filling fast', value: 'First 20 at LKR 250K' },
   },
   {
-    tag: '· Practical AI Career Pathways ·',
+    tag: '· Your AI Journey ·',
     title: 'From AI Student ',
     titleHighlight: 'to AI Engineer',
+    titleSingleLine: true,
     subtitle: 'Explore flexible learning pathways',
     description: 'Learn practical AI skills online and build toward the career you want.',
-    benefits: ['Practical AI Skills', 'Flexible Learning', 'Career Ready'],
-    primaryBtn: { label: 'Explore Programmes →', href: '/programs' },
+    benefits: ['Practical AI Skills', 'Flexible Learning', 'Career Growth'],
+    primaryBtn: { label: 'Explore Programs →', href: '/programs' },
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/ai-student-engineer-hero.png',
-    imageAlt: 'An AI student progressing toward a career as an AI engineer',
-    badgeTop: { label: 'AI CAREER PATHWAY' },
-    badgeBottom: { eyebrow: 'Build Your Future', value: 'AI Student → AI Engineer' },
+    imageAlt: 'AI student progressing toward a career as an AI engineer',
+    badgeTop: { label: 'AI PATHWAY' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'AI Student → Engineer' },
   },
   {
     tag: '· Your Business Journey ·',
-    title: 'From Business Student ',
+    title: 'From Business Student',
     titleHighlight: 'to Business Professional',
     titleBreakBeforeHighlight: true,
     subtitle: 'Foundation · HND · Degree pathways',
@@ -130,7 +132,7 @@ const HERO_SLIDES: HeroSlide[] = [
     primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/business-student-professional-hero.png',
-    imageAlt: 'Business student progressing toward a business professional career',
+    imageAlt: 'Business student progressing toward a professional career',
     badgeTop: { label: 'BUSINESS PATHWAY' },
     badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
   },
@@ -143,7 +145,7 @@ const HERO_SLIDES: HeroSlide[] = [
     benefits: ['Foundation', 'HND & Degrees', 'Short Courses', 'AI Mastery'],
     primaryBtn: { label: 'Explore all programmes →', href: '/programs' },
     secondaryBtn: { label: 'Check entry criteria', href: '/admissions' },
-    image: '/hr-professional-hero.png',
+    image: '/home-hero-programmes.png',
     imageAlt: 'Inspire College professional developing career-ready skills through online study',
     badgeTop: { label: 'UK ACCREDITED' },
     badgeBottom: { eyebrow: 'Flexible Learning', value: 'Study From Anywhere' },
@@ -152,10 +154,9 @@ const HERO_SLIDES: HeroSlide[] = [
     tag: '· For Every Parent Who Believes ·',
     title: 'Their Journey. ',
     titleHighlight: 'Your Proud Moment.',
-    titleBreakBeforeHighlight: true,
     subtitle: 'Foundation · HND · Degree pathways',
     description: 'Help your child take the next step with flexible online learning and guidance throughout their studies.',
-    benefits: ['Foundation', 'HND', 'Degree pathways'],
+    benefits: ['Foundation', 'HND', 'Degree Pathways'],
     primaryBtn: { label: 'Explore Programmes', href: '/programs' },
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/home-hero-about.png',
@@ -239,7 +240,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     </Tag>
                   </div>
 
-                  <h1 className="home-hero-title" style={{
+                  <h1 className={slide.titleSingleLine ? 'home-hero-title home-hero-title-single' : 'home-hero-title'} style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: 'clamp(36px, 3.3vw, 48px)',
                     fontWeight: 600, lineHeight: 1.08,
@@ -291,7 +292,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
           </div>
 
           {/* Right: hero image stack for continuous smooth looping */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', position: 'relative' }}>
+          <div style={{ position: 'relative', aspectRatio: '1 / 1' }}>
             {HERO_SLIDES.map((slide, idx) => {
               const active = idx === currentSlide
               return (
@@ -299,8 +300,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   key={idx}
                   className="home-hero-art"
                   style={{
-                    gridArea: '1 / 1',
-                    position: 'relative',
+                    position: 'absolute', inset: 0,
                     opacity: active ? 1 : 0,
                     transform: active ? 'none' : 'translateX(28px) scale(0.96)',
                     pointerEvents: active ? 'auto' : 'none',
@@ -310,15 +310,16 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   <Image
                     src={slide.image}
                     alt={slide.imageAlt}
-                    width={2048}
-                    height={2048}
+                    className={idx === 0 ? 'home-hero-image home-hero-image-first' : 'home-hero-image'}
+                    width={1024}
+                    height={1024}
                     sizes="(max-width: 900px) 92vw, 600px"
                     preload={idx === 0}
                     fetchPriority={idx === 0 ? 'high' : 'low'}
                     loading={idx === 0 ? 'eager' : 'lazy'}
                     style={{
                       position: 'relative', zIndex: 1,
-                      width: '100%', height: 'auto',
+                      width: '100%', height: '100%',
                       objectFit: 'contain', display: 'block',
                       filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
                       animation: 'home-hero-art-float 6s ease-in-out infinite',

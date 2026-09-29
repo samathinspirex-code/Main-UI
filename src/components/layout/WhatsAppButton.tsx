@@ -1,8 +1,8 @@
 // Floating WhatsApp chat button, rendered once from the root layout.
-// Set NEXT_PUBLIC_WHATSAPP_NUMBER (international format, digits only, e.g. 94711993331)
-// to point it at the WhatsApp bot; defaults to the college's main line.
+// Set NEXT_PUBLIC_WHATSAPP_NUMBER (international format, digits only)
+// to override the WhatsApp bot number.
 
-const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "94711993331").replace(/\D/g, "");
+const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "94743762393").replace(/\D/g, "");
 const WHATSAPP_MESSAGE = process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE || "Hi Inspire College! I'd like to know more about your programmes.";
 
 export function WhatsAppButton() {
