@@ -1,4 +1,4 @@
-const IC = (path: string) => `https://inspirecollege.lk/wp-content/uploads/${path}`;
+const IC = (path: string) => `/uploads/${path}`;
 
 export interface NewsItem {
   slug: string;

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-const LOGO = 'https://inspirecollege.lk/wp-content/uploads/2025/09/LeadHype-300-x-80-px-1.png'
+const LOGO = '/uploads/2025/09/LeadHype-300-x-80-px-1.png'
 
 const COLS: Record<string, { label: string; href?: string; external?: boolean }[]> = {
   Programs: [
