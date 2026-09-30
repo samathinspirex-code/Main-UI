@@ -1,4 +1,4 @@
-const IC = (path: string) => `https://inspirecollege.lk/wp-content/uploads/${path}`;
+const IC = (path: string) => `/uploads/${path}`;
 
 export const AB_IMG = {
   heroFigure: IC("2025/10/Gemini_Generated_Image_vwcqbzvwcqbzvwcq-Photoroom.png"),

@@ -36,27 +36,62 @@ const PARTNERS = [
   { name: 'Western International College Online', logo: '/partners/winc-online.png', className: 'winc' },
 ]
 
-/* ── Floating cursor-reactive dot grid ── */
-function DotGrid() {
-  const [cursor, setCursor] = useState({ x: 0, y: 0 })
-  const [hovering, setHovering] = useState(false)
-  const mask = `radial-gradient(circle at ${cursor.x}px ${cursor.y}px, rgba(63,0,124,0.45) 80px, transparent 140px)`
+/* ── Animated hero backdrop: aurora glow, flowing ribbons and drifting sparkles ── */
+const HERO_SPARKLES = [
+  { x: 6, y: 78, size: 5, delay: 0, duration: 11 },
+  { x: 14, y: 30, size: 3, delay: 3.2, duration: 9 },
+  { x: 23, y: 88, size: 4, delay: 6.1, duration: 12 },
+  { x: 34, y: 60, size: 3, delay: 1.4, duration: 10 },
+  { x: 45, y: 92, size: 5, delay: 4.6, duration: 13 },
+  { x: 53, y: 40, size: 3, delay: 7.8, duration: 9 },
+  { x: 62, y: 84, size: 4, delay: 2.3, duration: 11 },
+  { x: 71, y: 24, size: 3, delay: 5.4, duration: 10 },
+  { x: 79, y: 70, size: 5, delay: 0.9, duration: 12 },
+  { x: 87, y: 46, size: 3, delay: 6.8, duration: 9 },
+  { x: 94, y: 86, size: 4, delay: 3.9, duration: 11 },
+]
+
+function HeroBackdrop() {
   return (
-    <div
-      style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}
-      onPointerMove={(e) => { const r = (e.currentTarget.parentElement!).getBoundingClientRect(); setCursor({ x: e.clientX - r.left, y: e.clientY - r.top }); setHovering(true) }}
-      onPointerLeave={() => setHovering(false)}
-    >
-      <div className="dot-grid" style={{ position: 'absolute', inset: 0, opacity: 0.5 }} />
-      <div className="dot-grid" style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: 'radial-gradient(circle, rgba(63,0,124,0.5) 1.5px, transparent 1.5px)',
-        backgroundSize: '24px 24px',
-        opacity: hovering ? 1 : 0,
-        maskImage: mask, WebkitMaskImage: mask,
-        transition: 'opacity 0.3s',
-        pointerEvents: 'none',
-      }} />
+    <div className="hero-backdrop" aria-hidden="true">
+      <div className="hero-aurora" />
+      <svg className="hero-ribbons" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="hero-ribbon-purple" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#7B3EC8" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#7B3EC8" stopOpacity="0.55" />
+            <stop offset="1" stopColor="#3F007C" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="hero-ribbon-green" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#9BE15D" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#9BE15D" stopOpacity="0.6" />
+            <stop offset="1" stopColor="#9BE15D" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <g className="hero-ribbon-group hero-ribbon-group-a">
+          <path className="hero-ribbon-base" d="M-80 620 C 240 470, 460 760, 760 600 S 1240 380, 1520 520" />
+          <path className="hero-ribbon-flow" stroke="url(#hero-ribbon-purple)" d="M-80 620 C 240 470, 460 760, 760 600 S 1240 380, 1520 520" />
+        </g>
+        <g className="hero-ribbon-group hero-ribbon-group-b">
+          <path className="hero-ribbon-base" d="M-80 700 C 280 560, 520 820, 820 660 S 1260 470, 1520 610" />
+          <path className="hero-ribbon-flow hero-ribbon-flow-green" stroke="url(#hero-ribbon-green)" d="M-80 700 C 280 560, 520 820, 820 660 S 1260 470, 1520 610" />
+        </g>
+        <g className="hero-ribbon-group hero-ribbon-group-c">
+          <path className="hero-ribbon-base" d="M-80 220 C 300 120, 560 330, 880 210 S 1300 60, 1520 170" />
+          <path className="hero-ribbon-flow hero-ribbon-flow-slow" stroke="url(#hero-ribbon-purple)" d="M-80 220 C 300 120, 560 330, 880 210 S 1300 60, 1520 170" />
+        </g>
+      </svg>
+      <div className="hero-sparkles">
+        {HERO_SPARKLES.map((s, i) => (
+          <span
+            key={i}
+            style={{
+              left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size,
+              animationDelay: `${s.delay}s`, animationDuration: `${s.duration}s`,
+            }}
+          />
+        ))}
+      </div>
     </div>
   )
 }
@@ -118,8 +153,8 @@ const HERO_SLIDES: HeroSlide[] = [
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/ai-student-engineer-hero.png',
     imageAlt: 'AI student progressing toward a career as an AI engineer',
-    badgeTop: { label: 'AI PATHWAY' },
-    badgeBottom: { eyebrow: 'Career Ready', value: 'AI Student → Engineer' },
+    badgeTop: { label: 'AI ENGINEER' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'AI Student' },
   },
   {
     tag: '· Your Business Journey ·',
@@ -133,8 +168,8 @@ const HERO_SLIDES: HeroSlide[] = [
     secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
     image: '/business-student-professional-hero.png',
     imageAlt: 'Business student progressing toward a professional career',
-    badgeTop: { label: 'BUSINESS PATHWAY' },
-    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student → Professional' },
+    badgeTop: { label: 'BUSINESS PROFESSIONAL' },
+    badgeBottom: { eyebrow: 'Career Ready', value: 'Business Student' },
   },
   {
     tag: '· Globally Accredited Portfolio ·',
@@ -154,6 +189,7 @@ const HERO_SLIDES: HeroSlide[] = [
     tag: '· For Every Parent Who Believes ·',
     title: 'Their Journey. ',
     titleHighlight: 'Your Proud Moment.',
+    titleBreakBeforeHighlight: true,
     subtitle: 'Foundation · HND · Degree pathways',
     description: 'Help your child take the next step with flexible online learning and guidance throughout their studies.',
     benefits: ['Foundation', 'HND', 'Degree Pathways'],
@@ -204,23 +240,23 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       {/* ══ HERO ══ */}
       <section
         ref={heroRef}
-        style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 68 }}
+        style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 68, overflowX: 'clip' }}
       >
         {/* Orb container — overflow hidden lives here, not on the section, so text is never clipped */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-          <Orb style={{ width: 600, height: 600, background: 'rgba(198,184,240,0.55)', top: -120, left: -100, animation: 'orb-drift-a 14s ease-in-out infinite' }} />
+          <Orb style={{ width: 600, height: 600, background: 'rgba(255,255,255,0.95)', top: -160, left: -140, animation: 'orb-drift-a 14s ease-in-out infinite' }} />
           <Orb style={{ width: 400, height: 400, background: 'rgba(123,62,200,0.20)', bottom: 0, right: '10%', animation: 'orb-drift-b 18s ease-in-out infinite' }} />
           <Orb style={{ width: 250, height: 250, background: 'rgba(63,0,124,0.12)', top: '30%', right: '30%', animation: 'orb-drift-a 22s ease-in-out infinite reverse' }} />
         </div>
 
-        {/* Dot grid */}
-        <DotGrid />
+        {/* Animated backdrop */}
+        <HeroBackdrop />
 
         {/* Content */}
-        <div className="sx home-hero-grid home-hero-enter" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 48, padding: '80px 0' }}>
+        <div className="sx home-hero-grid home-hero-enter" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', alignItems: 'center', gap: 48, padding: '80px 0' }}>
 
           {/* Left: text stack for continuous smooth looping */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)' }}>
             {HERO_SLIDES.map((slide, idx) => {
               const active = idx === currentSlide
               return (
