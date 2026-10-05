@@ -306,8 +306,8 @@ export function AdmissionsForm({ programs, initialProgramSlug = "" }: { programs
             <div style={{ fontFamily: "var(--sk-hand)", fontSize: 13, opacity: 0.85, marginTop: 4, lineHeight: 1.5 }}>
               Mon–Fri · 8:30 AM – 5:30 PM<br />Level 01, Shangri la, Colombo 2
             </div>
-            <a href="tel:+94711993331" style={{ display: "block", marginTop: 12, fontFamily: "var(--sk-hand)", fontSize: 13, textDecoration: "underline" }}>
-              +94 71 199 3331 →
+            <a href="tel:+94760974224" style={{ display: "block", marginTop: 12, fontFamily: "var(--sk-hand)", fontSize: 13, textDecoration: "underline" }}>
+              +94 76 097 4224 →
             </a>
           </div>
         </div>

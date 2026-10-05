@@ -112,7 +112,7 @@ export default function Contact() {
           <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {[
               { icon: 'pin', label: 'Visit us', value: 'Level 01, Shangri la, Colombo 2', href: undefined },
-              { icon: 'chat', label: 'Call or WhatsApp', value: '+94 71 199 3331', href: 'tel:+94711993331' },
+              { icon: 'chat', label: 'Call or WhatsApp', value: '+94 76 097 4224', href: 'tel:+94760974224' },
               { icon: 'mail', label: 'Email', value: 'enrol@inspire.college', href: 'mailto:enrol@inspire.college' },
             ].map((c) => (
               <div key={c.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 20, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
@@ -129,7 +129,7 @@ export default function Contact() {
                 </div>
               </div>
             ))}
-            <a href="https://wa.me/94711993331" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/94760974224" target="_blank" rel="noopener noreferrer"
               style={{ background: 'var(--accent)', borderRadius: 10, padding: '20px 24px', display: 'flex', gap: 14, alignItems: 'center', textDecoration: 'none', transition: 'opacity 0.2s' }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.88')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}

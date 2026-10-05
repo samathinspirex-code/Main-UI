@@ -246,7 +246,7 @@ const DetailA = () => (
     <div style={{ margin: '0 48px 48px', background: SK.ink, color: SK.paper, padding: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <div>
         <Heading size={30} style={{ color: SK.paper }}>Ready to start?</Heading>
-        <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 14, opacity: 0.8, marginTop: 6 }}>First 50 students: ₨295,000 · talk to an advisor on +94 71 199 3331</div>
+        <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 14, opacity: 0.8, marginTop: 6 }}>First 50 students: ₨295,000 · talk to an advisor on +94 76 097 4224</div>
       </div>
       <SkBtn primary arrow>Reserve your seat</SkBtn>
     </div>
@@ -407,7 +407,7 @@ const AdmitA = () => (
           <SkIcon kind="chat" size={22} color={SK.paper} />
           <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 17, fontWeight: 700, marginTop: 10 }}>Need a hand?</div>
           <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 13, opacity: 0.85, marginTop: 4, lineHeight: 1.5 }}>Mon–Fri · 8:30 AM – 5:00 PM<br />Level 01, Shangri la, Colombo 2</div>
-          <div style={{ marginTop: 12, fontFamily: 'var(--sk-hand)', fontSize: 13, textDecoration: 'underline' }}>+94 71 199 3331 →</div>
+          <div style={{ marginTop: 12, fontFamily: 'var(--sk-hand)', fontSize: 13, textDecoration: 'underline' }}>+94 76 097 4224 →</div>
         </div>
       </div>
     </div>
@@ -497,7 +497,7 @@ const AdmitB = () => (
         ['Is it really 100% online?', 'Yes. Attend live classes, submit assignments and graduate fully online — with LMS access, verified certification and real-time interaction.'],
         ['Who teaches the programs?', 'Experienced academics and industry professionals — expert lecturers across computing, business, AI and digital marketing.'],
         ['What does the HND cost?', 'Regular HND fee is ₨400,000. For a limited time, the first 50 students can enroll at ₨295,000.'],
-        ['How do I get in touch?', 'Call +94 71 199 3331 or visit Level 01, Shangri la, Colombo 2 (Mon–Fri, 8:30 AM–5:00 PM).'],
+        ['How do I get in touch?', 'Call +94 76 097 4224 or visit Level 01, Shangri la, Colombo 2 (Mon–Fri, 8:30 AM–5:00 PM).'],
       ].map(([q, a], i) => (
         <div key={i} style={{ padding: '18px 0', borderBottom: `1.3px solid ${SK.ink}`, borderTop: i === 0 ? `1.3px solid ${SK.ink}` : 'none', display: 'grid', gridTemplateColumns: '1fr auto', gap: 20 }}>
           <div>

@@ -178,7 +178,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             <div>
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, margin: '0 0 8px' }}>Ready to start?</h3>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink-muted)', margin: 0 }}>
-                {program.tag ? `${program.tag} · ` : ''}Talk to an advisor on +94 71 199 3331
+                {program.tag ? `${program.tag} · ` : ''}Talk to an advisor on +94 76 097 4224
               </p>
             </div>
             <Button variant="primary" size="lg" href={`/admissions?program=${program.slug}`}>Reserve your seat →</Button>

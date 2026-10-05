@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(payload, { status: response.status });
   } catch {
     return NextResponse.json(
-      { error: { message: "The assistant is unavailable right now. Please WhatsApp us on +94 71 199 3331." } },
+      { error: { message: "The assistant is unavailable right now. Please WhatsApp us on +94 76 097 4224." } },
       { status: 503 },
     );
   }
