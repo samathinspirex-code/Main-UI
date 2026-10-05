@@ -360,8 +360,8 @@ export default function Admissions({ programs, initialProgramSlug = '' }: { prog
                 Mon–Fri · 8:30 AM – 5:30 PM<br />
                 Level 01, Shangri-La, Colombo 2
               </p>
-              <a href="tel:+94711993331" style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                +94 71 199 3331 →
+              <a href="tel:+94760974224" style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                +94 76 097 4224 →
               </a>
             </div>
           </div>

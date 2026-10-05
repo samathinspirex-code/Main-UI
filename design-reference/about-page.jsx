@@ -297,7 +297,7 @@ const AboutB = () => (
     <div style={{ margin: '0 48px 48px', marginTop: 48, background: SK.ink, color: SK.paper, padding: 36, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <div>
         <Heading size={30} style={{ color: SK.paper }}>Ready to learn without limits?</Heading>
-        <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 14, opacity: 0.8, marginTop: 6 }}>Talk to an advisor · +94 71 199 3331 · Level 01, Shangri la, Colombo 2</div>
+        <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 14, opacity: 0.8, marginTop: 6 }}>Talk to an advisor · +94 76 097 4224 · Level 01, Shangri la, Colombo 2</div>
       </div>
       <SkBtn primary arrow>Reserve your seat</SkBtn>
     </div>

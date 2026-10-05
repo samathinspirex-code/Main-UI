@@ -252,7 +252,7 @@ export function ProgramDetailA({ program }: { program: Program }) {
         <div>
           <Heading size={30} style={{ color: SK.paper }}>Ready to start?</Heading>
           <div style={{ fontFamily: "var(--sk-hand)", fontSize: 14, opacity: 0.8, marginTop: 6 }}>
-            {program.tag ? `${program.tag} · ` : ""}talk to an advisor on +94 71 199 3331
+            {program.tag ? `${program.tag} · ` : ""}talk to an advisor on +94 76 097 4224
           </div>
         </div>
         <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Reserve your seat</SkBtn>

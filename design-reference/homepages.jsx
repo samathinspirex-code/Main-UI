@@ -72,7 +72,7 @@ const FOOTER_LINKS = {
   'Programs': ['ATHE', 'WINC', 'LSBF', 'Jain University', 'Short Courses'],
   'About': ['About Us', 'Our Chairman', 'Partners', 'News & Events'],
   'Apply': ['Foundation', 'HND', 'Top-Up Degree', 'Postgraduate'],
-  'Connect': ['Contact Us', 'Student Portal', 'WhatsApp', '+94 71 199 3331'],
+  'Connect': ['Contact Us', 'Student Portal', 'WhatsApp', '+94 76 097 4224'],
 };
 const Footer = () => (
   <div style={{ background: SK.ink, color: '#e8e2d3', padding: '40px 48px 24px', fontFamily: 'var(--sk-hand)' }}>
@@ -80,7 +80,7 @@ const Footer = () => (
       <div>
         <Logo height={36} light />
         <div style={{ fontSize: 13, opacity: 0.7, marginTop: 14, lineHeight: 1.5 }}>Sri Lanka's first tech-enabled online higher education institution, revolutionizing education through innovation.</div>
-        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 10 }}>Level 01, Shangri la, Colombo 2<br />+94 71 199 3331</div>
+        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 10 }}>Level 01, Shangri la, Colombo 2<br />+94 76 097 4224</div>
         <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
           {['globe', 'mail', 'chat'].map((k) => <SkIcon key={k} kind={k} size={18} color="#e8e2d3" />)}
         </div>
@@ -455,7 +455,7 @@ const HomeD = () => (
         </div>
         <div>
           <div style={{ fontFamily: 'var(--sk-mono)', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: SK.inkSoft }}>C — The ask</div>
-          <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 20, marginTop: 8, lineHeight: 1.3 }}>Reserve your seat. Talk to an advisor on +94 71 199 3331. Start your application today.</div>
+          <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 20, marginTop: 8, lineHeight: 1.3 }}>Reserve your seat. Talk to an advisor on +94 76 097 4224. Start your application today.</div>
           <div style={{ marginTop: 14 }}><SkBtn primary arrow>Begin</SkBtn></div>
         </div>
       </div>
@@ -509,7 +509,7 @@ const HomeD = () => (
           Reserve<br />your <span style={{ color: SK.accentSoft }}>seat</span>.
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 28 }}>
-          <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 18, maxWidth: 520, opacity: 0.8 }}>Talk to an expert. Choose the right course. Begin today. — Call +94 71 199 3331 · Mon–Fri 8:30 AM–5 PM.</div>
+          <div style={{ fontFamily: 'var(--sk-hand)', fontSize: 18, maxWidth: 520, opacity: 0.8 }}>Talk to an expert. Choose the right course. Begin today. — Call +94 76 097 4224 · Mon–Fri 8:30 AM–5 PM.</div>
           <SkBtn primary arrow>Start</SkBtn>
         </div>
       </div>
