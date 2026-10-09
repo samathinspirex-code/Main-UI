@@ -59,7 +59,7 @@ const Scribble = ({ lines = 3, width = '100%', lineGap = 8, lastShort = true, co
 );
 
 // ── Image bank — real Inspire College assets + curated stock fallbacks ──
-const IC = (path) => `https://inspirecollege.lk/wp-content/uploads/${path}`;
+const IC = (path) => `../public/uploads/${path}`;
 const U = (id, w = 800, h = 600) => `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 
 // Keyword → image URL. First matching key wins. Order matters (specific → generic).
@@ -76,8 +76,8 @@ const IMG_BANK = [
   ['program 2·3', IC('2025/12/37-768x397.png')],     // Higher Diploma Business
   ['program 2·4', IC('2025/12/31-768x397.png')],     // Diploma Banking & Finance
 
-  ['program 3·1', IC('2026/04/Gemini_Generated_Image_gop2mqgop2mqgop2-768x648.png')], // AI Mastery
-  ['program 3·2', IC('2026/04/WhatsApp-Image-2026-04-06-at-15.05.40-768x648.jpeg')],  // Digital Marketing
+  ['program 3·1', '../public/ai-student-engineer-hero.png'], // AI Mastery
+  ['program 3·2', '../public/business-student-professional-hero.png'], // Digital Marketing
   ['program 3·3', IC('2025/12/7-1.png')],            // Data Analytics with Google
   ['program 3·4', IC('2025/12/2-1.png')],            // AI for Marketing
 

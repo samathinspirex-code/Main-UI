@@ -5,7 +5,7 @@ const HOME_W = 1200;
 const HOME_H = 1500;
 
 // Real Inspire College assets
-const INSPIRE_LOGO = 'https://inspirecollege.lk/wp-content/uploads/2025/09/LeadHype-300-x-80-px-1.png';
+const INSPIRE_LOGO = '../public/uploads/2025/09/LeadHype-300-x-80-px-1.png';
 const PARTNER_LOGOS = {
   ATHE: 'https://dwf.efc.mybluehost.me/website_8fb955f8/wp-content/uploads/2025/10/Colour-PNG-_No-BackGround_.png',
   LSBF: 'https://dwf.efc.mybluehost.me/website_8fb955f8/wp-content/uploads/2025/10/London_School_of_Business_and_Finance__LSBF__logo-removebg-preview.png',
