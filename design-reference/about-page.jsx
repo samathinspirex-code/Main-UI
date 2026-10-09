@@ -5,16 +5,16 @@ const ABOUT_W = 1200;
 
 // Real Inspire College About page imagery
 const AB_IMG = {
-  heroFigure: 'https://inspirecollege.lk/wp-content/uploads/2025/10/Gemini_Generated_Image_vwcqbzvwcqbzvwcq-Photoroom.png',
-  whoWeAre: 'https://inspirecollege.lk/wp-content/uploads/2025/10/About-us-image-1-1.png',
-  steven: 'https://inspirecollege.lk/wp-content/uploads/2025/09/steven-600x606-1.jpg',
-  dinesh: 'https://inspirecollege.lk/wp-content/uploads/2025/09/dinesh-600x606-1.jpg',
-  bhanuka: 'https://inspirecollege.lk/wp-content/uploads/2025/09/bhanuka-600x606-1.jpg',
-  tim: 'https://inspirecollege.lk/wp-content/uploads/2025/09/tim-600x606-1.jpg',
-  kanishka: 'https://inspirecollege.lk/wp-content/uploads/2025/09/kanishka-1.png',
-  sumaiya: 'https://inspirecollege.lk/wp-content/uploads/2025/09/enfk.png',
-  nishadie: 'https://inspirecollege.lk/wp-content/uploads/2025/12/Inspire-Portratis-14-819x1024.jpg',
-  leandra: 'https://inspirecollege.lk/wp-content/uploads/2025/12/Inspire-Portratis-4-819x1024.jpg',
+  heroFigure: '../public/uploads/2025/10/Gemini_Generated_Image_vwcqbzvwcqbzvwcq-Photoroom.png',
+  whoWeAre: '../public/about-us-graduates.jpeg',
+  steven: '../public/uploads/2025/09/steven-600x606-1.jpg',
+  dinesh: '../public/uploads/2025/09/dinesh-600x606-1.jpg',
+  bhanuka: '../public/uploads/2025/09/bhanuka-600x606-1.jpg',
+  tim: '../public/uploads/2025/09/tim-600x606-1.jpg',
+  kanishka: '../public/uploads/2025/09/kanishka-1.png',
+  sumaiya: '../public/uploads/2025/09/enfk.png',
+  nishadie: '../public/team/nishadie-gunathilaka.jpeg',
+  leandra: '../public/team/leandra-joseph.jpeg',
 };
 
 // Real photo placeholder — drops in a sketchy bordered photo from a URL
