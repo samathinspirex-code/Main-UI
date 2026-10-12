@@ -135,7 +135,7 @@ export function Navbar() {
       )}
 
       <style>{`
-        .hamburger { display: none; }
+        .hamburger { display: none !important; }
         .mobile-nav-backdrop {
           position: fixed;
           inset: 0;
@@ -201,7 +201,7 @@ export function Navbar() {
           from { opacity: 0; }
           to { opacity: 1; }
         }
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
           .hamburger { display: flex !important; }
           nav > div:nth-child(2) { display: none !important; }
           nav { padding: 0 24px !important; }

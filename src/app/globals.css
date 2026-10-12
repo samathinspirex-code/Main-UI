@@ -817,11 +817,13 @@ input, select, textarea { font: inherit; color: inherit; }
 @media (max-width: 1100px) {
   .home-hero-badge-top { right: 0 !important; }
   .home-hero-badge-bottom { left: 0 !important; }
+  .sx { padding-left: 32px !important; padding-right: 32px !important; }
+  .home-hero-title.home-hero-title-single { white-space: normal !important; }
 }
 
 @media (max-width: 900px) {
   .home-hero-title, .about-hero-copy h1, .admission-hero h1 { white-space: normal !important; }
-  .home-hero-title.home-hero-title-single { white-space: nowrap !important; }
+  .home-hero-title.home-hero-title-single { white-space: normal !important; }
   .about-hero-inner { grid-template-columns: 1fr; gap: 0; padding-top: 24px; }
   .about-hero-copy { max-width: 700px; margin: 0 auto; padding: 62px 0 24px; text-align: center; }
   .about-hero-copy > i { margin-right: auto; margin-left: auto; }
@@ -853,6 +855,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 @media (max-width: 768px) {
+  .sx { padding-left: 24px !important; padding-right: 24px !important; }
   /* Prevent iOS automatic zoom on focus when font size is under 16px */
   input, select, textarea {
     font-size: 16px !important;
