@@ -55,7 +55,7 @@ export default function About() {
           </section>
 
           {/* Board */}
-          <section id="board" className="sx" style={{ padding: '80px 0', background: 'var(--bg-soft)', borderTop: '1px solid var(--border)' }}>
+          <section id="board" className="sx" style={{ padding: '80px 0', background: '#fff', borderTop: '1px solid var(--border)' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, marginBottom: 48 }}>
                 <h2 className="reveal" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,4vw,48px)', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>Visionary leaders</h2>
@@ -64,7 +64,7 @@ export default function About() {
               <div className="rg-4" style={{ gap: 20 }}>
                 {BOARD.map((p, i) => (
                   <div key={p.name} className={`card-hover reveal reveal-delay-${i + 1}`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
-                    <img src={p.img} alt={p.name} style={{ width: '100%', height: 260, objectFit: 'contain', objectPosition: 'center bottom', padding: '14px 10px 0', background: 'linear-gradient(145deg, #b7a6e5, #c9b9eb)' }} />
+                    <img src={p.img} alt={p.name} style={{ width: '100%', height: 260, objectFit: 'contain', objectPosition: 'center bottom', padding: '14px 10px 0', background: '#fff' }} />
                     <div style={{ padding: 20 }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{p.name}</div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--accent)', marginBottom: 12 }}>{p.role.toUpperCase()}</div>
@@ -83,7 +83,7 @@ export default function About() {
               <div className="rg-2" style={{ gap: 24 }}>
                 {LEADERSHIP.map((p, i) => (
                   <div key={p.name} className={`reveal reveal-delay-${i + 1} profile-card leadership-card`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden', display: 'grid', gridTemplateColumns: '160px 1fr' }}>
-                    <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', minHeight: 200, background: 'linear-gradient(145deg, #b7a6e5, #c9b9eb)' }} />
+                    <img src={p.img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', minHeight: 200, background: '#fff' }} />
                     <div style={{ padding: 24 }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, marginBottom: 4 }}>{p.name}</div>
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--accent)', marginBottom: 14 }}>{p.role.toUpperCase()}</div>
@@ -131,7 +131,7 @@ export default function About() {
               </div>
               <div className="rg-3" style={{ gap: 20 }}>
                 {VALUES.map((v, i) => (
-                  <div key={v.t} className={`card-hover reveal reveal-delay-${(i % 3) + 1}`} style={{ background: 'var(--bg-soft)', border: '1px solid var(--border)', borderRadius: 10, padding: 28 }}>
+                  <div key={v.t} className={`card-hover reveal reveal-delay-${(i % 3) + 1}`} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 10, padding: 28 }}>
                     <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                       <Icon kind={v.icon} size={22} color="var(--accent)" />
                     </div>

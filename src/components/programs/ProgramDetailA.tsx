@@ -1,3 +1,4 @@
+import { WHATSAPP_BOT_URL } from '@/data/whatsapp'
 // Program detail — "A · Tabs + structured", ported from
 // design-reference/inner-pages.jsx (const DetailA), parametrized to work for
 // any program instead of being hardcoded to "HND Computing & AI", and with
@@ -224,7 +225,7 @@ export function ProgramDetailA({ program }: { program: Program }) {
           <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
             <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Reserve your seat</SkBtn>
             <SkBtn href="/contact">Download brochure</SkBtn>
-            <SkBtn href="/contact">Talk to an advisor</SkBtn>
+            <SkBtn href={WHATSAPP_BOT_URL}>Talk to an advisor</SkBtn>
           </div>
         </div>
         <div>

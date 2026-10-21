@@ -1,5 +1,7 @@
 'use client'
 
+import { WHATSAPP_BOT_URL } from '@/data/whatsapp'
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -75,7 +77,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: '100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.',
     benefits: ['100% Online', 'Flexible', 'Globally Recognised'],
     primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
-    secondaryBtn: { label: 'Talk to an advisor', href: '/contact' },
+    secondaryBtn: { label: 'Talk to an advisor', href: WHATSAPP_BOT_URL },
     image: '/hero-banner1.png',
     imageAlt: 'Inspire College student beginning his pathway to a global qualification',
     badgeTop: { label: '100% ONLINE' },
@@ -90,7 +92,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: 'Learn practical AI skills online and build toward the career you want.',
     benefits: ['Practical AI Skills', 'Flexible Learning', 'Career Growth'],
     primaryBtn: { label: 'Explore Programs →', href: '/programs' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: WHATSAPP_BOT_URL },
     image: '/ai-student-engineer-hero.png',
     imageAlt: 'AI student progressing toward a career as an AI engineer',
     badgeTop: { label: 'AI ENGINEER' },
@@ -105,7 +107,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: 'Build practical business skills online and grow toward the career you want.',
     benefits: ['Business Skills', 'Flexible Learning', 'Career Growth'],
     primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: WHATSAPP_BOT_URL },
     image: '/business-student-professional-hero.png',
     imageAlt: 'Business student progressing toward a professional career',
     badgeTop: { label: 'BUSINESS PROFESSIONAL' },
@@ -134,7 +136,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: 'Help your child take the next step with flexible online learning and guidance throughout their studies.',
     benefits: ['Foundation', 'HND', 'Degree Pathways'],
     primaryBtn: { label: 'Explore Programmes', href: '/programs' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: '/contact' },
+    secondaryBtn: { label: 'Talk to an Advisor', href: WHATSAPP_BOT_URL },
     image: '/home-hero-about.png',
     imageAlt: 'Inspire College graduate celebrating success with family',
     badgeBottom: { eyebrow: 'Student Success', value: '100% Satisfaction' },
@@ -560,7 +562,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               >
                 Reserve your seat →
               </a>
-              <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '12px 28px', background: 'transparent', color: 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, borderRadius: 8, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.35)', letterSpacing: '0.02em', transition: 'border-color 0.2s, color 0.2s' }}
+              <a href={WHATSAPP_BOT_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '12px 28px', background: 'transparent', color: 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, borderRadius: 8, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.35)', letterSpacing: '0.02em', transition: 'border-color 0.2s, color 0.2s' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.7)'; (e.currentTarget as HTMLAnchorElement).style.color = '#fff' }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.35)'; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.85)' }}
               >

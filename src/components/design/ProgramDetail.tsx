@@ -1,5 +1,7 @@
 'use client'
 
+import { WHATSAPP_BOT_URL } from '@/data/whatsapp'
+
 import { useState } from 'react'
 import Link from 'next/link'
 import { Navbar } from '../layout/Navbar'
@@ -46,7 +48,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             </div>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <Button variant="primary" href={`/admissions?program=${program.slug}`}>Reserve your seat →</Button>
-              <Button variant="outline" href="/contact">Talk to an advisor</Button>
+              <Button variant="outline" href={WHATSAPP_BOT_URL}>Talk to an advisor</Button>
             </div>
           </div>
           <div>
