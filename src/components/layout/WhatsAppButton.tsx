@@ -2,16 +2,14 @@
 // Set NEXT_PUBLIC_WHATSAPP_NUMBER (international format, digits only)
 // to override the WhatsApp bot number.
 
-const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "94743762393").replace(/\D/g, "");
-const WHATSAPP_MESSAGE = process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE || "Hi Inspire College! I'd like to know more about your programmes.";
+import { WHATSAPP_BOT_URL } from '@/data/whatsapp'
 
 export function WhatsAppButton() {
-  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
   return (
     <a
       className="whatsapp-float"
-      href={href}
+      href={WHATSAPP_BOT_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"

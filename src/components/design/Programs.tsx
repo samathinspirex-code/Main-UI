@@ -74,17 +74,25 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
   const [guidedBody, setGuidedBody] = useState(canonicalBody(initialBody))
   const [guidedSchool, setGuidedSchool] = useState(initialSchool)
   const [programme, setProgramme] = useState(initialProgramme)
+  const [studentType, setStudentType] = useState('')
+  const eligiblePrograms = useMemo(() => programs.filter(p => {
+    if (!studentType) return true
+    const category = programmeCode(p.programmeName ?? p.level)
+    const shortCourse = category.includes('SHORTCOURSE')
+    if (studentType === 'ol') return category.includes('FOUNDATION') || shortCourse
+    return shortCourse || category.includes('HND') || ['BCOM', 'BCA', 'BBA', 'MBA', 'MCA'].includes(category) || category.includes('POSTGRADUATE') || category.includes('MASTER')
+  }), [programs, studentType])
   const jainSelected = guidedBody === 'Jain University'
 
-  const guidedBodies = useMemo(() => [...new Set(programs.map(p => canonicalBody(p.awardingBody)))].sort((a, b) => bodyRank(a) - bodyRank(b) || a.localeCompare(b)), [programs])
-  const bodyCourses = useMemo(() => programs.filter(p => (!guidedBody || canonicalBody(p.awardingBody) === guidedBody) && (!jainSelected || JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level)))), [programs, guidedBody, jainSelected])
+  const guidedBodies = useMemo(() => [...new Set(eligiblePrograms.map(p => canonicalBody(p.awardingBody)))].sort((a, b) => bodyRank(a) - bodyRank(b) || a.localeCompare(b)), [eligiblePrograms])
+  const bodyCourses = useMemo(() => eligiblePrograms.filter(p => (!guidedBody || canonicalBody(p.awardingBody) === guidedBody) && (!jainSelected || JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level)))), [eligiblePrograms, guidedBody, jainSelected])
   const guidedSchools = useMemo(() => [...new Set(bodyCourses.map(p => p.schoolName ?? p.school))].sort(), [bodyCourses])
   const schoolCourses = useMemo(() => bodyCourses.filter(p => jainSelected || !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [bodyCourses, guidedSchool, jainSelected])
   const programmeOptions = useMemo(() => [...new Set(schoolCourses.map(p => p.programmeName ?? p.level))].sort(), [schoolCourses])
 
   const counts = useMemo(() => {
     const lc = new Map<string, number>(); const sc = new Map<string, number>(); const bc = new Map<string, number>()
-    for (const p of programs) {
+    for (const p of eligiblePrograms) {
       const programmeName = p.programmeName ?? p.level
       const schoolName = p.schoolName ?? p.school
       lc.set(programmeName, (lc.get(programmeName) ?? 0) + 1)
@@ -93,32 +101,32 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
       bc.set(body, (bc.get(body) ?? 0) + 1)
     }
     return { lc, sc, bc }
-  }, [programs])
+  }, [eligiblePrograms])
   const programmeFilters = useMemo(() => {
     return programmeNodes
       .map((node) => {
         const normalizedName = node.name.trim().toLowerCase()
-        const count = programs.filter((program) =>
+        const count = eligiblePrograms.filter((program) =>
           program.programmeId === node.programme_id ||
           (program.programmeId == null && (program.programmeName ?? program.level).trim().toLowerCase() === normalizedName)
         ).length
         return { label: node.name, value: node.name, count }
       })
       .filter((item) => item.count > 0)
-  }, [programs, programmeNodes])
+  }, [eligiblePrograms, programmeNodes])
   const schoolFilters = useMemo(() => {
     const visibleSchoolCounts = new Map<string, number>()
-    for (const program of programs) {
+    for (const program of eligiblePrograms) {
       const school = program.schoolName ?? program.school
       if (canonicalBody(program.awardingBody) === 'Jain University' || canonicalBody(school) === 'Jain University') continue
       visibleSchoolCounts.set(school, (visibleSchoolCounts.get(school) ?? 0) + 1)
     }
     return [...visibleSchoolCounts].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label))
-  }, [programs])
+  }, [eligiblePrograms])
   const bodyFilters = useMemo(() => [...counts.bc].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => bodyRank(a.value) - bodyRank(b.value) || a.label.localeCompare(b.label)), [counts])
 
   const filtered = useMemo(() => {
-    let list = programs.filter(p => {
+    let list = eligiblePrograms.filter(p => {
       if (programme && (p.programmeName ?? p.level) !== programme) return false
       if (jainSelected && !JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level))) return false
       if (!jainSelected && guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
@@ -131,7 +139,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
     })
     list = [...list].sort((a, b) => sort === 'price-asc' ? a.priceFrom - b.priceFrom : sort === 'price-desc' ? b.priceFrom - a.priceFrom : b.popularity - a.popularity)
     return list
-  }, [programs, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody, jainSelected])
+  }, [eligiblePrograms, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody, jainSelected])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const cur = Math.min(page, pageCount)
@@ -156,6 +164,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
 
         <div id="programme-catalogue-top" className="sx programme-catalogue-top page-load-secondary" style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 0 0' }}>
           <div className="catalogue-pathway-selects">
+            <select className="catalogue-select" aria-label="Student Type" value={studentType} onChange={e => { setStudentType(e.target.value); setGuidedBody(''); setGuidedSchool(''); setProgramme(''); setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setPage(1) }}><option value="">Student Type · All students</option><option value="ol">After O/L</option><option value="al">After A/L</option></select>
             <select className="catalogue-select" aria-label="Awarding body" value={guidedBody} onChange={e => { setGuidedBody(e.target.value); setGuidedSchool(''); setProgramme(''); setPage(1) }}><option value="">Awarding body · All awarding bodies</option>{guidedBodies.map(value => <option key={value} value={value}>{value}</option>)}</select>
             {!jainSelected && <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>}
             <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedBody || (!jainSelected && !guidedSchool)}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
@@ -171,8 +180,8 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
             <div style={{ position: 'sticky', top: 88 }} className={showFilters ? undefined : 'sidebar-collapsed'}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>Filters</div>
-                {(programmes.size || schools.size || bodies.size || query || guidedBody || guidedSchool || programme) ? (
-                  <button onClick={() => { setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setGuidedBody(''); setGuidedSchool(''); setProgramme(''); setQuery(''); setPage(1) }} style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--accent)', cursor: 'pointer' }}>
+                {(studentType || programmes.size || schools.size || bodies.size || query || guidedBody || guidedSchool || programme) ? (
+                  <button onClick={() => { setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setGuidedBody(''); setGuidedSchool(''); setProgramme(''); setStudentType(''); setQuery(''); setPage(1) }} style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--accent)', cursor: 'pointer' }}>
                     Clear all
                   </button>
                 ) : null}
