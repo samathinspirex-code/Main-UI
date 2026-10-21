@@ -3,7 +3,7 @@
   padding: 82px 0 70px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, #f4effd, #ece4fa);
+  background: #fff;
 }
 
 .student-stories-inner {
