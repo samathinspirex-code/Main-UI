@@ -60,7 +60,7 @@ export function Navbar() {
           justifyContent: 'space-between',
           backdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(1.4)' : 'none',
-          background: scrolled ? 'rgba(240,235,251,0.92)' : 'transparent',
+          background: '#fff',
           borderBottom: scrolled ? '1px solid rgba(63,0,124,0.14)' : '1px solid transparent',
           boxShadow: scrolled ? '0 2px 24px rgba(63,0,124,0.08)' : 'none',
           transition: 'background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease',
@@ -151,7 +151,7 @@ export function Navbar() {
           left: 0;
           right: 0;
           z-index: 99;
-          background: rgba(240, 235, 251, 0.98);
+          background: #fff;
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
           border-bottom: 1px solid var(--border);
