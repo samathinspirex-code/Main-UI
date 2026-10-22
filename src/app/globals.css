@@ -1030,3 +1030,63 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* HND tuition, offer and registration fees. */
+@property --hnd-border-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.hnd-fees { max-width: 1200px; }
+.hnd-fees-heading { max-width: 850px; margin-bottom: 18px; }
+.hnd-fees-heading > span, .hnd-fees-card > span { display: block; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .07em; }
+.hnd-fees-heading h2 { margin: 7px 0 8px; font-size: clamp(25px, 3vw, 30px); line-height: 1.2; }
+.hnd-fees-heading p, .hnd-fees-card p { margin: 8px 0; color: var(--ink-soft); font-size: 14px; line-height: 1.5; }
+.hnd-fees-plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.hnd-fees-details { width: 50%; margin: 18px auto 0; }
+.hnd-fees-card { min-width: 0; padding: 20px; border: 1px solid var(--border-accent); border-radius: 12px; background: #fff; transition: box-shadow .25s ease, border-color .25s ease, transform .25s ease; }
+@media (hover: hover) {
+  .hnd-fees-card:hover { border-color: var(--accent-lt); box-shadow: 0 8px 24px rgba(63,0,124,.14); transform: translateY(-2px); }
+  .hnd-fees-offer:hover { border-color: transparent; box-shadow: 0 8px 28px rgba(63,0,124,.22); }
+}
+.hnd-fees-offer { border: 2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, conic-gradient(from var(--hnd-border-angle), #d8c7ef 0%, #d8c7ef 55%, #7b3ec8 75%, #3f007c 85%, #d8c7ef 100%) border-box; animation: hnd-border-travel 5s linear infinite; }
+@keyframes hnd-border-travel { to { --hnd-border-angle: 360deg; } }
+.hnd-fees-card h3 { margin: 10px 0 6px; color: var(--accent); font-size: clamp(22px, 2.1vw, 28px); line-height: 1.2; }
+.hnd-fees-card small { color: var(--ink-soft); font-size: 12px; line-height: 1.5; font-weight: 400; }
+.hnd-fees-card h3 small { display: block; margin-top: 4px; }
+.hnd-fees-card .hnd-fees-seat-note { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; }
+.hnd-fees-seat-note strong { color: var(--accent); }
+.hnd-fees-card dl { display: grid; grid-template-columns: 1fr; gap: 4px; margin: 10px 0; }
+.hnd-fees-card dl > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.hnd-fees-card dt { color: var(--ink-soft); font-size: 13px; }
+.hnd-fees-card dd { margin: 0; font-weight: 700; color: var(--accent); }
+@media(max-width:900px) {
+  .hnd-fees-plans { grid-template-columns: 1fr; }
+  .hnd-fees-details { width: 100%; max-width: 580px; }
+}
+@media(max-width:600px) { .hnd-fees-plans { grid-template-columns: 1fr; } .hnd-fees-card { padding: 18px; } }
+@media(prefers-reduced-motion:reduce) { .hnd-fees-offer { animation: none; } .hnd-fees-card { transition: none; transform: none; } }
+
+.hnd-fee-amount { display: inline-grid; font-variant-numeric: tabular-nums; }
+.hnd-fee-amount > span { grid-area: 1 / 1; }
+.hnd-fee-amount-width { visibility: hidden; }
+
+/* WTC event campaign heading and floating information cards. */
+.home-wtc-title { margin: 0 0 18px; font-family: var(--font-display); font-size: clamp(36px, 3.3vw, 48px); font-weight: 600; letter-spacing: -.025em; line-height: 1.08; }
+.home-wtc-title > span { display: block; color: var(--ink); }
+.home-wtc-title strong { display: block; font-size: inherit; font-weight: inherit; margin-top: 4px; }
+.home-wtc-invitation { max-width: 450px; margin: 0 0 24px; color: var(--accent); font-size: 14px; font-weight: 600; line-height: 1.6; }
+.home-wtc-widgets { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.home-wtc-widget { position: absolute; display: flex; align-items: center; gap: 12px; max-width: 250px; padding: 14px 16px; border: 1px solid rgba(123,62,200,.2); border-radius: 16px; background: rgba(255,255,255,.97); box-shadow: 0 10px 32px rgba(63,0,124,.13); animation: float 5s ease-in-out infinite; }
+.home-wtc-date { top: 0; left: -10px; }
+.home-wtc-venue { top: 100px; right: -12px; animation-delay: -2s; }
+.home-wtc-widget-icon { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: #f6efff; font-size: 24px; }
+.home-wtc-widget small { display: block; margin-bottom: 4px; color: var(--ink-soft); font-size: 11px; }
+.home-wtc-widget strong, .home-wtc-widget div > span { display: block; color: var(--accent); font-size: 14px; line-height: 1.45; }
+.home-wtc-widget div > span { font-size: 12px; font-weight: 600; }
+@media(max-width:900px) { .home-wtc-date { left: 0; } .home-wtc-venue { right: 0; } }
+@media(max-width:480px) {
+  .home-wtc-widget { gap: 8px; max-width: 205px; padding: 10px 12px; border-radius: 12px; }
+  .home-wtc-widget-icon { width: 32px; height: 36px; font-size: 20px; }
+  .home-wtc-widget strong { font-size: 12px; }
+  .home-wtc-widget div > span { font-size: 11px; }
+  .home-wtc-venue { top: 86px; }
+}
+@media(prefers-reduced-motion:reduce) { .home-wtc-widget { animation: none; } }
+

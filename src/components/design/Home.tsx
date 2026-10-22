@@ -66,9 +66,31 @@ interface HeroSlide {
   titleSingleLine?: boolean
   badgeTop?: { label: string }
   badgeBottom: { eyebrow: string; value: string }
+  event?: { date: string; time: string; venue: string; invitation: string }
 }
 
 const HERO_SLIDES: HeroSlide[] = [
+  {
+    tag: '· Your Career Journey ·',
+    title: 'Inspire College is coming to',
+    titleHighlight: 'WTC!',
+    titleBreakBeforeHighlight: true,
+    subtitle: 'Explore flexible learning pathways',
+    description: 'Meet our team, explore our programmes, and take the next step in your career at Inspire College’s WTC event.',
+    benefits: [],
+    event: {
+      date: '26th October 2026',
+      time: '8.30 AM to 5.30 PM',
+      venue: 'World Trade Center, Colombo',
+      invitation: 'Visit our stall and explore your career opportunities!',
+    },
+    primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
+    secondaryBtn: { label: 'Talk to an advisor', href: WHATSAPP_BOT_URL },
+    image: '/career-journey-wtc.png',
+    imageAlt: 'Professionals in front of the World Trade Center, Colombo',
+    badgeTop: { label: 'WTC EVENT · 26 OCT' },
+    badgeBottom: { eyebrow: 'Spot Offers', value: 'Up to 50%' },
+  },
   {
     tag: "· Sri Lanka's First Online University ·",
     title: 'Your Online ',
@@ -166,15 +188,41 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
   // The first slide is visible in the server HTML (its entrance is a CSS animation),
   // so the hero paints without waiting for JavaScript.
   const [currentSlide, setCurrentSlide] = useState(0)
+  const swipeStart = useRef<{ x: number; y: number } | null>(null)
+  const [touchingHero, setTouchingHero] = useState(false)
+
+  function cancelHeroSwipe() {
+    swipeStart.current = null
+    setTouchingHero(false)
+  }
+
+  function startHeroSwipe(event: React.PointerEvent<HTMLElement>) {
+    if (!event.isPrimary || event.button !== 0 || (event.target as Element).closest('a, button, input, select, textarea')) return
+    swipeStart.current = { x: event.clientX, y: event.clientY }
+    event.currentTarget.setPointerCapture(event.pointerId)
+    setTouchingHero(true)
+  }
+
+  function endHeroSwipe(event: React.PointerEvent<HTMLElement>) {
+    const start = swipeStart.current
+    cancelHeroSwipe()
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+    if (!start) return
+    const dx = event.clientX - start.x
+    const dy = event.clientY - start.y
+    if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.5) return
+    setCurrentSlide(previous => (previous + (dx < 0 ? 1 : -1) + HERO_SLIDES.length) % HERO_SLIDES.length)
+  }
 
   // Keep one steady seven-second loop. Manual selection starts a fresh full
   // interval so a chosen slide is never replaced immediately afterwards.
   useEffect(() => {
+    if (touchingHero) return
     const timer = window.setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
     }, HERO_SLIDE_INTERVAL_MS)
     return () => window.clearTimeout(timer)
-  }, [currentSlide])
+  }, [currentSlide, touchingHero])
 
   return (
     <div className="home-page" style={{ minHeight: '100vh', background: 'var(--bg)' }}>
@@ -182,8 +230,40 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       {/* ══ HERO ══ */}
       <section
         ref={heroRef}
-        style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 68, overflowX: 'clip', background: '#fff' }}
+        onPointerDown={startHeroSwipe}
+        onPointerUp={endHeroSwipe}
+        onPointerCancel={cancelHeroSwipe}
+        onLostPointerCapture={cancelHeroSwipe}
+        style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: 68, overflowX: 'clip', background: '#fff', touchAction: 'pan-y pinch-zoom', userSelect: 'none', cursor: touchingHero ? 'grabbing' : 'grab' }}
       >
+        <div className="hero-backdrop" aria-hidden="true">
+          <svg className="hero-ribbons" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="hero-ribbon-purple" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#7B3EC8" stopOpacity="0" />
+                <stop offset="0.5" stopColor="#7B3EC8" stopOpacity="0.55" />
+                <stop offset="1" stopColor="#3F007C" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="hero-ribbon-green" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#9BE15D" stopOpacity="0" />
+                <stop offset="0.5" stopColor="#9BE15D" stopOpacity="0.6" />
+                <stop offset="1" stopColor="#9BE15D" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <g className="hero-ribbon-group hero-ribbon-group-a">
+              <path className="hero-ribbon-base" d="M-80 620 C 240 470, 460 760, 760 600 S 1240 380, 1520 520" />
+              <path className="hero-ribbon-flow" stroke="url(#hero-ribbon-purple)" d="M-80 620 C 240 470, 460 760, 760 600 S 1240 380, 1520 520" />
+            </g>
+            <g className="hero-ribbon-group hero-ribbon-group-b">
+              <path className="hero-ribbon-base" d="M-80 700 C 280 560, 520 820, 820 660 S 1260 470, 1520 610" />
+              <path className="hero-ribbon-flow hero-ribbon-flow-green" stroke="url(#hero-ribbon-green)" d="M-80 700 C 280 560, 520 820, 820 660 S 1260 470, 1520 610" />
+            </g>
+            <g className="hero-ribbon-group hero-ribbon-group-c">
+              <path className="hero-ribbon-base" d="M-80 220 C 300 120, 560 330, 880 210 S 1300 60, 1520 170" />
+              <path className="hero-ribbon-flow hero-ribbon-flow-slow" stroke="url(#hero-ribbon-purple)" d="M-80 220 C 300 120, 560 330, 880 210 S 1300 60, 1520 170" />
+            </g>
+          </svg>
+        </div>
         {/* Content */}
         <div className="sx home-hero-grid home-hero-enter" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', alignItems: 'center', gap: 48, padding: '80px 0' }}>
 
@@ -208,6 +288,12 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     </Tag>
                   </div>
 
+                  {slide.event ? (
+                    <h1 className="home-wtc-title">
+                      <span>Inspire College</span>
+                      <strong className="text-gold">is coming to WTC!</strong>
+                    </h1>
+                  ) : (
                   <h1 className={slide.titleSingleLine ? 'home-hero-title home-hero-title-single' : 'home-hero-title'} style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: 'clamp(36px, 3.3vw, 48px)',
@@ -218,6 +304,8 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   }}>
                     {slide.title}{slide.titleBreakBeforeHighlight && <br />}<span className="text-gold" style={{ display: 'inline-block' }}>{slide.titleHighlight}</span>
                   </h1>
+
+                  )}
 
                   <h2 style={{
                     fontFamily: 'var(--font-body)',
@@ -241,6 +329,9 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   </p>
 
                   {/* Study benefits */}
+                  {slide.event ? (
+                    <p className="home-wtc-invitation">{slide.event.invitation}</p>
+                  ) : (
                   <div style={{ marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
                     {slide.benefits.map((b) => (
                       <div key={b} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -249,6 +340,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                       </div>
                     ))}
                   </div>
+                  )}
 
                   <div className="home-hero-actions" style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                     <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
@@ -266,7 +358,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
               return (
                 <div
                   key={idx}
-                  className="home-hero-art"
+                  className={slide.event ? 'home-hero-art home-wtc-art' : 'home-hero-art'}
                   style={{
                     position: 'absolute', inset: 0,
                     opacity: active ? 1 : 0,
@@ -277,8 +369,9 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                 >
                   <Image
                     src={slide.image}
+                    draggable={false}
                     alt={slide.imageAlt}
-                    className={idx === 0 ? 'home-hero-image home-hero-image-first' : 'home-hero-image'}
+                    className={slide.image === '/hero-banner1.png' ? 'home-hero-image home-hero-image-first' : 'home-hero-image'}
                     width={1024}
                     height={1024}
                     sizes="(max-width: 900px) 92vw, 600px"
@@ -288,7 +381,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     style={{
                       position: 'relative', zIndex: 1,
                       width: '100%', height: '100%',
-                      objectFit: 'contain', display: 'block',
+                      objectFit: 'contain', objectPosition: 'center bottom', display: 'block',
                       filter: 'drop-shadow(0 26px 28px rgba(49,16,112,.22))',
                       animation: 'home-hero-art-float 6s ease-in-out infinite',
                     }}
@@ -308,8 +401,20 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
                   </div>
+                  {slide.event && (
+                    <div className="home-wtc-widgets">
+                      <div className="home-wtc-widget home-wtc-date">
+                        <span className="home-wtc-widget-icon" aria-hidden="true">📅</span>
+                        <div><small>Date &amp; time</small><strong>{slide.event.date}</strong><span>{slide.event.time}</span></div>
+                      </div>
+                      <div className="home-wtc-widget home-wtc-venue">
+                        <span className="home-wtc-widget-icon"><Icon kind="pin" size={25} color="var(--accent-lt)" /></span>
+                        <div><small>Meet us at</small><strong>World Trade Center</strong><span>Colombo</span></div>
+                      </div>
+                    </div>
+                  )}
                   {/* Top right badge */}
-                  {slide.badgeTop && (
+                  {slide.badgeTop && !slide.event && (
                     <div
                       className="home-hero-badge-top"
                       style={{

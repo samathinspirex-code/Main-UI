@@ -3,6 +3,7 @@
 import { WHATSAPP_BOT_URL } from '@/data/whatsapp'
 
 import { useState } from 'react'
+import HndFees from './HndFees'
 import Link from 'next/link'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
@@ -16,6 +17,7 @@ const TABS = ['Overview','Curriculum','Careers','Fees & Aid','Apply']
 export default function ProgramDetail({ program, related }: { program: Program; related: Program[] }) {
   const [activeTab, setActiveTab] = useState('Overview')
   const heroImg = program.imageUrl || getProgramImage(program.imageLabel)
+  const isHnd = /\bhnd\b/i.test(program.programmeName ?? program.level)
 
   return (
     <div>
@@ -148,6 +150,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             </div>
           )}
           {activeTab === 'Fees & Aid' && (
+            isHnd ? <HndFees /> :
             <div className="rg-2" style={{ gap: 24, maxWidth: 720 }}>
               <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 28 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-muted)', marginBottom: 8 }}>TUITION</div>
