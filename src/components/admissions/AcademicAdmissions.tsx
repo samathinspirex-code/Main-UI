@@ -13,7 +13,7 @@ import "./academic-admissions.css";
 type Props = { programs: Program[]; programmes: ProgrammeNode[]; initialProgramSlug?: string };
 type Details = { full_name: string; email: string; phone: string };
 type StudyMode = "full_time" | "part_time";
-type Draft = Details & { programmeId: string; courseId: string; qualification: string; studyMode: StudyMode; courseSelectionSkipped?: boolean; step: number };
+type Draft = Details & { submissionId?: string; programmeId: string; courseId: string; qualification: string; studyMode: StudyMode; courseSelectionSkipped?: boolean; step: number };
 const STEPS = [["01","Your details","Name, email & phone"],["02","Pick your course","Programme, then course"],["03","Upload results","Optional documents"],["04","Reserve & Pay","Confirm your course fee"]];
 const QUALIFICATIONS = ["After O/L","After A/L","Certificate","Diploma/HND","Bachelor degree","Postgraduate degree","Other"];
 const QUALIFICATION_PROGRAMMES: Record<string, string[]> = {
@@ -64,7 +64,7 @@ export default function AcademicAdmissions({ programs, programmes, initialProgra
   const [busy,setBusy] = useState(false);
   const [error,setError] = useState("");
   const [complete,setComplete] = useState(false);
-  const [submissionId] = useState(() => crypto.randomUUID());
+  const [submissionId,setSubmissionId] = useState(() => crypto.randomUUID());
 
   useEffect(() => {
     if (initialCourse) return;
@@ -72,6 +72,7 @@ export default function AcademicAdmissions({ programs, programmes, initialProgra
       try {
         const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null") as Draft | null;
         if (!draft) return;
+        if (draft.submissionId) setSubmissionId(draft.submissionId);
         setDetails({ full_name: draft.full_name || "", email: draft.email || "", phone: draft.phone || "" });
         setProgrammeId(draft.programmeId || ""); setCourseId(draft.courseId || "");
         setCourseSelectionSkipped(Boolean(draft.courseSelectionSkipped));
@@ -100,7 +101,21 @@ export default function AcademicAdmissions({ programs, programmes, initialProgra
   const canContinueWithoutCourse=allowsCourseDeferral(selectedProgramme?.name);
   const stepTwoValid=Boolean(selectedProgramme&&(selectedCourse||(courseSelectionSkipped&&canContinueWithoutCourse)));
 
-  function saveDraft(exit=false){localStorage.setItem(DRAFT_KEY,JSON.stringify({...details,programmeId,courseId,qualification,studyMode,courseSelectionSkipped,step} satisfies Draft));setSaved(true);window.setTimeout(()=>setSaved(false),2500);if(exit)router.push("/");}
+  async function saveDraft(exit=false){
+    setError("");
+    try {
+      localStorage.setItem(DRAFT_KEY,JSON.stringify({...details,submissionId,programmeId,courseId,qualification,studyMode,courseSelectionSkipped,step} satisfies Draft));
+      if(exit){
+        if(!stepOneValid){setError("Enter your name, a valid email address and phone number before saving and exiting.");setStep(1);return;}
+        setBusy(true);
+        const response=await fetch("/api/admission-drafts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submission_id:submissionId,...details,highest_qualification:qualification,programme_id:programmeId?Number(programmeId):null,preferred_course_id:courseId?Number(courseId):null,preferred_study_mode:selectedStudyOption?.study_mode??studyMode})});
+        const payload=await response.json();
+        if(!response.ok)throw new Error(payload?.error?.message||"Unable to save your progress. Please try again.");
+        router.push("/");
+      }
+      setSaved(true);window.setTimeout(()=>setSaved(false),2500);
+    }catch(reason){setError(reason instanceof Error?reason.message:"Unable to save your progress. Please try again.");}finally{setBusy(false);}
+  }
   function chooseCourse(value:string){if(value==="__later__"){setCourseId("");setCourseSelectionSkipped(true);setStudyMode("full_time");return;}setCourseSelectionSkipped(false);setCourseId(value);const course=programs.find(item=>String(item.courseId)===value);setStudyMode(course?.studyOptions?.find(option=>option.is_enabled)?.study_mode??"full_time");}
   function chooseDocument(file?:File){setError("");if(!file){setDocument(null);return;}if(!["application/pdf","image/jpeg","image/png"].includes(file.type)){setError("Choose a PDF, JPG or PNG result document.");return;}if(file.size>10*1024*1024){setError("The result document must be 10 MB or smaller.");return;}setDocument(file);}
   async function submit(){if(!stepOneValid||!stepTwoValid)return;setBusy(true);setError("");try{const result_document=document?{filename:document.name,content_type:document.type,size_bytes:document.size,data_base64:await fileToBase64(document)}:null;const response=await fetch("/api/programme-enrolments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({submission_id:submissionId,...details,highest_qualification:qualification,programme_id:Number(programmeId),preferred_course_id:courseId?Number(courseId):null,preferred_study_mode:selectedStudyOption?.study_mode??null,result_document})});const payload=await response.json();if(!response.ok)throw new Error(payload?.error?.message||payload?.detail||"Unable to submit your application.");localStorage.removeItem(DRAFT_KEY);setComplete(true);}catch(reason){setError(reason instanceof Error?reason.message:"Unable to submit your application.");}finally{setBusy(false);}}
@@ -116,7 +131,7 @@ export default function AcademicAdmissions({ programs, programmes, initialProgra
       {step===3&&<div className="admission-panel"><PanelHead step="STEP 03 · OPTIONAL" title="Upload your results" text="Add an O/L, A/L, diploma, degree or other result now, or provide it later."/><label className="admission-upload"><input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" onChange={e=>chooseDocument(e.target.files?.[0])}/><span className="admission-upload-icon"><Icon kind="book" size={28} color="var(--accent)"/></span><b>{document?document.name:"Choose a result document"}</b><small>{document?`${(document.size/1024/1024).toFixed(1)} MB · Click to replace`:"PDF, JPG or PNG · maximum 10 MB"}</small></label>{document&&<button type="button" className="admission-remove-file" onClick={()=>setDocument(null)}>Remove document</button>}</div>}
       {step===4&&<div className="admission-panel"><PanelHead step="STEP 04" title="Reserve & Pay" text="Review your details and reserve your place at the current course fee."/><dl className="admission-review">{[["Name",details.full_name],["Email",details.email],["Phone",details.phone],["Programme",selectedProgramme?.name||"—"],["Course",selectedCourse?.title||(courseSelectionSkipped?"To be confirmed with admissions":"—")],["Study option",selectedCourse?(selectedStudyOption?.study_mode==="part_time"?"Part time":"Full time"):"To be confirmed"],["Result document",document?.name||"Not uploaded — provide later"]].map(([key,value])=><div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl><div className="admission-fee"><span><small>COURSE FEE</small><b>{selectedDuration||"To be confirmed"}</b></span><strong>{feeCourse?formatLKR(displayedPrice):"To be confirmed"}</strong></div>{isHndCourse&&<div className="admission-fee admission-fee-upfront"><span><small>UPFRONT PAYMENT</small><b>To reserve your HND place</b></span><strong>{formatLKR(HND_UPFRONT_PAYMENT)}</strong></div>}<div className="admission-consent"><Icon kind="check" size={18} color="var(--accent)"/><span>Your place will be reserved and our admissions team will contact you with the available payment options.</span></div></div>}
       {error&&<p className="admission-error" role="alert">{error}</p>}{!catalogueAvailable&&<p className="admission-error" role="alert">The programme catalogue is temporarily unavailable. Please try again shortly.</p>}
-      <nav className="admission-nav"><button type="button" className="admission-button secondary" disabled={step===1||busy} onClick={()=>setStep(v=>Math.max(1,v-1))}>← Back</button><span className="admission-save-status">{saved?"Progress saved":""}</span><button type="button" className="admission-button ghost" disabled={busy} onClick={()=>saveDraft(true)}>Save & exit</button>{step<4?<button type="button" className="admission-button primary" disabled={!catalogueAvailable||(step===1&&!stepOneValid)||(step===2&&!stepTwoValid)} onClick={()=>setStep(v=>Math.min(4,v+1))}>Continue to step {step+1} →</button>:<button type="button" className="admission-button primary" disabled={busy||!stepOneValid||!stepTwoValid} onClick={submit}>{busy?"Reserving…":"Reserve my seat →"}</button>}</nav>
+      <nav className="admission-nav"><button type="button" className="admission-button secondary" disabled={step===1||busy} onClick={()=>setStep(v=>Math.max(1,v-1))}>← Back</button><span className="admission-save-status">{saved?"Progress saved":""}</span><button type="button" className="admission-button ghost" disabled={busy} onClick={()=>saveDraft(true)}>Save & exit</button>{step<4?<button type="button" className="admission-button primary" disabled={busy||!catalogueAvailable||(step===1&&!stepOneValid)||(step===2&&!stepTwoValid)} onClick={()=>setStep(v=>Math.min(4,v+1))}>Continue to step {step+1} →</button>:<button type="button" className="admission-button primary" disabled={busy||!stepOneValid||!stepTwoValid} onClick={submit}>{busy?"Reserving…":"Reserve my seat →"}</button>}</nav>
     </div><aside className="admission-aside"><div className="admission-help-card"><span>PERSONAL GUIDANCE</span><h3>Need a hand?</h3><p>Our admissions advisors can help you choose the right programme and course.</p><a href="tel:+94711993331">+94 71 199 3331 →</a></div><div className="admission-benefits"><span>WHAT HAPPENS NEXT</span><ol><li>We review your application</li><li>An advisor contacts you</li><li>We confirm entry requirements</li><li>You complete enrolment</li></ol></div></aside></section>
   </main><Footer/></div>;
 }
