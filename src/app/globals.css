@@ -1090,3 +1090,9 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 }
 @media(prefers-reduced-motion:reduce) { .home-wtc-widget { animation: none; } }
 
+
+.home-wtc-preregister { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 15px 32px; border: 1px solid var(--accent); border-radius: 10px; background: linear-gradient(120deg, var(--accent), #7b2fc2); color: #fff; font-size: 17px; font-weight: 700; box-shadow: 0 6px 20px rgba(93,0,145,.22); transform-origin: center; animation: wtc-preregister-pop 2.6s ease-in-out infinite; }
+.home-wtc-preregister:hover { animation-play-state: paused; box-shadow: 0 10px 30px rgba(93,0,145,.3); }
+.home-wtc-preregister:focus-visible { outline: 3px solid var(--accent-lt); outline-offset: 4px; }
+@keyframes wtc-preregister-pop { 0%,100% { transform: translateY(0) scale(1); box-shadow: 0 6px 20px rgba(93,0,145,.22); } 45% { transform: translateY(-5px) scale(1.045); box-shadow: 0 12px 30px rgba(93,0,145,.3); } 65% { transform: translateY(-1px) scale(1.015); } }
+@media(prefers-reduced-motion:reduce) { .home-wtc-preregister { animation: none; } }

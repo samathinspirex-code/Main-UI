@@ -214,13 +214,13 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
     setCurrentSlide(previous => (previous + (dx < 0 ? 1 : -1) + HERO_SLIDES.length) % HERO_SLIDES.length)
   }
 
-  // Keep one steady seven-second loop. Manual selection starts a fresh full
+  // Keep the first slide for ten seconds and other slides for seven. Manual selection starts a fresh full
   // interval so a chosen slide is never replaced immediately afterwards.
   useEffect(() => {
     if (touchingHero) return
     const timer = window.setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
-    }, HERO_SLIDE_INTERVAL_MS)
+    }, currentSlide === 0 ? 10000 : HERO_SLIDE_INTERVAL_MS)
     return () => window.clearTimeout(timer)
   }, [currentSlide, touchingHero])
 
@@ -342,10 +342,12 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   </div>
                   )}
 
-                  <div className="home-hero-actions" style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                  {slide.event ? (
+                    <Link className="home-wtc-preregister" href="/wtc-event">Pre-Registration</Link>
+                  ) : <div className="home-hero-actions" style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                     <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
                     <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
-                  </div>
+                  </div>}
                 </div>
               )
             })}

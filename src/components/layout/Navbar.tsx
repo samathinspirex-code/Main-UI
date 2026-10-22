@@ -17,7 +17,7 @@ const NAV = [
   { label: 'Contact', href: '/contact' },
 ]
 
-export function Navbar() {
+export function Navbar({ actionLabel = 'Apply Now', onAction }: { actionLabel?: string; onAction?: () => void } = {}) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
@@ -89,7 +89,7 @@ export function Navbar() {
         </div>
 
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <span className="desktop-apply"><Button variant="primary" size="sm" href="/admissions">Apply Now</Button></span>
+          <span className="desktop-apply"><Button variant="primary" size="sm" href={onAction ? undefined : '/admissions'} onClick={onAction}>{actionLabel}</Button></span>
           <button
             onClick={() => setOpen((v) => !v)}
             style={{ color: 'var(--ink)', padding: '8px', minWidth: 44, minHeight: 44, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
@@ -129,7 +129,7 @@ export function Navbar() {
             )
           })}
           <div style={{ paddingTop: 8 }}>
-            <Button variant="primary" fullWidth href="/admissions" onClick={() => setOpen(false)}>Apply Now</Button>
+            <Button variant="primary" fullWidth href={onAction ? undefined : '/admissions'} onClick={() => { setOpen(false); if (onAction) window.setTimeout(onAction, 0) }}>{actionLabel}</Button>
           </div>
         </div>
       )}
