@@ -10,9 +10,9 @@ import { Footer } from '../layout/Footer'
 import './wtc-event.css'
 
 const PROGRAMMES = [
-  { title: 'CPD Short Courses', displayTitle: 'CPD Short Courses', description: 'Practical, career-focused professional programmes.', image: '/wtc/cpd-portrait-hd.webp', icon: 'book' },
-  { title: 'ATHE Level 7 Qualifications', displayTitle: 'ATHE Level 7 Qualifications', description: 'Explore postgraduate-level qualification pathways.', image: '/wtc/athe-portrait-hd.webp', icon: 'grad' },
-  { title: 'Jain University Master’s', displayTitle: 'Jain University Online Master’s Programmes', description: 'Flexible online postgraduate degrees.', image: '/wtc/jain-portrait-hd.webp', icon: 'building' },
+  { title: 'CPD Short Courses', displayTitle: 'CPD Short Courses', description: 'Practical, career-focused professional programmes.', image: '/wtc/cpd.png', icon: 'book' },
+  { title: 'ATHE Level 7 Qualifications', displayTitle: 'ATHE Level 7 Qualifications', description: 'Explore postgraduate-level qualification pathways.', image: '/wtc/athe.png', icon: 'grad' },
+  { title: 'Jain University Master’s', displayTitle: 'Jain University Online Master’s Programmes', description: 'Flexible online postgraduate degrees.', image: '/wtc/jain.ban.png', icon: 'building' },
 ]
 const TIMES = ['8.30 AM – 10.00 AM', '10.00 AM – 12.00 PM', '12.00 PM – 2.00 PM', '2.00 PM – 4.00 PM', '4.00 PM – 5.30 PM']
 type Result = { registration_id: string; lead_id: number; crm_saved: true; confirmation_sent: boolean; notification_sent: boolean; message: string }
@@ -136,7 +136,7 @@ export default function WtcEvent() {
         </section>
 
         <section ref={formSection} id="registration" className="wtc-registration wtc-section">
-          <div className="wtc-registration-copy"><span className="wtc-eyebrow">04 · REGISTRATION FORM</span><h2>Reserve{' '}<br /><em>Your Slot.</em></h2><p>Register today and explore your opportunities.</p><Image src="/wtc/registration-cutout.png" alt="Two professionals with the World Trade Center towers behind them and flowing purple ribbons" width={1254} height={1254} quality={90} sizes="(max-width: 800px) 90vw, 440px" /></div>
+          <div className="wtc-registration-copy"><span className="wtc-eyebrow">04 · REGISTRATION FORM</span><h2>Reserve{' '}<br /><em>Your Slot.</em></h2><p>Register today and explore your opportunities.</p><Image src="/wtc/ban.png" alt="Two professionals with the World Trade Center towers behind them and flowing purple ribbons" width={1254} height={1254} quality={90} sizes="(max-width: 800px) 90vw, 440px" /></div>
           <div className="wtc-form-card">
             <form onSubmit={register} aria-busy={busy}>
               <fieldset disabled={busy || Boolean(result)}>
