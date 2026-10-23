@@ -64,7 +64,7 @@
 .wtc-registration-copy { position: relative; }
 .wtc-registration-copy h2 { font-size: clamp(40px,5vw,65px); }
 .wtc-registration-copy p { max-width: 290px; color: #5e436f; }
-.wtc-registration-copy > img { display: block; width: 100%; height: auto; max-height: 440px; object-fit: contain; object-position: bottom; margin-top: 12px; filter: drop-shadow(0 12px 18px rgba(66,12,99,.10)); }
+.wtc-registration-copy > img { display: block; width: 100%; height: auto; max-height: 440px; object-fit: contain; object-position: left bottom; margin-top: 12px; filter: drop-shadow(0 12px 18px rgba(66,12,99,.10)); }
 .wtc-form-card { position: relative; padding: 30px; border-radius: 22px; border: 1px solid #eee3f5; background: #fff; box-shadow: 0 15px 48px #4c006c0b; }
 .wtc-form-card fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
 .wtc-form-legend { font-size: 15px; font-weight: 700; margin-bottom: 22px; }
@@ -108,7 +108,7 @@
   .wtc-offers { grid-template-columns: 1fr; gap: 20px; } .wtc-offer-art { max-width: 360px; }
   .wtc-offer-copy { text-align: center; } .wtc-offer-copy p { margin-left: auto; margin-right: auto; } .wtc-yellow-rule { margin: auto; }
   .wtc-registration { grid-template-columns: 1fr; }
-  .wtc-registration-copy > img { width: min(100%, 340px); max-height: 300px; margin: 16px auto 0; }
+  .wtc-registration-copy > img { width: min(100%, 340px); max-height: 300px; margin: 16px 0 0; }
   .wtc-registration-copy h2 br { display: none; }
 }
 @media(max-width:480px) {
