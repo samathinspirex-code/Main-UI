@@ -71,27 +71,6 @@ interface HeroSlide {
 
 const HERO_SLIDES: HeroSlide[] = [
   {
-    tag: '· Your Career Journey ·',
-    title: 'Inspire College is coming to',
-    titleHighlight: 'WTC!',
-    titleBreakBeforeHighlight: true,
-    subtitle: 'Explore flexible learning pathways',
-    description: 'Meet our team, explore our programmes, and take the next step in your career at Inspire College’s WTC event.',
-    benefits: [],
-    event: {
-      date: '26th October 2026',
-      time: '8.30 AM to 5.30 PM',
-      venue: 'World Trade Center, Colombo',
-      invitation: 'Visit our stall and explore your career opportunities!',
-    },
-    primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
-    secondaryBtn: { label: 'Talk to an advisor', href: WHATSAPP_BOT_URL },
-    image: '/career-journey-wtc.png',
-    imageAlt: 'Professionals in front of the World Trade Center, Colombo',
-    badgeTop: { label: 'WTC EVENT · 26 OCT' },
-    badgeBottom: { eyebrow: 'Spot Offers', value: 'Up to 50%' },
-  },
-  {
     tag: "· Sri Lanka's First Online University ·",
     title: 'Your Online ',
     titleHighlight: 'University',
