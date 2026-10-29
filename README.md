@@ -26,6 +26,19 @@ npm run build    # production build
 npm run lint
 ```
 
+## Contact form bot protection
+
+The contact endpoint rejects `185.225.69.203` in both the website proxy and API. To turn on
+Google reCAPTCHA v2 ("I'm not a robot" checkbox), register `inspirecollege.lk` and
+`www.inspirecollege.lk` in the [reCAPTCHA admin console](https://www.google.com/recaptcha/admin/create).
+Use separate development keys with `localhost` registered for local testing.
+
+Set `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` on the website (Vercel) and
+`CONTACT_RECAPTCHA_SECRET_KEY` on the API. After both deployments include the keys,
+set `CONTACT_RECAPTCHA_ENABLED=true` on the API and restart it. The API verifies each
+token with Google and rejects missing, expired, reused, or wrong-host tokens before
+creating a CRM lead or sending mail. Keep the secret key out of the website and Git.
+
 ## Folder structure
 
 ```

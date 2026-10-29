@@ -6,6 +6,9 @@ import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
 import { Button } from '../ui/Button'
 import { Icon } from '../ui/Icon'
+import { ContactCaptcha } from './ContactCaptcha'
+
+const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
 
 const inputStyle = {
   width: '100%',
@@ -30,6 +33,8 @@ export default function Contact() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [focused, setFocused] = useState<string | null>(null)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaResetCount, setCaptchaResetCount] = useState(0)
 
   async function submitContactForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -44,11 +49,14 @@ export default function Contact() {
       if (!trimmedName || !trimmedEmail || !trimmedPhone || !trimmedMessage) {
         throw new Error('Please fill in your name, email, phone number, and message.')
       }
+      if (recaptchaSiteKey && !captchaToken) {
+        throw new Error('Please complete the reCAPTCHA check before sending your message.')
+      }
 
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage }),
+        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage, captcha_token: captchaToken || undefined }),
       })
       const payload = await response.json().catch(() => null)
 
@@ -69,6 +77,7 @@ export default function Contact() {
       setSent(true)
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'We could not send your message. Please try again.')
+      if (captchaToken) setCaptchaResetCount((count) => count + 1)
     } finally {
       setBusy(false)
     }
@@ -166,6 +175,7 @@ export default function Contact() {
               <textarea style={{ ...inputStyle, minHeight: 130, resize: 'vertical', borderColor: focused === 'message' ? 'var(--accent)' : 'var(--border)' }} required value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we help?"
                 onFocus={() => setFocused('message')} onBlur={() => setFocused(null)} />
             </div>
+            {recaptchaSiteKey && <ContactCaptcha siteKey={recaptchaSiteKey} onToken={setCaptchaToken} resetCount={captchaResetCount} />}
             {error && (
               <div role="alert" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#a11b1b', background: '#fff3f3', border: '1px solid #efcaca', borderRadius: 6, padding: '10px 12px' }}>
                 {error}
