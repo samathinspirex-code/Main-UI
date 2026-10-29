@@ -10,6 +10,9 @@ export async function POST(request: NextRequest) {
       || request.headers.get("x-forwarded-for")?.split(",")[0].trim()
       || request.headers.get("x-real-ip")?.trim()
       || "";
+    if (visitorIp === "185.225.69.203") {
+      return NextResponse.json({ error: { message: "This contact request cannot be accepted." } }, { status: 403 });
+    }
     const response = await fetch(`${API_URL}/api/v1/public/contact-inquiries`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...(visitorIp ? { "X-Contact-Visitor-IP": visitorIp } : {}) },
