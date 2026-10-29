@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 
 declare global {
@@ -14,6 +14,7 @@ declare global {
       }) => number
       reset: (widgetId: number) => void
     }
+    onContactRecaptchaReady?: () => void
   }
 }
 
@@ -26,9 +27,10 @@ interface Props {
 export function ContactCaptcha({ siteKey, onToken, resetCount }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const widgetId = useRef<number | null>(null)
+  const [scriptConfigured, setScriptConfigured] = useState(false)
 
   const renderWidget = useCallback(() => {
-    if (!container.current || !window.grecaptcha || widgetId.current !== null) return
+    if (!container.current || typeof window.grecaptcha?.render !== 'function' || widgetId.current !== null) return
     widgetId.current = window.grecaptcha.render(container.current, {
       sitekey: siteKey,
       callback: onToken,
@@ -37,16 +39,22 @@ export function ContactCaptcha({ siteKey, onToken, resetCount }: Props) {
     })
   }, [siteKey, onToken])
 
-  useEffect(() => { renderWidget() }, [renderWidget])
   useEffect(() => {
-    if (resetCount > 0 && widgetId.current !== null) {
-      window.grecaptcha?.reset(widgetId.current)
+    // Google's onload callback runs only after the widget API is initialized.
+    window.onContactRecaptchaReady = renderWidget
+    setScriptConfigured(true)
+    renderWidget() // Handles an already loaded script after client navigation.
+    return () => { window.onContactRecaptchaReady = undefined }
+  }, [renderWidget])
+  useEffect(() => {
+    if (resetCount > 0 && widgetId.current !== null && typeof window.grecaptcha?.reset === 'function') {
+      window.grecaptcha.reset(widgetId.current)
       onToken('')
     }
   }, [resetCount, onToken])
 
   return <div aria-label="Verify you are human">
-    <Script src="https://www.google.com/recaptcha/api.js?render=explicit" strategy="afterInteractive" onReady={renderWidget} />
+    {scriptConfigured && <Script src="https://www.google.com/recaptcha/api.js?onload=onContactRecaptchaReady&render=explicit" strategy="afterInteractive" onReady={renderWidget} />}
     <div ref={container} />
   </div>
 }
