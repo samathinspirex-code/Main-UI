@@ -25,6 +25,7 @@ export default function PrivacyPolicyPage() {
             'To manage course registration and academic records.',
             'To communicate about enrolment and academic progress.',
             'To improve our services and the user experience.',
+            'To investigate misuse of website forms and protect the service from spam.',
             'To send marketing communications where you have provided consent.',
             'To meet legal and regulatory requirements.',
           ],
