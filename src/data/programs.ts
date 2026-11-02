@@ -14,6 +14,8 @@ export interface Program {
   studyOptions?: StudyOption[];
   slug: string;
   title: string;
+  subtitle?: string;
+  subtitleEnabled?: boolean;
   level: ProgramLevel;
   school: School;
   awardingBody: AwardingBody;
@@ -232,6 +234,7 @@ export function formatLKR(amount: number): string {
 }
 
 interface ApiProgram {
+  subtitle_enabled?: boolean;
   course_id?: number;
   programme_id?: number;
   programme_name?: string;
@@ -240,6 +243,7 @@ interface ApiProgram {
   study_options?: StudyOption[];
   slug: string;
   title: string;
+  subtitle?: string | null;
   level?: string;
   school?: string;
   awarding_body: string;
@@ -272,6 +276,8 @@ function mapApiProgramToUi(api: ApiProgram): Program {
     studyOptions: enabledOptions,
     slug: api.slug,
     title: api.title,
+    subtitle: api.subtitle || undefined,
+    subtitleEnabled: api.subtitle_enabled ?? false,
     level: (api.programme_name ?? api.level ?? "Short Course") as ProgramLevel,
     school: (api.school ?? api.school_name?.replace(/^School of /, "") ?? "CPD") as School,
     awardingBody: api.awarding_body as AwardingBody,
