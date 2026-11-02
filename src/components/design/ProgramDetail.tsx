@@ -38,7 +38,10 @@ export default function ProgramDetail({ program, related }: { program: Program; 
         <div className="sx rg-hero" style={{ padding: '32px 0 48px', maxWidth: 1200, margin: '0 auto', gap: 48, alignItems: 'start' }}>
           <div>
             {program.tag && <Tag accent style={{ marginBottom: 16 }}>{program.tag.toUpperCase()}</Tag>}
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px,4vw,56px)', fontWeight: 700, margin: '0 0 16px', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{program.title}</h1>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px,calc(4vw - 2px),54px)', fontWeight: 700, margin: '0 0 16px', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{program.title}</h1>
+            {program.subtitleEnabled && program.subtitle?.trim() && (
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,calc(4vw - 4px),52px)', fontWeight: 600, margin: '0 0 16px', letterSpacing: '-0.02em', lineHeight: 1.15 }}>{program.subtitle}</p>
+            )}
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 18, color: 'var(--ink-soft)', margin: '0 0 28px', lineHeight: 1.6 }}>{program.blurb}</p>
             <div className="rg-4" style={{ gap: 20, padding: '20px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
               {[[program.code,'Awarding'],[program.duration,'Duration'],['100% Online','Mode'],[formatLKR(program.priceFrom), program.tag ? 'First 50' : 'From']].map(([v, l]) => (
