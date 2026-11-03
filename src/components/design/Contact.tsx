@@ -7,6 +7,7 @@ import { Footer } from '../layout/Footer'
 import { Button } from '../ui/Button'
 import { Icon } from '../ui/Icon'
 import { ContactCaptcha } from './ContactCaptcha'
+import { track } from '@/lib/analytics'
 
 const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
 
@@ -74,6 +75,7 @@ export default function Contact() {
         throw new Error(msg)
       }
 
+      track('generate_lead', { form: 'contact' })
       setSent(true)
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'We could not send your message. Please try again.')

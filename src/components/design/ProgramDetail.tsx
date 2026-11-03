@@ -40,7 +40,10 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             {program.tag && <Tag accent style={{ marginBottom: 16 }}>{program.tag.toUpperCase()}</Tag>}
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px,calc(4vw - 2px),54px)', fontWeight: 700, margin: '0 0 16px', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{program.title}</h1>
             {program.subtitleEnabled && program.subtitle?.trim() && (
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,calc(4vw - 4px),52px)', fontWeight: 600, margin: '0 0 16px', letterSpacing: '-0.02em', lineHeight: 1.15 }}>{program.subtitle}</p>
+              <div style={{ marginBottom: 24 }}>
+                <span aria-hidden="true" style={{ display: 'block', width: 48, height: 5, borderRadius: 999, background: 'var(--accent-lt)', marginBottom: 12 }} />
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,2vw,22px)', fontWeight: 700, color: 'var(--ink-soft)', margin: 0, letterSpacing: '-0.02em', lineHeight: 1.35 }}>{program.subtitle}</p>
+              </div>
             )}
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 18, color: 'var(--ink-soft)', margin: '0 0 28px', lineHeight: 1.6 }}>{program.blurb}</p>
             <div className="rg-4" style={{ gap: 20, padding: '20px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>

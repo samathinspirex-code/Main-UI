@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { track } from '@/lib/analytics'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -85,6 +86,8 @@ export default function WtcEvent() {
       if (payload.crm_saved !== true || !Number.isInteger(payload.lead_id) || payload.lead_id <= 0 || !/^WTC26-[A-Z0-9]{4,16}$/.test(payload.registration_id)) {
         throw new Error('Your registration could not be verified. Please try again or contact enrol@inspire.college.')
       }
+      track('generate_lead', { form: 'event' })
+      track('webinar_register', { form: 'wtc' })
       setResult(payload)
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Unable to register right now. Please try again.')

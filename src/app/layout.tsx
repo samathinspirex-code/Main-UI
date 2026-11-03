@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SiteAnalytics } from "@/components/layout/SiteAnalytics";
 import { SiteAssistant } from "@/components/layout/SiteAssistant";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 
@@ -38,18 +39,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
         {/* End Google Tag Manager */}
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YPD21512T" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-8YPD21512T');
-            `,
-          }}
-        />
         {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{
@@ -108,6 +97,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           />
         </noscript>
         {children}
+        <SiteAnalytics />
         <WhatsAppButton />
         <SiteAssistant />
       </body>
