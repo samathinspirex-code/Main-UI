@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { track } from "@/lib/analytics";
 import { SK } from "@/components/sketch/tokens";
 import { Heading, SkBtn, SkIcon } from "@/components/sketch/primitives";
 
@@ -59,6 +60,7 @@ export function ContactForm() {
         throw new Error(msg);
       }
 
+      track("generate_lead", { form: "contact" });
       setSent(true);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "We could not send your message. Please try again.");
