@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { track } from "@/lib/analytics";
 import { SK } from "@/components/sketch/tokens";
 import { Heading, SkBtn, SkIcon } from "@/components/sketch/primitives";
+import { AdsConsent, adsConsentFields } from "../ui/AdsConsent";
 
 const inputStyle = {
   width: "100%",
@@ -20,6 +21,7 @@ export function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [adsConsent, setAdsConsent] = useState(false);
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -42,7 +44,7 @@ export function ContactForm() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage }),
+        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage, ...adsConsentFields(adsConsent) }),
       });
       const payload = await response.json().catch(() => null);
 
@@ -114,6 +116,7 @@ export function ContactForm() {
           {error}
         </div>
       )}
+      <AdsConsent checked={adsConsent} onChange={setAdsConsent} />
       <SkBtn primary arrow type="submit" disabled={busy}>{busy ? "Sending…" : "Send message"}</SkBtn>
     </form>
   );

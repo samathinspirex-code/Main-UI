@@ -8,6 +8,7 @@ import { Button } from '../ui/Button'
 import { Icon } from '../ui/Icon'
 import { ContactCaptcha } from './ContactCaptcha'
 import { track } from '@/lib/analytics'
+import { AdsConsent, adsConsentFields } from '../ui/AdsConsent'
 
 const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
 
@@ -29,6 +30,7 @@ export default function Contact() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [adsConsent, setAdsConsent] = useState(false)
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -57,7 +59,7 @@ export default function Contact() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage, captcha_token: captchaToken || undefined }),
+        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage, captcha_token: captchaToken || undefined, ...adsConsentFields(adsConsent) }),
       })
       const payload = await response.json().catch(() => null)
 
@@ -177,6 +179,7 @@ export default function Contact() {
               <textarea style={{ ...inputStyle, minHeight: 130, resize: 'vertical', borderColor: focused === 'message' ? 'var(--accent)' : 'var(--border)' }} required value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we help?"
                 onFocus={() => setFocused('message')} onBlur={() => setFocused(null)} />
             </div>
+            <AdsConsent checked={adsConsent} onChange={setAdsConsent} />
             {recaptchaSiteKey && <ContactCaptcha siteKey={recaptchaSiteKey} onToken={setCaptchaToken} resetCount={captchaResetCount} />}
             {error && (
               <div role="alert" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#a11b1b', background: '#fff3f3', border: '1px solid #efcaca', borderRadius: 6, padding: '10px 12px' }}>
