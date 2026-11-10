@@ -63,11 +63,14 @@ function FilterGroup({ title, items, selected, onToggle }: { title: string; item
   )
 }
 
-export default function Programs({ programs, programmeNodes = [], initialQuery = '', initialBody = '', initialSchool = '', initialProgramme = '', initialLevel = '' }: { programs: Program[]; programmeNodes?: ProgrammeNode[]; initialQuery?: string; initialBody?: string; initialSchool?: string; initialProgramme?: string; initialLevel?: string }) {
+/** Sidebar checkboxes to tick on load (labels as shown, without the count). Used by the landing pages. */
+export type ProgramsInitialChecks = { programmes?: string[]; schools?: string[]; bodies?: string[] }
+
+export default function Programs({ programs, programmeNodes = [], initialQuery = '', initialBody = '', initialSchool = '', initialProgramme = '', initialLevel = '', initialChecks, heading = 'Find your program', intro = "Foundation · HND · Top-Up Degree · Master's · Short Courses — all 100% online", crumb = 'PROGRAMS' }: { programs: Program[]; programmeNodes?: ProgrammeNode[]; initialQuery?: string; initialBody?: string; initialSchool?: string; initialProgramme?: string; initialLevel?: string; initialChecks?: ProgramsInitialChecks; heading?: string; intro?: string; crumb?: string }) {
   const [query, setQuery] = useState(initialQuery)
-  const [programmes, setProgrammes] = useState<Set<string>>(new Set(initialLevel ? [initialLevel] : []))
-  const [schools, setSchools] = useState<Set<string>>(new Set())
-  const [bodies, setBodies] = useState<Set<string>>(new Set())
+  const [programmes, setProgrammes] = useState<Set<string>>(new Set([...(initialLevel ? [initialLevel] : []), ...(initialChecks?.programmes ?? [])]))
+  const [schools, setSchools] = useState<Set<string>>(new Set(initialChecks?.schools ?? []))
+  const [bodies, setBodies] = useState<Set<string>>(new Set(initialChecks?.bodies ?? []))
   const [sort, setSort] = useState<'popularity'|'price-asc'|'price-desc'>('popularity')
   const [page, setPage] = useState(1)
   const [showFilters, setShowFilters] = useState(false)
@@ -156,9 +159,9 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
         {/* Header */}
         <div className="sx page-load-hero" style={{ padding: '56px 0 32px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 12 }}>HOME / PROGRAMS</div>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>Find your program</h1>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-soft)', margin: 0 }}>Foundation · HND · Top-Up Degree · Master's · Short Courses — all 100% online</p>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 12 }}>HOME / {crumb}</div>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>{heading}</h1>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-soft)', margin: 0 }}>{intro}</p>
           </div>
         </div>
 
