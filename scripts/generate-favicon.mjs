@@ -4,11 +4,23 @@ import { dirname, resolve } from "node:path";
 import sharp from "sharp";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const source = await readFile(resolve(root, "scripts/favicon-i.svg"));
+// Source: scripts/favicon-mark.png (purple Inspire mark on a transparent square).
+const source = await readFile(resolve(root, "scripts/favicon-mark.png"));
 const render = (size) => sharp(source).resize(size, size).png().toBuffer();
+// iOS renders transparency as black, so the Apple icon sits on white with padding.
+const renderApple = (size) => {
+  const inner = Math.round(size * 0.8);
+  const lead = Math.floor((size - inner) / 2);
+  const trail = size - inner - lead;
+  return sharp(source)
+    .resize(inner, inner)
+    .extend({ top: lead, bottom: trail, left: lead, right: trail, background: "#ffffff" })
+    .flatten({ background: "#ffffff" })
+    .png().toBuffer();
+};
 
 const [icon, appleIcon, ...icoImages] = await Promise.all([
-  render(512), render(180), ...[16, 32, 48, 64, 128, 256].map(render),
+  render(512), renderApple(180), ...[16, 32, 48, 64, 128, 256].map(render),
 ]);
 
 await writeFile(resolve(root, "src/app/icon.png"), icon);

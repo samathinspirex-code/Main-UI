@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Home from "@/components/design/Home";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -8,7 +9,7 @@ import { fetchTestimonials } from "@/data/testimonials";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Inspire College | Your Online University" };
+export const metadata: Metadata = pageMetadata("/");
 
 export default async function Page() {
   const [programs, news, testimonials] = await Promise.all([fetchPrograms(), fetchNewsEvents(), fetchTestimonials()]);

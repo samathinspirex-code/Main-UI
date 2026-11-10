@@ -4,6 +4,8 @@ import "./globals.css";
 import { SiteAnalytics } from "@/components/layout/SiteAnalytics";
 import { SiteAssistant } from "@/components/layout/SiteAssistant";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { SiteJsonLd } from "@/components/seo/JsonLd";
+import { PAGES, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const nohemi = localFont({
   src: "./fonts/Nohemi-Variable.ttf",
@@ -15,11 +17,23 @@ const nohemi = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Inspire College | Your Online University",
-    template: "%s | Inspire College",
+    default: PAGES["/"].title,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: "Sri Lanka's first tech-enabled online higher education institution.",
+  description: PAGES["/"].description,
+  applicationName: SITE_NAME,
+  keywords: [
+    "online university Sri Lanka", "HND Sri Lanka", "AI degree Sri Lanka",
+    "software engineering Sri Lanka", "cyber security course Sri Lanka",
+    "ATHE Sri Lanka", "online degree Colombo", "Inspire College",
+  ],
+  openGraph: { type: "website", siteName: SITE_NAME, locale: "en_LK" },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
+  // After verifying in Google Search Console with the HTML-tag method, add:
+  // verification: { google: "XXXXXXXXXXXX" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -74,6 +88,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* TikTok Pixel Code End */}
       </head>
       <body>
+        <SiteJsonLd />
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
