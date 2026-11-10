@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
+import { oldSiteRedirects } from "./redirects";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      // "Free Counselling Session" sitelink goes to the contact form.
+      { source: "/free-counselling", destination: "/contact#contact-form", permanent: false },
+      // Old WordPress URLs from Search Console's "Not found (404)" report.
+      ...oldSiteRedirects,
+    ];
+  },
   async headers() {
     return [
       {

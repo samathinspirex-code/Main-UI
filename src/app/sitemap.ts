@@ -7,7 +7,7 @@ import { PAGES, SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-const SECTIONS = ["/programs", "/admissions", "/about", "/contact", "/news"];
+const SECTIONS = ["/programs", "/postgraduate-degrees", "/computing-degrees", "/short-courses", "/admissions", "/about", "/contact", "/news"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

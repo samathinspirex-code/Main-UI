@@ -9,7 +9,9 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
     { label: 'ATHE', href: '/programs?body=ATHE#programme-catalogue-top' },
     { label: 'WINC', href: '/programs?body=WINC#programme-catalogue-top' },
     { label: 'Jain University', href: '/programs?body=Jain+University#programme-catalogue-top' },
-    { label: 'Short Courses', href: '/programs?level=Short+Course#programme-catalogue-top' },
+    { label: 'Computing & IT Degrees', href: '/computing-degrees' },
+    { label: 'Postgraduate Degrees', href: '/postgraduate-degrees' },
+    { label: 'Short Courses', href: '/short-courses' },
   ],
   About: [
     { label: 'About Us', href: '/about' },
@@ -20,11 +22,12 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
   Apply: [
     { label: 'Foundation', href: '/programs?level=Foundation#programme-catalogue-top' },
     { label: 'HND', href: '/programs?level=HND#programme-catalogue-top' },
-    { label: 'Short Course', href: '/programs?level=Short+Course#programme-catalogue-top' },
-    { label: 'Postgraduate', href: '/programs?level=Postgraduate#programme-catalogue-top' },
+    { label: 'Short Course', href: '/short-courses' },
+    { label: 'Postgraduate', href: '/postgraduate-degrees' },
   ],
   Connect: [
     { label: 'Contact Us', href: '/contact' },
+    { label: 'Free Counselling', href: '/contact#contact-form' },
     { label: 'Student Portal', href: 'https://lms-ui-amber.vercel.app/', external: true },
     { label: 'WhatsApp', href: 'https://wa.me/94711993331', external: true },
     { label: '+94 71 199 3331', href: 'tel:+94711993331', external: true },

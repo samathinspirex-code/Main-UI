@@ -12,7 +12,24 @@ export const PAGES: Record<string, PageSeo> = {
   "/": {
     title: "Inspire College Sri Lanka | Online UK Qualifications – Foundation, HND & Degrees",
     description:
-      "Study 100% online with Inspire College, Sri Lanka. Ofqual-regulated ATHE UK qualifications in AI, Computing, Cyber Security & Business. Apply now.",
+      "Study 100% online with Inspire College Sri Lanka. UK-recognised ATHE, WINC & Jain University qualifications in AI, Computing & Business. Apply now.",
+  },
+
+  // ---- Sitelink landing pages (each shows the programmes list pre-filtered) ----
+  "/postgraduate-degrees": {
+    title: "Postgraduate Degrees – Online MBA, MCA & Level 7",
+    description:
+      "Postgraduate study designed for global careers. Online MBA, MCA and Level 7 diplomas, UK-recognised and flexible. Compare programmes and apply.",
+  },
+  "/computing-degrees": {
+    title: "Computing & IT Degrees – School of Computing",
+    description:
+      "Software Engineering, AI, Cyber Security & Data Analytics. Foundation to Master's, 100% online from Sri Lanka. Explore the School of Computing.",
+  },
+  "/short-courses": {
+    title: "Short Courses – CPD Certified, 100% Online",
+    description:
+      "CPD short courses in AI, digital marketing, data and finance. Learn practical skills in weeks, fully online. Browse all short courses.",
   },
   "/programs": {
     title: "Programmes – Foundation, HND, Top-Up Degree & Master's",
@@ -58,6 +75,11 @@ export const PAGES: Record<string, PageSeo> = {
  * not listed here falls back to its CMS title and blurb.
  */
 export const PROGRAM_SEO: Record<string, PageSeo> = {
+  "postgraduate-diploma-in-computing-artificial-intelligence-postgraduate": {
+    title: "Study Artificial Intelligence – Postgraduate Diploma in AI (Online)",
+    description:
+      "Ready to work in AI? Study a Level 7 Postgraduate Diploma in Computing – Artificial Intelligence, 100% online with practical, industry-shaped modules.",
+  },
   "hnd-computing-ai": {
     title: "HND in Computing & Artificial Intelligence (Online)",
     description:
