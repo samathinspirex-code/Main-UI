@@ -6,7 +6,18 @@ import sharp from "sharp";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // Source: scripts/favicon-mark.png (purple Inspire mark on a transparent square).
 const source = await readFile(resolve(root, "scripts/favicon-mark.png"));
-const render = (size) => sharp(source).resize(size, size).png().toBuffer();
+// Browser icons: the mark on a white rounded square, so it stays visible on
+// dark browser tabs and dark-mode search results.
+const render = async (size) => {
+  const inner = Math.round(size * 0.8);
+  const offset = Math.floor((size - inner) / 2);
+  const radius = Math.round(size * 0.22);
+  const tile = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${radius}" fill="#ffffff"/></svg>`,
+  );
+  const mark = await sharp(source).resize(inner, inner).png().toBuffer();
+  return sharp(tile).composite([{ input: mark, top: offset, left: offset }]).png().toBuffer();
+};
 // iOS renders transparency as black, so the Apple icon sits on white with padding.
 const renderApple = (size) => {
   const inner = Math.round(size * 0.8);
