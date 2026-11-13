@@ -14,7 +14,7 @@ import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
-const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
+const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
 const canonicalBody = (value: string) => {
   const normalized = value.trim().toLowerCase()
   if (normalized.includes('athe')) return 'ATHE'
@@ -22,6 +22,7 @@ const canonicalBody = (value: string) => {
   if (normalized.includes('winc')) return 'WINC'
   if (normalized.includes('lsbf')) return 'LSBF'
   if (normalized.includes('jain')) return 'Jain University'
+  if (normalized.includes('inspire college')) return 'Inspire College'
   return value.trim()
 }
 
