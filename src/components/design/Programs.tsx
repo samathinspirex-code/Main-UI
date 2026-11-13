@@ -8,7 +8,8 @@ import { Icon } from '../ui/Icon'
 import { formatLKR, getProgramImage, type Program, type ProgrammeNode } from '../../data/programs'
 
 const PAGE_SIZE = 6
-const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University']
+const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
+const SCHOOL_FREE_BODIES = new Set(['LSBF', 'Jain University', 'Inspire College'])
 const JAIN_PROGRAMMES = new Set(['BCOM', 'BBA', 'BCA', 'MBA', 'MCA'])
 const programmeCode = (value: string) => value.toUpperCase().replace(/[^A-Z]/g, '')
 const canonicalBody = (value: string) => {
@@ -18,6 +19,7 @@ const canonicalBody = (value: string) => {
   if (normalized.includes('winc')) return 'WINC'
   if (normalized.includes('lsbf')) return 'LSBF'
   if (normalized.includes('jain')) return 'Jain University'
+  if (normalized.includes('inspire college')) return 'Inspire College'
   return value.trim()
 }
 const bodyRank = (value: string) => {
@@ -86,11 +88,12 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
     return shortCourse || category.includes('HND') || ['BCOM', 'BCA', 'BBA', 'MBA', 'MCA'].includes(category) || category.includes('POSTGRADUATE') || category.includes('MASTER')
   }), [programs, studentType])
   const jainSelected = guidedBody === 'Jain University'
+  const schoolStepSkipped = SCHOOL_FREE_BODIES.has(guidedBody)
 
   const guidedBodies = useMemo(() => [...new Set(eligiblePrograms.map(p => canonicalBody(p.awardingBody)))].sort((a, b) => bodyRank(a) - bodyRank(b) || a.localeCompare(b)), [eligiblePrograms])
   const bodyCourses = useMemo(() => eligiblePrograms.filter(p => (!guidedBody || canonicalBody(p.awardingBody) === guidedBody) && (!jainSelected || JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level)))), [eligiblePrograms, guidedBody, jainSelected])
   const guidedSchools = useMemo(() => [...new Set(bodyCourses.map(p => p.schoolName ?? p.school))].sort(), [bodyCourses])
-  const schoolCourses = useMemo(() => bodyCourses.filter(p => jainSelected || !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [bodyCourses, guidedSchool, jainSelected])
+  const schoolCourses = useMemo(() => bodyCourses.filter(p => schoolStepSkipped || !guidedSchool || (p.schoolName ?? p.school) === guidedSchool), [bodyCourses, guidedSchool, schoolStepSkipped])
   const programmeOptions = useMemo(() => [...new Set(schoolCourses.map(p => p.programmeName ?? p.level))].sort(), [schoolCourses])
 
   const counts = useMemo(() => {
@@ -121,7 +124,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
     const visibleSchoolCounts = new Map<string, number>()
     for (const program of eligiblePrograms) {
       const school = program.schoolName ?? program.school
-      if (canonicalBody(program.awardingBody) === 'Jain University' || canonicalBody(school) === 'Jain University') continue
+      if (SCHOOL_FREE_BODIES.has(canonicalBody(program.awardingBody)) || SCHOOL_FREE_BODIES.has(canonicalBody(school))) continue
       visibleSchoolCounts.set(school, (visibleSchoolCounts.get(school) ?? 0) + 1)
     }
     return [...visibleSchoolCounts].map(([label, count]) => ({ label, value: label, count })).sort((a, b) => a.label.localeCompare(b.label))
@@ -132,7 +135,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
     let list = eligiblePrograms.filter(p => {
       if (programme && (p.programmeName ?? p.level) !== programme) return false
       if (jainSelected && !JAIN_PROGRAMMES.has(programmeCode(p.programmeName ?? p.level))) return false
-      if (!jainSelected && guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
+      if (!schoolStepSkipped && guidedSchool && (p.schoolName ?? p.school) !== guidedSchool) return false
       if (guidedBody && canonicalBody(p.awardingBody) !== guidedBody) return false
       if (programmes.size && !programmes.has(p.programmeName ?? p.level)) return false
       if (schools.size && !schools.has(p.schoolName ?? p.school)) return false
@@ -142,7 +145,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
     })
     list = [...list].sort((a, b) => sort === 'price-asc' ? a.priceFrom - b.priceFrom : sort === 'price-desc' ? b.priceFrom - a.priceFrom : b.popularity - a.popularity)
     return list
-  }, [eligiblePrograms, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody, jainSelected])
+  }, [eligiblePrograms, programmes, schools, bodies, query, sort, programme, guidedSchool, guidedBody, jainSelected, schoolStepSkipped])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const cur = Math.min(page, pageCount)
@@ -169,8 +172,8 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
           <div className="catalogue-pathway-selects">
             <select className="catalogue-select" aria-label="Student Type" value={studentType} onChange={e => { setStudentType(e.target.value); setGuidedBody(''); setGuidedSchool(''); setProgramme(''); setProgrammes(new Set()); setSchools(new Set()); setBodies(new Set()); setPage(1) }}><option value="">Student Type · All students</option><option value="ol">After O/L</option><option value="al">After A/L</option></select>
             <select className="catalogue-select" aria-label="Awarding body" value={guidedBody} onChange={e => { setGuidedBody(e.target.value); setGuidedSchool(''); setProgramme(''); setPage(1) }}><option value="">Awarding body · All awarding bodies</option>{guidedBodies.map(value => <option key={value} value={value}>{value}</option>)}</select>
-            {!jainSelected && <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>}
-            <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedBody || (!jainSelected && !guidedSchool)}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
+            {!schoolStepSkipped && <select className="catalogue-select" aria-label="School" value={guidedSchool} onChange={e => { setGuidedSchool(e.target.value); setProgramme(''); setPage(1) }} disabled={!guidedBody}><option value="">School · All schools</option>{guidedSchools.map(value => <option key={value} value={value}>{value}</option>)}</select>}
+            <select className="catalogue-select" aria-label="Programme" value={programme} onChange={e => { setProgramme(e.target.value); setPage(1) }} disabled={!guidedBody || (!schoolStepSkipped && !guidedSchool)}><option value="">Programme · All programmes</option>{programmeOptions.map(value => <option key={value} value={value}>{value}</option>)}</select>
           </div>
         </div>
 

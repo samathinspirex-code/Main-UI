@@ -233,7 +233,7 @@ export function ProgramDetailA({ program }: { program: Program }) {
           <div style={{ marginTop: 16, border: `1.5px solid ${SK.ink}`, borderRadius: 4, padding: 16, background: "#fff" }}>
             <div style={{ fontFamily: "var(--sk-hand)", fontSize: 14, fontWeight: 700, marginBottom: 10 }}>At a glance</div>
             {[
-              ["Awarding body", program.awardingBody === "Jain" ? "Jain University" : `${program.awardingBody}, UK · Ofqual reg.`],
+              ["Awarding body", program.awardingBody === "Jain" ? "Jain University" : program.awardingBody],
               ["Entry", ENTRY_BY_LEVEL[program.level]],
               ["Format", "Live online + LMS"],
               ["Progression", PROGRESSION_BY_LEVEL[program.level]],

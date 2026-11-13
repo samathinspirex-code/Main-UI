@@ -1,6 +1,6 @@
 export type ProgramLevel = "Foundation" | "HND" | "Higher Diploma" | "Diploma" | "Top-Up Degree" | "Postgraduate" | "Short Course";
 export type School = "Computing" | "Business" | "CPD";
-export type AwardingBody = "ATHE" | "WINC" | "LSBF" | "Jain";
+export type AwardingBody = "ATHE" | "CPD" | "WINC" | "LSBF" | "Jain" | "Jain University" | "Inspire College";
 
 export interface Topic { topic_id: number; program_id: number; order: number; topic: string; }
 export interface Outcome { outcome_id: number; program_id: number; order: number; outcome: string; }
