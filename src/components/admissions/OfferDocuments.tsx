@@ -12,6 +12,7 @@ import "./offer-documents.css";
 type DocumentType = "nic_passport" | "qualification" | "transcript";
 type Upload = { document_type: DocumentType; file_name: string; uploaded_at: string };
 type OfferView = { status: "active" | "expired" | "not_found" | "unavailable"; first_name?: string; programme?: string; expires_on?: string; uploaded?: Upload[] };
+type Progress = { index: number; total: number; title: string; percent: number };
 
 const DOCUMENTS: { type: DocumentType; title: string; text: string; required: boolean }[] = [
   { type: "nic_passport", title: "NIC or Passport", text: "A clear copy of your National Identity Card or Passport.", required: true },
@@ -19,6 +20,7 @@ const DOCUMENTS: { type: DocumentType; title: string; text: string; required: bo
   { type: "transcript", title: "Academic Transcript", text: "If applicable.", required: false },
 ];
 const ACCEPT = ".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png";
+const TYPES = ["application/pdf", "image/jpeg", "image/png"];
 const MAX_BYTES = 10 * 1024 * 1024;
 
 function fileToBase64(file: File): Promise<string> {
@@ -30,14 +32,39 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
+// XHR (not fetch) so the uploading screen can show real progress.
+function sendDocument(token: string, body: string, onProgress: (percent: number) => void): Promise<OfferView> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `/api/offer-documents/${encodeURIComponent(token)}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.upload.onprogress = event => { if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100)); };
+    xhr.onerror = () => reject(new Error("The upload was interrupted. Check your connection and try again."));
+    xhr.onload = () => {
+      let payload: (OfferView & { error?: { message?: string }; detail?: string }) | null = null;
+      try { payload = JSON.parse(xhr.responseText); } catch { /* handled below */ }
+      if (xhr.status >= 200 && xhr.status < 300 && payload) resolve(payload);
+      else reject(new Error(payload?.error?.message || payload?.detail || "Unable to upload the document. Please try again."));
+    };
+    xhr.send(body);
+  });
+}
+
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function formatSize(bytes: number) {
+  return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
 export default function OfferDocuments({ token }: { token: string }) {
   const [view, setView] = useState<OfferView | null>(null);
-  const [busy, setBusy] = useState<DocumentType | null>(null);
+  const [selected, setSelected] = useState<Partial<Record<DocumentType, File>>>({});
   const [errors, setErrors] = useState<Partial<Record<DocumentType, string>>>({});
+  const [progress, setProgress] = useState<Progress | null>(null);
+  const [submitError, setSubmitError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -50,10 +77,11 @@ export default function OfferDocuments({ token }: { token: string }) {
 
   useEffect(() => { load(); }, [load]);
 
-  async function upload(type: DocumentType, file?: File) {
+  function choose(type: DocumentType, file?: File) {
     setErrors(current => ({ ...current, [type]: undefined }));
+    setSubmitError("");
     if (!file) return;
-    if (!["application/pdf", "image/jpeg", "image/png"].includes(file.type)) {
+    if (!TYPES.includes(file.type)) {
       setErrors(current => ({ ...current, [type]: "Choose a PDF, JPG or PNG file." }));
       return;
     }
@@ -61,21 +89,36 @@ export default function OfferDocuments({ token }: { token: string }) {
       setErrors(current => ({ ...current, [type]: "The file must be 10 MB or smaller." }));
       return;
     }
-    setBusy(type);
-    try {
-      const response = await fetch(`/api/offer-documents/${encodeURIComponent(token)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ document_type: type, filename: file.name, content_type: file.type, size_bytes: file.size, data_base64: await fileToBase64(file) }),
-      });
-      const payload = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(payload?.error?.message || payload?.detail || "Unable to upload the document. Please try again.");
-      setView(payload);
-    } catch (reason) {
-      setErrors(current => ({ ...current, [type]: reason instanceof Error ? reason.message : "Unable to upload the document." }));
-    } finally {
-      setBusy(null);
+    setSelected(current => ({ ...current, [type]: file }));
+  }
+
+  function remove(type: DocumentType) {
+    setSelected(current => { const next = { ...current }; delete next[type]; return next; });
+  }
+
+
+  async function submit() {
+    const queue = DOCUMENTS.filter(doc => selected[doc.type]);
+    if (!queue.length || progress) return;
+    setSubmitError("");
+    for (const [index, doc] of queue.entries()) {
+      const file = selected[doc.type]!;
+      setProgress({ index: index + 1, total: queue.length, title: doc.title, percent: 0 });
+      try {
+        const body = JSON.stringify({ document_type: doc.type, filename: file.name, content_type: file.type, size_bytes: file.size, data_base64: await fileToBase64(file) });
+        const next = await sendDocument(token, body, percent => setProgress(current => current && { ...current, percent }));
+        setView(next);
+        remove(doc.type);
+      } catch (reason) {
+        setProgress(null);
+        setErrors(current => ({ ...current, [doc.type]: reason instanceof Error ? reason.message : "Unable to upload the document." }));
+        setSubmitError(`${doc.title} could not be uploaded. Your other documents are safe; fix this one and press Submit again.`);
+        return;
+      }
     }
+    setProgress(null);
+    setSubmitted(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (!view) {
@@ -100,35 +143,69 @@ export default function OfferDocuments({ token }: { token: string }) {
 
   const uploaded = view.uploaded || [];
   const latest = (type: DocumentType) => uploaded.find(item => item.document_type === type);
-  const requiredDone = DOCUMENTS.filter(doc => doc.required).every(doc => latest(doc.type));
+  const ready = (type: DocumentType) => Boolean(latest(type) || selected[type]);
+  const missingRequired = DOCUMENTS.filter(doc => doc.required && !ready(doc.type));
+  const selectedCount = DOCUMENTS.filter(doc => selected[doc.type]).length;
+  const allRequiredUploaded = DOCUMENTS.filter(doc => doc.required).every(doc => latest(doc.type));
+
+  if (submitted && allRequiredUploaded) {
+    return <div><Navbar /><main className="admission-success">
+      <div className="admission-success-mark"><Icon kind="check" size={34} color="var(--accent)" /></div>
+      <Tag accent>DOCUMENTS SUBMITTED</Tag>
+      <h1>Thank you, {view.first_name}!</h1>
+      <p>We have received your documents for <b>{view.programme}</b>. Our Admissions Team will verify them and guide you through the final enrolment process.</p>
+      <ul className="offer-docs-summary">{DOCUMENTS.map(doc => { const done = latest(doc.type); return done ? <li key={doc.type}><Icon kind="check" size={14} color="var(--accent)" /> {doc.title} · {done.file_name}</li> : null; })}</ul>
+      <button type="button" className="admission-button secondary" onClick={() => setSubmitted(false)}>Add or replace a document</button>
+      <Link className="admission-button ghost" href="/">Back to home</Link>
+    </main><Footer /></div>;
+  }
 
   return <div><Navbar /><main className="offer-docs-page">
     <header className="admission-hero sx offer-docs-hero">
       <Tag accent>CONDITIONAL OFFER OF ADMISSION</Tag>
       <h1>Submit your <span>documents.</span></h1>
-      <p>Hi {view.first_name}, congratulations on your offer for <b>{view.programme}</b>. Upload the documents below to fulfil the conditions of your offer.</p>
+      <p>Hi {view.first_name}, congratulations on your offer for <b>{view.programme}</b>. Choose your documents below (PDF, JPG or PNG, max 10 MB each), then press <b>Submit documents</b>.</p>
       <p className="offer-docs-expiry">Offer valid until <b>{view.expires_on}</b></p>
     </header>
     <section className="offer-docs-list sx">
       {DOCUMENTS.map(doc => {
         const done = latest(doc.type);
-        const loading = busy === doc.type;
-        return <div className={`offer-docs-item${done ? " done" : ""}`} key={doc.type}>
+        const file = selected[doc.type];
+        return <div className={`offer-docs-item${done && !file ? " done" : ""}`} key={doc.type}>
           <div className="offer-docs-text">
-            <b>{doc.title}{!doc.required && <small> · optional</small>}</b>
+            <b>{doc.title}{doc.required ? <span className="offer-docs-required"> *</span> : <small> · optional</small>}</b>
             <span>{doc.text}</span>
-            {done && <span className="offer-docs-done"><Icon kind="check" size={14} color="var(--accent)" /> Uploaded {done.file_name} · {formatDate(done.uploaded_at)}</span>}
-            {errors[doc.type] && <p className="admission-error">{errors[doc.type]}</p>}
+            {done && <span className="offer-docs-done"><Icon kind="check" size={14} color="var(--accent)" /> Received {done.file_name} · {formatDate(done.uploaded_at)}</span>}
           </div>
-          <label className={`admission-button ${done ? "secondary" : "primary"} offer-docs-button${loading ? " busy" : ""}`}>
-            <input type="file" accept={ACCEPT} disabled={busy !== null} onChange={event => { upload(doc.type, event.target.files?.[0]); event.target.value = ""; }} />
-            {loading ? "Uploading…" : done ? "Replace" : "Upload"}
-          </label>
+          {file ? <div className="offer-docs-file">
+            <Icon kind="book" size={20} color="var(--accent)" />
+            <div><b>{file.name}</b><small>{formatSize(file.size)} · ready to submit</small></div>
+            <button type="button" className="offer-docs-remove" onClick={() => remove(doc.type)} disabled={Boolean(progress)} aria-label={`Remove ${file.name}`}><Icon kind="x" size={16} color="currentColor" /></button>
+          </div> : <label className={`admission-button ${done ? "secondary" : "primary"} offer-docs-button`}>
+            <input type="file" accept={ACCEPT} disabled={Boolean(progress)} onChange={event => { choose(doc.type, event.target.files?.[0]); event.target.value = ""; }} />
+            {done ? "Replace file" : "Upload"}
+          </label>}
+          {errors[doc.type] && <p className="admission-error">{errors[doc.type]}</p>}
         </div>;
       })}
-      <p className="offer-docs-note">PDF, JPG or PNG · maximum 10 MB each. Your documents are stored securely and only seen by our Admissions Team.</p>
-      {requiredDone && <div className="offer-docs-complete"><Icon kind="check" size={20} color="var(--accent)" /><span>Thank you! We have received your documents. Our Admissions Team will verify them and guide you through the final enrolment process.</span></div>}
-      <p className="offer-docs-help">Need help? Call Admissions on <a href="tel:+94711993331">071 199 3331</a>.</p>
+      <div className="offer-docs-submit">
+        {submitError && <p className="admission-error" role="alert">{submitError}</p>}
+        {missingRequired.length > 0 && <p className="offer-docs-note">Still needed: {missingRequired.map(doc => doc.title).join(" and ")}.</p>}
+        <button type="button" className="admission-button primary" disabled={selectedCount === 0 || Boolean(progress)} onClick={() => void submit()}>
+          {selectedCount > 1 ? `Submit ${selectedCount} documents` : "Submit documents"}
+        </button>
+        <p className="offer-docs-note">Your documents are stored securely and only seen by our Admissions Team.</p>
+        <p className="offer-docs-help">Need help? Call Admissions on <a href="tel:+94711993331">071 199 3331</a>.</p>
+      </div>
     </section>
+    {progress && <div className="offer-docs-uploading" role="alertdialog" aria-live="polite" aria-label="Uploading your documents">
+      <div className="offer-docs-uploading-card">
+        <div className="offer-docs-spinner" aria-hidden="true" />
+        <h2>Uploading your documents…</h2>
+        <p>{progress.title} · {progress.index} of {progress.total}</p>
+        <div className="offer-docs-bar"><span style={{ width: `${progress.percent}%` }} /></div>
+        <small>{progress.percent < 100 ? `${progress.percent}%` : "Saving securely…"} · please keep this page open</small>
+      </div>
+    </div>}
   </main><Footer /></div>;
 }
