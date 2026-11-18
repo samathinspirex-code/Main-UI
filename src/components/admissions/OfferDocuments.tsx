@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type DragEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Navbar } from "../layout/Navbar";
 import { Footer } from "../layout/Footer";
@@ -62,7 +62,6 @@ export default function OfferDocuments({ token }: { token: string }) {
   const [view, setView] = useState<OfferView | null>(null);
   const [selected, setSelected] = useState<Partial<Record<DocumentType, File>>>({});
   const [errors, setErrors] = useState<Partial<Record<DocumentType, string>>>({});
-  const [dragOver, setDragOver] = useState<DocumentType | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -97,12 +96,6 @@ export default function OfferDocuments({ token }: { token: string }) {
     setSelected(current => { const next = { ...current }; delete next[type]; return next; });
   }
 
-  function onDrop(type: DocumentType, event: DragEvent<HTMLLabelElement>) {
-    event.preventDefault();
-    setDragOver(null);
-    if (progress) return;
-    choose(type, event.dataTransfer.files?.[0]);
-  }
 
   async function submit() {
     const queue = DOCUMENTS.filter(doc => selected[doc.type]);
@@ -171,7 +164,7 @@ export default function OfferDocuments({ token }: { token: string }) {
     <header className="admission-hero sx offer-docs-hero">
       <Tag accent>CONDITIONAL OFFER OF ADMISSION</Tag>
       <h1>Submit your <span>documents.</span></h1>
-      <p>Hi {view.first_name}, congratulations on your offer for <b>{view.programme}</b>. Add the documents below, then press <b>Submit documents</b>.</p>
+      <p>Hi {view.first_name}, congratulations on your offer for <b>{view.programme}</b>. Choose your documents below (PDF, JPG or PNG, max 10 MB each), then press <b>Submit documents</b>.</p>
       <p className="offer-docs-expiry">Offer valid until <b>{view.expires_on}</b></p>
     </header>
     <section className="offer-docs-list sx">
@@ -188,17 +181,9 @@ export default function OfferDocuments({ token }: { token: string }) {
             <Icon kind="book" size={20} color="var(--accent)" />
             <div><b>{file.name}</b><small>{formatSize(file.size)} · ready to submit</small></div>
             <button type="button" className="offer-docs-remove" onClick={() => remove(doc.type)} disabled={Boolean(progress)} aria-label={`Remove ${file.name}`}><Icon kind="x" size={16} color="currentColor" /></button>
-          </div> : <label
-            className={`offer-docs-drop${dragOver === doc.type ? " over" : ""}`}
-            onDragOver={event => { event.preventDefault(); setDragOver(doc.type); }}
-            onDragLeave={() => setDragOver(current => current === doc.type ? null : current)}
-            onDrop={event => onDrop(doc.type, event)}
-          >
+          </div> : <label className={`admission-button ${done ? "secondary" : "primary"} offer-docs-button`}>
             <input type="file" accept={ACCEPT} disabled={Boolean(progress)} onChange={event => { choose(doc.type, event.target.files?.[0]); event.target.value = ""; }} />
-            <span className="admission-upload-icon"><Icon kind="book" size={22} color="var(--accent)" /></span>
-            <b className="offer-docs-pointer">{dragOver === doc.type ? "Drop the file here" : done ? "Drag a new file here to replace it" : "Drag & drop your file here"}</b>
-            <b className="offer-docs-touch">{done ? "Tap to replace the file" : "Tap to choose a file"}</b>
-            <small><span className="offer-docs-pointer">or <u>browse</u> · </span>PDF, JPG or PNG · max 10 MB</small>
+            {done ? "Replace file" : "Upload"}
           </label>}
           {errors[doc.type] && <p className="admission-error">{errors[doc.type]}</p>}
         </div>;
