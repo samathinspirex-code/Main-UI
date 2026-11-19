@@ -7,7 +7,7 @@ export default function PaymentPlans({ plan, programTitle }: { plan: PaymentPlan
   const heading = plan.heading || `${programTitle} – Payment Plan`
 
   return (
-    <section className="pp" aria-labelledby="pp-title">
+    <section className={`pp${plan.cards.length === 1 ? ' single' : ''}`} aria-labelledby="pp-title">
       <header className="pp-head">
         <span className="pp-eyebrow">FEES &amp; PAYMENT PLANS</span>
         <h2 id="pp-title">{heading}</h2>
@@ -15,7 +15,7 @@ export default function PaymentPlans({ plan, programTitle }: { plan: PaymentPlan
         {plan.intro && <p className="pp-intro">{plan.intro}</p>}
       </header>
 
-      <div className={`pp-cards${plan.cards.length === 1 ? ' single' : ''}`}>
+      <div className="pp-cards">
         {plan.cards.map((card, index) => (
           <article key={index} className={`pp-card${card.featured ? ' featured' : ''}`}>
             <div className="pp-card-top">
@@ -23,11 +23,14 @@ export default function PaymentPlans({ plan, programTitle }: { plan: PaymentPlan
               {card.badge && <span className="pp-card-badge">{card.badge}</span>}
             </div>
             {card.title && <h3 className="pp-card-title">{card.title}</h3>}
-            {card.amount && (
-              <p className="pp-card-amount">
-                {card.amount}
-                {card.amount_note && <small>{card.amount_note}</small>}
-              </p>
+            {(card.amount || card.limited_offer) && (
+              <div className="pp-card-price">
+                <div className="pp-card-amount-line">
+                  {card.amount && <p className="pp-card-amount">{card.amount}</p>}
+                  {card.limited_offer && <span className="pp-offer-stamp">{card.limited_offer_label || 'Limited offer'}</span>}
+                </div>
+                {card.amount_note && <small className="pp-card-amount-note">{card.amount_note}</small>}
+              </div>
             )}
             {card.rows.length > 0 && (
               <table className="pp-table">

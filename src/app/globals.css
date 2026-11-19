@@ -1040,9 +1040,10 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 .pp-highlight { display: inline-flex; align-items: center; gap: 8px; margin: 2px 0 8px; padding: 8px 16px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; }
 .pp-highlight::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; opacity: .85; }
 .pp-intro { margin: 8px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
-.pp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; align-items: start; }
-.pp-cards.single { grid-template-columns: minmax(0, 640px); }
-.pp-card { min-width: 0; padding: 22px; border: 1px solid var(--border-accent); border-radius: 14px; background: var(--surface); transition: box-shadow .25s ease, border-color .25s ease, transform .25s ease; }
+/* Flex so a card left alone on a row is centred instead of stretching. */
+.pp-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; align-items: flex-start; }
+.pp.single .pp-head { margin-left: auto; margin-right: auto; text-align: center; }
+.pp-card { flex: 1 1 360px; max-width: 580px; min-width: 0; padding: 22px; border: 1px solid var(--border-accent); border-radius: 14px; background: var(--surface); transition: box-shadow .25s ease, border-color .25s ease, transform .25s ease; }
 .pp-card.featured { border: 2px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, conic-gradient(from var(--pp-border-angle), #d8c7ef 0%, #d8c7ef 55%, #7b3ec8 75%, #3f007c 85%, #d8c7ef 100%) border-box; animation: pp-border-travel 5s linear infinite; }
 @keyframes pp-border-travel { to { --pp-border-angle: 360deg; } }
 @media (hover: hover) {
@@ -1053,8 +1054,13 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 .pp-card-eyebrow { color: var(--accent); font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
 .pp-card-badge { padding: 3px 10px; border-radius: 999px; background: var(--surface-lt); border: 1px solid var(--border-accent); color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .06em; }
 .pp-card-title { margin: 8px 0 2px; font-family: var(--font-display); font-size: 20px; color: var(--ink); }
-.pp-card-amount { margin: 4px 0 14px; color: var(--accent); font-family: var(--font-display); font-size: clamp(26px, 2.4vw, 32px); font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
-.pp-card-amount small { display: block; margin-top: 3px; color: var(--ink-soft); font-family: var(--font-body); font-size: 12px; font-weight: 400; }
+.pp-card-price { margin: 4px 0 14px; }
+.pp-card-amount-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 3px 0; }
+.pp-card-amount { margin: 0; color: var(--accent); font-family: var(--font-display); font-size: clamp(26px, 2.4vw, 32px); font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.pp-card-amount-note { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 12px; }
+.pp-offer-stamp { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border: 2px dashed #fff; border-radius: 8px; outline: 2px solid #e8590c; background: linear-gradient(135deg, #ff7a1a, #e8590c 55%, #c2410c); color: #fff; font-family: var(--font-display); font-size: clamp(13px, 1.2vw, 15px); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; line-height: 1; white-space: nowrap; transform: rotate(-4deg); box-shadow: 0 6px 16px rgba(232,89,12,.35); animation: pp-stamp-pulse 2.4s ease-in-out infinite; }
+.pp-offer-stamp::before { content: "★"; font-size: 1.05em; }
+@keyframes pp-stamp-pulse { 0%, 100% { transform: rotate(-4deg) scale(1); } 50% { transform: rotate(-4deg) scale(1.06); } }
 .pp-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .pp-table th, .pp-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
 .pp-table thead th { padding-top: 0; color: var(--ink-muted); font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
@@ -1066,14 +1072,15 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 .pp-table tr.emphasis th { border-radius: 8px 0 0 8px; }
 .pp-table tr.emphasis td:last-child { border-radius: 0 8px 8px 0; }
 .pp-card-footnote { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border); color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; }
-.pp-extra { max-width: 760px; margin-top: 22px; padding: 22px; border: 1px dashed var(--border-accent); border-radius: 14px; background: var(--surface-lt); }
+.pp-extra { max-width: 1178px; margin: 22px auto 0; padding: 22px; border: 1px dashed var(--border-accent); border-radius: 14px; background: var(--surface-lt); }
+.pp.single .pp-extra { max-width: 580px; }
 .pp-extra h3 { margin: 0 0 12px; font-family: var(--font-display); font-size: 18px; color: var(--ink); }
 .pp-extra .pp-table td:last-child { white-space: normal; text-align: left; font-weight: 400; color: var(--ink-soft); }
 .pp-extra .pp-table thead th:last-child { text-align: left; }
 .pp-extra .pp-table td.pp-extra-amount { color: var(--accent); font-weight: 700; white-space: nowrap; }
 .pp-extra-note { margin: 12px 0 0; color: var(--ink-soft); font-size: 13px; }
 @media (max-width: 600px) {
-  .pp-cards, .pp-cards.single { grid-template-columns: 1fr; }
+  .pp-card { flex-basis: 100%; }
   .pp-card, .pp-extra { padding: 18px; }
   .pp-table thead { display: none; }
   .pp-table tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 8px; border-bottom: 1px solid var(--border); }
@@ -1084,7 +1091,7 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
   .pp-extra .pp-table td.pp-extra-amount { grid-column: 2; grid-row: 1; }
   .pp-extra .pp-table td:last-child { grid-column: 1 / -1; grid-row: 2; font-size: 12px; }
 }
-@media (prefers-reduced-motion: reduce) { .pp-card.featured { animation: none; } .pp-card { transition: none; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pp-card.featured, .pp-offer-stamp { animation: none; } .pp-card { transition: none; transform: none; } }
 
 /* WTC event campaign heading and floating information cards. */
 .home-wtc-title { margin: 0 0 18px; font-family: var(--font-display); font-size: clamp(36px, 3.3vw, 48px); font-weight: 600; letter-spacing: -.025em; line-height: 1.08; }
