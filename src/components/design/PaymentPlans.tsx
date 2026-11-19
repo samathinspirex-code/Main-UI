@@ -1,4 +1,5 @@
 import type { PaymentPlans as PaymentPlansData } from '../../data/programs'
+import OfferStamp from './OfferStamp'
 
 /** CMS-managed payment plan: section heading → plan cards (with breakdown) → additional fees. */
 export default function PaymentPlans({ plan, programTitle }: { plan: PaymentPlansData; programTitle: string }) {
@@ -18,7 +19,7 @@ export default function PaymentPlans({ plan, programTitle }: { plan: PaymentPlan
       <div className="pp-cards">
         {plan.cards.map((card, index) => (
           <article key={index} className={`pp-card${card.featured ? ' featured' : ''}${card.limited_offer ? ' has-offer' : ''}`}>
-            {card.limited_offer && <span className="pp-offer-stamp">{card.limited_offer_label.trim() || 'Limited Offer'}</span>}
+            {card.limited_offer && <OfferStamp label={card.limited_offer_label.trim() || 'Limited Offer'} />}
             <div className="pp-card-top">
               {card.eyebrow && <span className="pp-card-eyebrow">{card.eyebrow}</span>}
               {card.badge && <span className="pp-card-badge">{card.badge}</span>}
