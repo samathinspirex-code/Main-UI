@@ -5,6 +5,17 @@ export type AwardingBody = "ATHE" | "CPD" | "WINC" | "LSBF" | "Jain" | "Jain Uni
 export interface Topic { topic_id: number; program_id: number; order: number; topic: string; }
 export interface Outcome { outcome_id: number; program_id: number; order: number; outcome: string; }
 
+export interface PaymentPlanRow { label: string; calculation: string; amount: string; emphasis: boolean; }
+export interface PaymentPlanCard { eyebrow: string; title: string; amount: string; amount_note: string; badge: string; featured: boolean; rows: PaymentPlanRow[]; footnote: string; }
+export interface PaymentPlanFeeRow { label: string; amount: string; due: string; }
+export interface PaymentPlans {
+  heading: string;
+  highlight: string;
+  intro: string;
+  cards: PaymentPlanCard[];
+  extra_fees: { title: string; note: string; rows: PaymentPlanFeeRow[] };
+}
+
 export interface Program {
   courseId?: number;
   programmeId?: number;
@@ -32,6 +43,8 @@ export interface Program {
   popularity: number;
   topics?: Topic[];
   outcomes?: Outcome[];
+  paymentPlansEnabled?: boolean;
+  paymentPlans?: PaymentPlans;
 }
 
 export interface StudyOption {
@@ -260,6 +273,27 @@ interface ApiProgram {
   popularity?: number;
   topics?: Topic[];
   outcomes?: Outcome[];
+  payment_plans_enabled?: boolean;
+  payment_plans?: Partial<PaymentPlans> | null;
+}
+
+/** Normalise the CMS payment plan JSON so the page never trips on a missing key. */
+function normalizePaymentPlans(raw: Partial<PaymentPlans> | null | undefined): PaymentPlans | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const str = (value: unknown) => (typeof value === "string" ? value : "");
+  const cards = (Array.isArray(raw.cards) ? raw.cards : []).map(card => ({
+    eyebrow: str(card?.eyebrow), title: str(card?.title), amount: str(card?.amount), amount_note: str(card?.amount_note),
+    badge: str(card?.badge), featured: Boolean(card?.featured), footnote: str(card?.footnote),
+    rows: (Array.isArray(card?.rows) ? card.rows : []).map(row => ({ label: str(row?.label), calculation: str(row?.calculation), amount: str(row?.amount), emphasis: Boolean(row?.emphasis) })),
+  })).filter(card => card.title || card.amount || card.rows.length);
+  const extra = raw.extra_fees ?? { title: "", note: "", rows: [] };
+  return {
+    heading: str(raw.heading), highlight: str(raw.highlight), intro: str(raw.intro), cards,
+    extra_fees: {
+      title: str(extra.title), note: str(extra.note),
+      rows: (Array.isArray(extra.rows) ? extra.rows : []).map(row => ({ label: str(row?.label), amount: str(row?.amount), due: str(row?.due) })).filter(row => row.label || row.amount),
+    },
+  };
 }
 
 const API_BASE_URL = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
@@ -294,6 +328,8 @@ function mapApiProgramToUi(api: ApiProgram): Program {
     popularity: api.popularity ?? 0,
     topics: api.topics,
     outcomes: api.outcomes,
+    paymentPlansEnabled: api.payment_plans_enabled ?? false,
+    paymentPlans: normalizePaymentPlans(api.payment_plans),
   };
 }
 
