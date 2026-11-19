@@ -6,7 +6,7 @@ export interface Topic { topic_id: number; program_id: number; order: number; to
 export interface Outcome { outcome_id: number; program_id: number; order: number; outcome: string; }
 
 export interface PaymentPlanRow { label: string; calculation: string; amount: string; emphasis: boolean; }
-export interface PaymentPlanCard { eyebrow: string; title: string; amount: string; amount_note: string; badge: string; featured: boolean; rows: PaymentPlanRow[]; footnote: string; }
+export interface PaymentPlanCard { eyebrow: string; title: string; amount: string; amount_note: string; badge: string; featured: boolean; limited_offer: boolean; limited_offer_label: string; rows: PaymentPlanRow[]; footnote: string; }
 export interface PaymentPlanFeeRow { label: string; amount: string; due: string; }
 export interface PaymentPlans {
   heading: string;
@@ -284,6 +284,7 @@ function normalizePaymentPlans(raw: Partial<PaymentPlans> | null | undefined): P
   const cards = (Array.isArray(raw.cards) ? raw.cards : []).map(card => ({
     eyebrow: str(card?.eyebrow), title: str(card?.title), amount: str(card?.amount), amount_note: str(card?.amount_note),
     badge: str(card?.badge), featured: Boolean(card?.featured), footnote: str(card?.footnote),
+    limited_offer: Boolean(card?.limited_offer), limited_offer_label: str(card?.limited_offer_label),
     rows: (Array.isArray(card?.rows) ? card.rows : []).map(row => ({ label: str(row?.label), calculation: str(row?.calculation), amount: str(row?.amount), emphasis: Boolean(row?.emphasis) })),
   })).filter(card => card.title || card.amount || card.rows.length);
   const extra = raw.extra_fees ?? { title: "", note: "", rows: [] };
