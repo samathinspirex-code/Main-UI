@@ -17,18 +17,16 @@ export default function PaymentPlans({ plan, programTitle }: { plan: PaymentPlan
 
       <div className="pp-cards">
         {plan.cards.map((card, index) => (
-          <article key={index} className={`pp-card${card.featured ? ' featured' : ''}`}>
+          <article key={index} className={`pp-card${card.featured ? ' featured' : ''}${card.limited_offer ? ' has-offer' : ''}`}>
+            {card.limited_offer && <span className="pp-offer-stamp">{card.limited_offer_label.trim() || 'Limited Offer'}</span>}
             <div className="pp-card-top">
               {card.eyebrow && <span className="pp-card-eyebrow">{card.eyebrow}</span>}
               {card.badge && <span className="pp-card-badge">{card.badge}</span>}
             </div>
             {card.title && <h3 className="pp-card-title">{card.title}</h3>}
-            {(card.amount || card.limited_offer) && (
+            {card.amount && (
               <div className="pp-card-price">
-                <div className="pp-card-amount-line">
-                  {card.amount && <p className="pp-card-amount">{card.amount}</p>}
-                  {card.limited_offer && <span className="pp-offer-stamp">{card.limited_offer_label || 'Limited offer'}</span>}
-                </div>
+                <p className="pp-card-amount">{card.amount}</p>
                 {card.amount_note && <small className="pp-card-amount-note">{card.amount_note}</small>}
               </div>
             )}
