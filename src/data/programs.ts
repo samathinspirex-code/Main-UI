@@ -6,14 +6,14 @@ export interface Topic { topic_id: number; program_id: number; order: number; to
 export interface Outcome { outcome_id: number; program_id: number; order: number; outcome: string; }
 
 export interface PaymentPlanRow { label: string; calculation: string; amount: string; emphasis: boolean; }
-export interface PaymentPlanCard { eyebrow: string; title: string; amount: string; amount_note: string; badge: string; featured: boolean; limited_offer: boolean; limited_offer_label: string; rows: PaymentPlanRow[]; footnote: string; }
 export interface PaymentPlanFeeRow { label: string; amount: string; due: string; }
+export interface PaymentPlanFees { title: string; note: string; rows: PaymentPlanFeeRow[]; }
+export interface PaymentPlanCard { eyebrow: string; title: string; amount: string; amount_note: string; badge: string; featured: boolean; rows: PaymentPlanRow[]; extra_fees: PaymentPlanFees; footnote: string; }
 export interface PaymentPlans {
   heading: string;
   highlight: string;
   intro: string;
   cards: PaymentPlanCard[];
-  extra_fees: { title: string; note: string; rows: PaymentPlanFeeRow[] };
 }
 
 export interface Program {
@@ -45,6 +45,7 @@ export interface Program {
   outcomes?: Outcome[];
   paymentPlansEnabled?: boolean;
   paymentPlans?: PaymentPlans;
+  limitedOffer?: { enabled: boolean; label: string };
 }
 
 export interface StudyOption {
@@ -274,27 +275,40 @@ interface ApiProgram {
   topics?: Topic[];
   outcomes?: Outcome[];
   payment_plans_enabled?: boolean;
-  payment_plans?: Partial<PaymentPlans> | null;
+  payment_plans?: (Partial<PaymentPlans> & { extra_fees?: Partial<PaymentPlanFees> }) | null;
+  limited_offer_enabled?: boolean;
+  limited_offer_label?: string | null;
 }
 
 /** Normalise the CMS payment plan JSON so the page never trips on a missing key. */
-function normalizePaymentPlans(raw: Partial<PaymentPlans> | null | undefined): PaymentPlans | undefined {
+function normalizePaymentPlans(raw: (Partial<PaymentPlans> & { extra_fees?: Partial<PaymentPlanFees> }) | null | undefined): PaymentPlans | undefined {
   if (!raw || typeof raw !== "object") return undefined;
   const str = (value: unknown) => (typeof value === "string" ? value : "");
-  const cards = (Array.isArray(raw.cards) ? raw.cards : []).map(card => ({
+  const toFees = (fees: any): PaymentPlanFees => ({
+    title: str(fees?.title), note: str(fees?.note),
+    rows: (Array.isArray(fees?.rows) ? fees.rows : []).map((row: any) => ({ label: str(row?.label), amount: str(row?.amount), due: str(row?.due) })).filter((row: PaymentPlanFeeRow) => row.label || row.amount),
+  });
+  const cards: PaymentPlanCard[] = (Array.isArray(raw.cards) ? raw.cards : []).map((card: any) => ({
     eyebrow: str(card?.eyebrow), title: str(card?.title), amount: str(card?.amount), amount_note: str(card?.amount_note),
     badge: str(card?.badge), featured: Boolean(card?.featured), footnote: str(card?.footnote),
-    limited_offer: Boolean(card?.limited_offer), limited_offer_label: str(card?.limited_offer_label),
-    rows: (Array.isArray(card?.rows) ? card.rows : []).map(row => ({ label: str(row?.label), calculation: str(row?.calculation), amount: str(row?.amount), emphasis: Boolean(row?.emphasis) })),
+    rows: (Array.isArray(card?.rows) ? card.rows : []).map((row: any) => ({ label: str(row?.label), calculation: str(row?.calculation), amount: str(row?.amount), emphasis: Boolean(row?.emphasis) })),
+    extra_fees: toFees(card?.extra_fees),
   })).filter(card => card.title || card.amount || card.rows.length);
-  const extra = raw.extra_fees ?? { title: "", note: "", rows: [] };
-  return {
-    heading: str(raw.heading), highlight: str(raw.highlight), intro: str(raw.intro), cards,
-    extra_fees: {
-      title: str(extra.title), note: str(extra.note),
-      rows: (Array.isArray(extra.rows) ? extra.rows : []).map(row => ({ label: str(row?.label), amount: str(row?.amount), due: str(row?.due) })).filter(row => row.label || row.amount),
-    },
-  };
+  // Legacy plans kept one plan-level fee box: fold its rows into the matching card
+  // ("Year 1" row -> "Year 1" card; a single card takes all; unmatched -> first card).
+  const legacy = toFees(raw.extra_fees);
+  if (cards.length && legacy.rows.length && !cards.some(card => card.extra_fees.rows.length)) {
+    const norm = (value: string) => value.toLowerCase().split(/\s+/).filter(Boolean).join(" ");
+    for (const row of legacy.rows) {
+      const label = norm(row.label);
+      const match = cards.length > 1 ? cards.findIndex(card => label && (norm(card.title) === label || norm(card.eyebrow) === label)) : 0;
+      const card = cards[match < 0 ? 0 : match];
+      card.extra_fees.rows.push(row);
+      card.extra_fees.title ||= legacy.title;
+      card.extra_fees.note ||= legacy.note;
+    }
+  }
+  return { heading: str(raw.heading), highlight: str(raw.highlight), intro: str(raw.intro), cards };
 }
 
 const API_BASE_URL = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
@@ -331,6 +345,7 @@ function mapApiProgramToUi(api: ApiProgram): Program {
     outcomes: api.outcomes,
     paymentPlansEnabled: api.payment_plans_enabled ?? false,
     paymentPlans: normalizePaymentPlans(api.payment_plans),
+    limitedOffer: { enabled: api.limited_offer_enabled ?? false, label: api.limited_offer_label?.trim() || "Limited Offer" },
   };
 }
 

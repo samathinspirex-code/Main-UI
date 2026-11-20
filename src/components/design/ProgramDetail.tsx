@@ -13,9 +13,13 @@ import { Icon } from '../ui/Icon'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
 
 const TABS = ['Overview','Curriculum','Careers','Fees & Aid','Apply']
+// Limited offer courses lead with the fees.
+const OFFER_TABS = ['Fees & Aid','Overview','Curriculum','Careers','Apply']
 
 export default function ProgramDetail({ program, related }: { program: Program; related: Program[] }) {
-  const [activeTab, setActiveTab] = useState('Overview')
+  const hasOffer = Boolean(program.limitedOffer?.enabled)
+  const tabs = hasOffer ? OFFER_TABS : TABS
+  const [activeTab, setActiveTab] = useState(tabs[0])
   const heroImg = program.imageUrl || getProgramImage(program.imageLabel)
   const paymentPlan = program.paymentPlansEnabled && program.paymentPlans?.cards.length ? program.paymentPlans : undefined
 
@@ -76,7 +80,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
         {/* Tabs */}
         <div className="program-detail-tabs-shell">
           <div className="sx program-detail-tabs">
-            {TABS.map(tab => (
+            {tabs.map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -156,7 +160,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             </div>
           )}
           {activeTab === 'Fees & Aid' && (
-            paymentPlan ? <PaymentPlans plan={paymentPlan} programTitle={program.title} /> :
+            paymentPlan ? <PaymentPlans plan={paymentPlan} programTitle={program.title} offer={program.limitedOffer} /> :
             <div className="rg-2" style={{ gap: 24, maxWidth: 720 }}>
               <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 28 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-muted)', marginBottom: 8 }}>TUITION</div>

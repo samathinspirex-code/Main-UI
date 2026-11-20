@@ -13,6 +13,7 @@ import { Tag } from '../ui/Tag'
 import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 import { formatLKR, getProgramImage, type Program } from '../../data/programs'
+import OfferStamp from './OfferStamp'
 
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
 const canonicalBody = (value: string) => {
@@ -555,8 +556,9 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                 <Link
                   key={p.slug}
                   href={`/programs/${p.slug}`}
-                  className={`programme-image-card home-programme-card card-hover reveal reveal-delay-${(i % 3) + 1}`}
+                  className={`programme-image-card home-programme-card card-hover reveal reveal-delay-${(i % 3) + 1}${p.limitedOffer?.enabled ? ' has-offer' : ''}`}
                 >
+                  {p.limitedOffer?.enabled && <OfferStamp label={p.limitedOffer.label} variant="badge" className="programme-offer-badge" />}
                   <div className="programme-card-cover">
                     <img
                       src={p.imageUrl || getProgramImage(p.imageLabel)}

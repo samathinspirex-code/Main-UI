@@ -6,6 +6,7 @@ import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
 import { Icon } from '../ui/Icon'
 import { formatLKR, getProgramImage, type Program, type ProgrammeNode } from '../../data/programs'
+import OfferStamp from './OfferStamp'
 
 const PAGE_SIZE = 6
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
@@ -228,8 +229,9 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
                   <Link
                     key={p.slug}
                     href={`/programs/${p.slug}`}
-                    className="programme-image-card card-hover"
+                    className={`programme-image-card card-hover${p.limitedOffer?.enabled ? ' has-offer' : ''}`}
                   >
+                    {p.limitedOffer?.enabled && <OfferStamp label={p.limitedOffer.label} variant="badge" className="programme-offer-badge" />}
                     <div className="programme-card-cover">
                       <img
                         src={p.imageUrl || getProgramImage(p.imageLabel)}
