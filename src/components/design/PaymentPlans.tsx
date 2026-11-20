@@ -10,6 +10,7 @@ type Phase = 'hidden' | 'stamp' | 'exit' | 'done'
 
 const STAMP_HOLD_MS = 1900
 const STAMP_EXIT_MS = 550
+const SETTLE_MS = 350
 
 /**
  * CMS-managed payment plan: section heading → plan cards (breakdown + the card's own additional fee).
@@ -27,16 +28,23 @@ export default function PaymentPlans({ plan, programTitle, offer }: { plan: Paym
     const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     if (!node || reduced || typeof IntersectionObserver === 'undefined') { setPhase('done'); return }
     const timers: number[] = []
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries.some(entry => entry.isIntersecting)) return
+    let settle = 0
+    const start = () => {
       observer.disconnect()
       if (!showOffer) { setPhase('done'); return }
       setPhase('stamp')
       timers.push(window.setTimeout(() => setPhase('exit'), STAMP_HOLD_MS))
       timers.push(window.setTimeout(() => setPhase('done'), STAMP_HOLD_MS + STAMP_EXIT_MS))
+    }
+    // Only start once the section has stayed on screen briefly, so a scroll that merely
+    // passes over it (e.g. the page scrolling back to the top) doesn't use up the popup.
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.some(entry => entry.isIntersecting)
+      window.clearTimeout(settle)
+      if (visible) settle = window.setTimeout(start, SETTLE_MS)
     }, { rootMargin: '0px 0px -20% 0px', threshold: 0 })
     observer.observe(node)
-    return () => { observer.disconnect(); timers.forEach(clearTimeout) }
+    return () => { observer.disconnect(); window.clearTimeout(settle); timers.forEach(clearTimeout) }
   }, [showOffer])
 
   const cardsShown = phase === 'exit' || phase === 'done'

@@ -57,7 +57,7 @@ export function HomeA() {
           Globally recognised qualifications validated by ATHE, WINC, LSBF and Jain University — delivered fully online from Colombo.
         </div>
         <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 34 }}>
-          <SkBtn primary arrow href="/admissions">Reserve your seat</SkBtn>
+          <SkBtn primary arrow href="/admissions">Apply now</SkBtn>
           <SkBtn href="/contact">Talk to an expert</SkBtn>
         </div>
         <div style={{ marginTop: 40 }}>

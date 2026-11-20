@@ -45,7 +45,9 @@ export interface Program {
   outcomes?: Outcome[];
   paymentPlansEnabled?: boolean;
   paymentPlans?: PaymentPlans;
-  limitedOffer?: { enabled: boolean; label: string };
+  /** `price` is the discounted price, set only when it is lower than `priceFrom`. */
+  limitedOffer?: { enabled: boolean; label: string; price?: number };
+  monthlyInstalment?: number;
 }
 
 export interface StudyOption {
@@ -243,6 +245,11 @@ export function getProgramBySlug(slug: string): Program | undefined {
   return PROGRAMS.find((p) => p.slug === slug);
 }
 
+/** The price a visitor pays now: the limited-offer price when one applies, otherwise the normal price. */
+export function effectivePrice(program: Program): number {
+  return program.limitedOffer?.price ?? program.priceFrom;
+}
+
 export function formatLKR(amount: number): string {
   return `LKR ${amount.toLocaleString("en-LK")}`;
 }
@@ -278,6 +285,8 @@ interface ApiProgram {
   payment_plans?: (Partial<PaymentPlans> & { extra_fees?: Partial<PaymentPlanFees> }) | null;
   limited_offer_enabled?: boolean;
   limited_offer_label?: string | null;
+  monthly_instalment?: number | null;
+  limited_offer_price?: number | null;
 }
 
 /** Normalise the CMS payment plan JSON so the page never trips on a missing key. */
@@ -345,7 +354,12 @@ function mapApiProgramToUi(api: ApiProgram): Program {
     outcomes: api.outcomes,
     paymentPlansEnabled: api.payment_plans_enabled ?? false,
     paymentPlans: normalizePaymentPlans(api.payment_plans),
-    limitedOffer: { enabled: api.limited_offer_enabled ?? false, label: api.limited_offer_label?.trim() || "Limited Offer" },
+    limitedOffer: {
+      enabled: api.limited_offer_enabled ?? false,
+      label: api.limited_offer_label?.trim() || "Limited Offer",
+      price: api.limited_offer_enabled && api.limited_offer_price && api.limited_offer_price > 0 && api.limited_offer_price < lowestPrice ? api.limited_offer_price : undefined,
+    },
+    monthlyInstalment: api.monthly_instalment && api.monthly_instalment > 0 ? api.monthly_instalment : undefined,
   };
 }
 

@@ -12,8 +12,9 @@ import { Button } from '../ui/Button'
 import { Tag } from '../ui/Tag'
 import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
-import { formatLKR, getProgramImage, type Program } from '../../data/programs'
-import OfferStamp from './OfferStamp'
+import { getProgramImage, type Program } from '../../data/programs'
+import OfferRibbon from './OfferRibbon'
+import CoursePrice, { InstalmentPill } from './CoursePrice'
 
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
 const canonicalBody = (value: string) => {
@@ -28,9 +29,9 @@ const canonicalBody = (value: string) => {
 }
 
 const PATH_CARDS = [
-  { icon: 'grad', title: 'Foundation', blurb: 'Build essential knowledge and skills for further study and a successful academic journey.', tag: 'From LKR 125,000', href: '/programs?level=Foundation', delay: 0 },
-  { icon: 'book', title: 'HND & Degrees', blurb: 'Strong foundation with HND, Top-Up Degrees and Postgraduate routes from UK partners.', tag: 'From LKR 250,000', href: '/programs?level=HND', delay: 100 },
-  { icon: 'brush', title: 'Short Courses', blurb: 'Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.', tag: 'From LKR 15,000', href: '/programs?level=Short+Course', delay: 200 },
+  { icon: 'grad', title: 'Foundation', blurb: 'Start your pathway to a degree with flexible monthly payments.', tag: 'From LKR 5,000/month*', href: '/programs?level=Foundation', delay: 0 },
+  { icon: 'book', title: 'HND-Level Study', blurb: 'Explore Level 4 & 5 programmes — Year 1 and Year 2.', tag: 'From LKR 9,900/month*', href: '/programs?level=HND', delay: 100 },
+  { icon: 'brush', title: 'Short Courses', blurb: 'Build practical skills with career-focused CPD programmes.', tag: 'From LKR 9,900/month*', href: '/programs?level=Short+Course', delay: 200 },
 ]
 
 const PARTNERS = [
@@ -73,14 +74,28 @@ interface HeroSlide {
 
 const HERO_SLIDES: HeroSlide[] = [
   {
+    tag: '· Free Coffee with Barista ·',
+    title: 'Your Future ',
+    titleHighlight: 'is Brewing.',
+    subtitle: 'Study hard. Sip free.',
+    description: 'Free coffee for every enrolled Inspire College student at participating Barista cafés. Weekday daytime only, funded by Inspire College.',
+    benefits: ['1 Coffee a Week', '4 Coffees a Month', '48 Coffees a Year'],
+    primaryBtn: { label: 'Apply now →', href: '/admissions' },
+    secondaryBtn: { label: 'Chat with an advisor', href: WHATSAPP_BOT_URL },
+    image: '/home-hero-free-coffee.webp',
+    imageAlt: 'Inspire College student holding a free Barista coffee, with 1 coffee a week, 4 a month and 48 a year',
+    badgeTop: { label: 'FREE COFFEE' },
+    badgeBottom: { eyebrow: 'Weekday daytime', value: 'At Barista cafés' },
+  },
+  {
     tag: "· Sri Lanka's First Online University ·",
     title: 'Your Online ',
     titleHighlight: 'University',
     subtitle: 'Foundation · HND · Degree · Master’s · CPD',
     description: '100% online qualifications and professional courses through ATHE, an Ofqual-regulated UK awarding organisation, international university partners, and CPD programmes.',
     benefits: ['100% Online', 'Flexible', 'Globally Recognised'],
-    primaryBtn: { label: 'Reserve your seat →', href: '/admissions' },
-    secondaryBtn: { label: 'Talk to an advisor', href: WHATSAPP_BOT_URL },
+    primaryBtn: { label: 'Apply now →', href: '/admissions' },
+    secondaryBtn: { label: 'Chat with an advisor', href: WHATSAPP_BOT_URL },
     image: '/hero-banner1.png',
     imageAlt: 'Inspire College student beginning his pathway to a global qualification',
     badgeTop: { label: '100% ONLINE' },
@@ -95,7 +110,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: 'Learn practical AI skills online and build toward the career you want.',
     benefits: ['Practical AI Skills', 'Flexible Learning', 'Career Growth'],
     primaryBtn: { label: 'Explore Programs →', href: '/programs' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: WHATSAPP_BOT_URL },
+    secondaryBtn: { label: 'Chat with an Advisor', href: WHATSAPP_BOT_URL },
     image: '/ai-student-engineer-hero.png',
     imageAlt: 'AI student progressing toward a career as an AI engineer',
     badgeTop: { label: 'AI ENGINEER' },
@@ -110,7 +125,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: 'Build practical business skills online and grow toward the career you want.',
     benefits: ['Business Skills', 'Flexible Learning', 'Career Growth'],
     primaryBtn: { label: 'Explore Business Programmes →', href: '/programs?school=Business' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: WHATSAPP_BOT_URL },
+    secondaryBtn: { label: 'Chat with an Advisor', href: WHATSAPP_BOT_URL },
     image: '/business-student-professional-hero.png',
     imageAlt: 'Business student progressing toward a professional career',
     badgeTop: { label: 'BUSINESS PROFESSIONAL' },
@@ -139,7 +154,7 @@ const HERO_SLIDES: HeroSlide[] = [
     description: 'Help your child take the next step with flexible online learning and guidance throughout their studies.',
     benefits: ['Foundation', 'HND', 'Degree Pathways'],
     primaryBtn: { label: 'Explore Programmes', href: '/programs' },
-    secondaryBtn: { label: 'Talk to an Advisor', href: WHATSAPP_BOT_URL },
+    secondaryBtn: { label: 'Chat with an Advisor', href: WHATSAPP_BOT_URL },
     image: '/home-hero-about.png',
     imageAlt: 'Inspire College graduate celebrating success with family',
     badgeBottom: { eyebrow: 'Student Success', value: '100% Satisfaction' },
@@ -558,7 +573,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   href={`/programs/${p.slug}`}
                   className={`programme-image-card home-programme-card card-hover reveal reveal-delay-${(i % 3) + 1}${p.limitedOffer?.enabled ? ' has-offer' : ''}`}
                 >
-                  {p.limitedOffer?.enabled && <OfferStamp label={p.limitedOffer.label} variant="badge" className="programme-offer-badge" />}
+                  {p.limitedOffer?.enabled && <OfferRibbon label={p.limitedOffer.label} />}
                   <div className="programme-card-cover">
                     <img
                       src={p.imageUrl || getProgramImage(p.imageLabel)}
@@ -572,10 +587,12 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                       <small>{p.duration}</small>
                     </div>
                     <h3>{p.title}</h3>
-                    <p>{p.blurb}</p>
-                    <div className="programme-card-footer">
-                      <strong>From {formatLKR(p.priceFrom)}</strong>
-                      <span className="programme-read-more">Read more <Icon kind="arrow" size={14} /></span>
+                    <div className="programme-card-prices">
+                      <CoursePrice program={p} />
+                      {p.monthlyInstalment ? <InstalmentPill amount={p.monthlyInstalment} /> : null}
+                    </div>
+                    <div className="programme-card-footer only-link">
+                      <span className="programme-read-more">Learn more <Icon kind="arrow" size={14} /></span>
                     </div>
                   </div>
                 </Link>
@@ -618,47 +635,18 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
           </div>
         </section>
 
-        {/* CTA banner */}
+        {/* Free Coffee promotion artwork (desktop and mobile versions). */}
         <section className="sx" style={{ padding: '0 0 100px' }}>
-          <div
-            className="reveal home-cta"
-            style={{
-              maxWidth: 1200, margin: '0 auto',
-              background: 'linear-gradient(135deg, #3F007C 0%, #7B3EC8 60%, #3F007C 100%)',
-              backgroundSize: '200% 200%',
-              animation: 'gradient-shift 6s ease infinite',
-              borderRadius: 20, padding: '64px 72px',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 40,
-              position: 'relative', overflow: 'hidden',
-            }}
-          >
-            {/* Decorative orbs inside banner */}
-            <div style={{ position: 'absolute', width: 300, height: 300, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', top: -80, right: 200, pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', bottom: -60, right: 80, pointerEvents: 'none' }} />
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.65)', marginBottom: 14, textTransform: 'uppercase' }}>Limited offer</div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px,4vw,50px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.1 }}>
-                First 20 students receive a<br className="cta-br" /><span style={{ color: '#c6b8f0' }}>LKR 200,000 scholarship</span>
-              </h2>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.6 }}>
-                Registration fee starting from LKR 9,900.
-              </p>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flexShrink: 0, position: 'relative', zIndex: 1 }}>
-              <a href="/admissions" style={{ display: 'inline-flex', alignItems: 'center', padding: '14px 28px', background: '#fff', color: 'var(--accent)', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 15, borderRadius: 8, textDecoration: 'none', border: 'none', letterSpacing: '0.02em', transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 28px rgba(0,0,0,0.2)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = ''; (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)' }}
-              >
-                Reserve your seat →
-              </a>
-              <a href={WHATSAPP_BOT_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '12px 28px', background: 'transparent', color: 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 14, borderRadius: 8, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.35)', letterSpacing: '0.02em', transition: 'border-color 0.2s, color 0.2s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.7)'; (e.currentTarget as HTMLAnchorElement).style.color = '#fff' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.35)'; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.85)' }}
-              >
-                Talk to an advisor
-              </a>
-            </div>
-          </div>
+          <picture className="reveal home-promo-banner">
+            <source media="(max-width: 767px)" srcSet="/free-coffee-banner-mobile.jpg" width={750} height={900} />
+            <img
+              src="/free-coffee-banner-desktop.jpg"
+              width={2000}
+              height={517}
+              loading="lazy"
+              alt="Your Future is Brewing. Free Coffee for every enrolled Inspire College student: 1 coffee a week, 4 coffees a month, 48 coffees a year."
+            />
+          </picture>
         </section>
       </div>
     </div>

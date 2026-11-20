@@ -173,10 +173,10 @@ function ApplyTab({ program }: { program: Program }) {
     <div style={{ padding: "40px 48px 48px", textAlign: "center" }}>
       <Heading size={30}>Ready to apply?</Heading>
       <div style={{ fontFamily: "var(--sk-hand)", fontSize: 15, color: SK.inkSoft, marginTop: 8, maxWidth: 520, marginInline: "auto" }}>
-        Reserve your seat in {program.title} — takes about twenty minutes, save and return any time.
+        Apply now for {program.title} — takes about twenty minutes, save and return any time.
       </div>
       <div style={{ marginTop: 22 }}>
-        <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Reserve your seat</SkBtn>
+        <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Apply now</SkBtn>
       </div>
     </div>
   );
@@ -223,9 +223,9 @@ export function ProgramDetailA({ program }: { program: Program }) {
             ))}
           </div>
           <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
-            <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Reserve your seat</SkBtn>
+            <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Apply now</SkBtn>
             <SkBtn href="/contact">Download brochure</SkBtn>
-            <SkBtn href={WHATSAPP_BOT_URL}>Talk to an advisor</SkBtn>
+            <SkBtn href={WHATSAPP_BOT_URL}>Chat with an advisor</SkBtn>
           </div>
         </div>
         <div>
@@ -253,10 +253,10 @@ export function ProgramDetailA({ program }: { program: Program }) {
         <div>
           <Heading size={30} style={{ color: SK.paper }}>Ready to start?</Heading>
           <div style={{ fontFamily: "var(--sk-hand)", fontSize: 14, opacity: 0.8, marginTop: 6 }}>
-            {program.tag ? `${program.tag} · ` : ""}talk to an advisor on +94 71 199 3331
+            {program.tag ? `${program.tag} · ` : ""}chat with an advisor on +94 71 199 3331
           </div>
         </div>
-        <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Reserve your seat</SkBtn>
+        <SkBtn primary arrow href={`/admissions?program=${program.slug}`}>Apply now</SkBtn>
       </div>
 
       {related.length > 0 && (

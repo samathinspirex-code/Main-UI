@@ -4,6 +4,7 @@ import { WHATSAPP_BOT_URL } from '@/data/whatsapp'
 
 import { useState } from 'react'
 import PaymentPlans from './PaymentPlans'
+import CoursePrice from './CoursePrice'
 import Link from 'next/link'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
@@ -51,7 +52,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             )}
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 18, color: 'var(--ink-soft)', margin: '0 0 28px', lineHeight: 1.6 }}>{program.blurb}</p>
             <div className="rg-4" style={{ gap: 20, padding: '20px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', marginBottom: 28 }}>
-              {[[program.code,'Awarding'],[program.duration,'Duration'],['100% Online','Mode'],[formatLKR(program.priceFrom), program.tag ? 'First 50' : 'From']].map(([v, l]) => (
+              {([[program.code,'Awarding'],[program.duration,'Duration'],['100% Online','Mode'],[<CoursePrice key="price" program={program} size="hero" />, program.limitedOffer?.price ? 'Offer price' : program.tag ? 'First 50' : 'From']] as [React.ReactNode, string][]).map(([v, l]) => (
                 <div key={l}>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-muted)', marginBottom: 4 }}>{l.toUpperCase()}</div>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 600 }}>{v}</div>
@@ -59,8 +60,8 @@ export default function ProgramDetail({ program, related }: { program: Program; 
               ))}
             </div>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Button variant="primary" href={`/admissions?program=${program.slug}`}>Reserve your seat →</Button>
-              <Button variant="outline" href={WHATSAPP_BOT_URL}>Talk to an advisor</Button>
+              <Button variant="primary" href={`/admissions?program=${program.slug}`}>Apply now →</Button>
+              <Button variant="outline" href={WHATSAPP_BOT_URL}>Chat with an advisor</Button>
             </div>
           </div>
           <div>
@@ -68,11 +69,17 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             <div style={{ marginTop: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 20 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', color: 'var(--accent)', marginBottom: 14 }}>AT A GLANCE</div>
               {[['Awarding body', program.awardingBody === 'Jain' ? 'Jain University' : program.awardingBody],['Entry', program.entryRequirements || 'Contact admissions for entry requirements.'],['Format', 'Live online + LMS'],['Progression', program.progressionRoute || 'Contact admissions for progression options.']].map(([k, v], i, arr) => (
-                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < arr.length - 1 || program.monthlyInstalment ? '1px solid var(--border)' : 'none' }}>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--ink-muted)' }}>{k}</span>
                   <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600 }}>{v}</span>
                 </div>
               ))}
+              {program.monthlyInstalment ? (
+                <div className="glance-instalment">
+                  <span className="glance-instalment-label">Instalments</span>
+                  <span className="glance-instalment-price">{formatLKR(program.monthlyInstalment)} <small>/ month</small></span>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -164,7 +171,7 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             <div className="rg-2" style={{ gap: 24, maxWidth: 720 }}>
               <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 28 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em', color: 'var(--ink-muted)', marginBottom: 8 }}>TUITION</div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, color: 'var(--accent)', marginBottom: 8 }}>From {formatLKR(program.priceFrom)}</div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, color: 'var(--accent)', marginBottom: 8 }}>{program.limitedOffer?.price ? <CoursePrice program={program} /> : `From ${formatLKR(program.priceFrom)}`}</div>
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
                   {program.tag ? `${program.tag} — regular fee applies after the offer ends.` : 'Flexible payment plans available.'}
                 </p>
@@ -180,9 +187,9 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             <div style={{ textAlign: 'center', maxWidth: 480, margin: '0 auto', padding: '32px 0' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, margin: '0 0 16px' }}>Ready to apply?</h2>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink-soft)', margin: '0 0 28px', lineHeight: 1.6 }}>
-                Reserve your seat in {program.title} — takes about twenty minutes, save and return any time.
+                Apply now for {program.title} — takes about twenty minutes, save and return any time.
               </p>
-              <Button variant="primary" size="lg" href={`/admissions?program=${program.slug}`}>Reserve your seat →</Button>
+              <Button variant="primary" size="lg" href={`/admissions?program=${program.slug}`}>Apply now →</Button>
             </div>
           )}
         </div>
@@ -193,10 +200,10 @@ export default function ProgramDetail({ program, related }: { program: Program; 
             <div>
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, margin: '0 0 8px' }}>Ready to start?</h3>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink-muted)', margin: 0 }}>
-                {program.tag ? `${program.tag} · ` : ''}Talk to an advisor on +94 71 199 3331
+                {program.tag ? `${program.tag} · ` : ''}Chat with an advisor on +94 71 199 3331
               </p>
             </div>
-            <Button variant="primary" size="lg" href={`/admissions?program=${program.slug}`}>Reserve your seat →</Button>
+            <Button variant="primary" size="lg" href={`/admissions?program=${program.slug}`}>Apply now →</Button>
           </div>
         </div>
 

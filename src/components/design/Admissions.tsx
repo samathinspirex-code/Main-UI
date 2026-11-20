@@ -109,7 +109,7 @@ export default function Admissions({ programs, initialProgramSlug = '' }: { prog
         <div className="sx page-load-hero" style={{ padding: '64px 0 40px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div style={{ marginBottom: 18 }}>
-              <Tag accent>RESERVE YOUR SEAT</Tag>
+              <Tag accent>APPLY NOW</Tag>
             </div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,68px)', fontWeight: 700, margin: '0 0 14px', letterSpacing: '-0.02em', lineHeight: 1.05 }}>
               Begin your<br />

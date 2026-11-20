@@ -115,7 +115,7 @@ export default function Contact() {
         <div className="sx" style={{ padding: '56px 0 32px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em', color: 'var(--ink-muted)', marginBottom: 12 }}>HOME / CONTACT</div>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>Talk to an advisor</h1>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 700, margin: '0 0 12px', letterSpacing: '-0.02em' }}>Chat with an advisor</h1>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--ink-soft)', margin: 0 }}>Mon–Fri · 8:30 AM – 5:30 PM · we usually reply within one business day.</p>
           </div>
         </div>
@@ -187,7 +187,7 @@ export default function Contact() {
                 {error}
               </div>
             )}
-            <Button variant="primary" type="submit" fullWidth disabled={busy}>{busy ? 'Sending…' : 'Send message →'}</Button>
+            <Button variant="primary" type="submit" fullWidth disabled={busy}>{busy ? 'Sending…' : 'Apply now →'}</Button>
           </form>
         </div>
       </main>
