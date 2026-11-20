@@ -30,8 +30,11 @@ const STARS = [
 ]
 const RIBBON = '2,82 198,82 186,100 198,118 2,118 14,100'
 
-/** Animated rubber-stamp seal with the offer text curved around the ring and across a ribbon. */
-export default function OfferStamp({ label }: { label: string }) {
+/**
+ * Animated rubber-stamp seal with the offer text curved around the ring and across a ribbon.
+ * `badge`: small, pinned to a programme box corner. `hero`: large, used by the fees reveal popup.
+ */
+export default function OfferStamp({ label, variant = 'badge', className = '' }: { label: string; variant?: 'badge' | 'hero'; className?: string }) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, '')
   const text = label.toUpperCase()
   const ringSize = Math.max(9, Math.min(14, 150 / Math.max(text.length, 1)))
@@ -39,7 +42,7 @@ export default function OfferStamp({ label }: { label: string }) {
   const ribbonFits = text.length * ribbonSize * 0.62 <= 150
 
   return (
-    <span className="pp-offer-stamp" role="img" aria-label={label}>
+    <span className={`offer-stamp offer-stamp--${variant}${className ? ` ${className}` : ''}`} role="img" aria-label={label}>
       <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
         <defs>
           {/* Worn-ink speckles: noise punches small holes in the artwork. */}

@@ -5,7 +5,9 @@ import Link from 'next/link'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
 import { Icon } from '../ui/Icon'
-import { formatLKR, getProgramImage, type Program, type ProgrammeNode } from '../../data/programs'
+import { getProgramImage, type Program, type ProgrammeNode } from '../../data/programs'
+import OfferRibbon from './OfferRibbon'
+import CoursePrice, { InstalmentPill } from './CoursePrice'
 
 const PAGE_SIZE = 6
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
@@ -183,7 +185,7 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
             <button className="filter-toggle-btn" onClick={() => setShowFilters(f => !f)}>
               <span>⚙</span> {showFilters ? 'Hide filters' : 'Show filters'}
             </button>
-            <div style={{ position: 'sticky', top: 88 }} className={showFilters ? undefined : 'sidebar-collapsed'}>
+            <div style={{ position: 'sticky', top: 'calc(88px + var(--announce-h, 0px))' }} className={showFilters ? undefined : 'sidebar-collapsed'}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>Filters</div>
                 {(studentType || programmes.size || schools.size || bodies.size || query || guidedBody || guidedSchool || programme) ? (
@@ -199,9 +201,9 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
                 placeholder="Search programs…"
                 style={{ width: '100%', padding: '10px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--ink)', outline: 'none', marginBottom: 24 }}
               />
-              <FilterGroup title="Awarding Body" items={bodyFilters} selected={bodies} onToggle={v => { setBodies(toggle(bodies, v)); setPage(1) }} />
-              <FilterGroup title="School" items={schoolFilters} selected={schools} onToggle={v => { setSchools(toggle(schools, v)); setPage(1) }} />
               {programmeFilters.length > 0 && <FilterGroup title="Programme" items={programmeFilters} selected={programmes} onToggle={v => { setProgrammes(toggle(programmes, v)); setPage(1) }} />}
+              <FilterGroup title="School" items={schoolFilters} selected={schools} onToggle={v => { setSchools(toggle(schools, v)); setPage(1) }} />
+              <FilterGroup title="Awarding Body" items={bodyFilters} selected={bodies} onToggle={v => { setBodies(toggle(bodies, v)); setPage(1) }} />
             </div>
           </div>
 
@@ -228,8 +230,9 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
                   <Link
                     key={p.slug}
                     href={`/programs/${p.slug}`}
-                    className="programme-image-card card-hover"
+                    className={`programme-image-card card-hover${p.limitedOffer?.enabled ? ' has-offer' : ''}`}
                   >
+                    {p.limitedOffer?.enabled && <OfferRibbon label={p.limitedOffer.label} />}
                     <div className="programme-card-cover">
                       <img
                         src={p.imageUrl || getProgramImage(p.imageLabel)}
@@ -243,10 +246,12 @@ export default function Programs({ programs, programmeNodes = [], initialQuery =
                         <small>{p.duration}</small>
                       </div>
                       <h3>{p.title}</h3>
-                      <p>{p.blurb}</p>
-                      <div className="programme-card-footer">
-                        <strong>From {formatLKR(p.priceFrom)}</strong>
-                        <span className="programme-read-more">Read more <Icon kind="arrow" size={14} /></span>
+                      <div className="programme-card-prices">
+                        <CoursePrice program={p} />
+                        {p.monthlyInstalment ? <InstalmentPill amount={p.monthlyInstalment} /> : null}
+                      </div>
+                      <div className="programme-card-footer only-link">
+                        <span className="programme-read-more">Learn more <Icon kind="arrow" size={14} /></span>
                       </div>
                     </div>
                   </Link>

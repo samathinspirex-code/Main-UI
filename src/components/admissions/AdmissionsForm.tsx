@@ -248,7 +248,7 @@ export function AdmissionsForm({ programs, initialProgramSlug = "" }: { programs
               </div>
               {selectedProgram && (
                 <div style={{ marginTop: 20, padding: 16, background: SK.ink, color: SK.paper, borderRadius: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontFamily: "var(--sk-hand)", fontSize: 14 }}>Due to reserve your seat</span>
+                  <span style={{ fontFamily: "var(--sk-hand)", fontSize: 14 }}>Due when you apply</span>
                   <span style={{ fontFamily: "var(--sk-hand)", fontSize: 22, fontWeight: 800 }}>{formatLKR(selectedProgram.priceFrom)}</span>
                 </div>
               )}

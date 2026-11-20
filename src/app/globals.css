@@ -466,9 +466,9 @@ input, select, textarea { font: inherit; color: inherit; }
   margin: 0 0 12px;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: clamp(20px, 2vw, 25px);
+  font-size: clamp(18px, 1.6vw, 21px);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.22;
 }
 .programme-card-content > p {
   display: -webkit-box;
@@ -530,15 +530,15 @@ input, select, textarea { font: inherit; color: inherit; }
   margin: 0 auto;
 }
 .program-detail-tabs button { flex: 0 0 auto; }
-.home-programme-card .programme-card-content h3 { font-size: 21px; }
+.home-programme-card .programme-card-content h3 { font-size: 19px; }
 
 @media (max-width: 600px) {
   .programme-card-content { padding: 20px 10px 12px; }
-  .programme-card-footer { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .programme-card-footer { align-items: center; flex-direction: row; flex-wrap: wrap; gap: 10px; }
   .programme-image-card { padding: 10px; }
   .programme-card-meta { align-items: flex-start; margin-bottom: 16px; }
   .programme-card-meta > span { min-height: 30px; padding: 0 12px; }
-  .programme-card-content h3, .home-programme-card .programme-card-content h3 { font-size: 21px; }
+  .programme-card-content h3, .home-programme-card .programme-card-content h3 { font-size: 18px; }
   .program-detail-tabs { width: max-content; min-width: 100%; }
   .program-detail-tabs button { padding: 13px 18px !important; }
 }
@@ -1057,12 +1057,77 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 .pp-card-price { margin: 4px 0 14px; }
 .pp-card-amount { margin: 0; color: var(--accent); font-family: var(--font-display); font-size: clamp(26px, 2.4vw, 32px); font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .pp-card-amount-note { display: block; margin-top: 3px; color: var(--ink-soft); font-size: 12px; }
-/* Limited offer stamp inside the card's top-right corner; a round two-line stamp on phones. */
-.pp-card.has-offer { position: relative; }
-.pp-card.has-offer .pp-card-title, .pp-card.has-offer .pp-card-price { padding-right: 160px; }
-/* Animated seal stamp (OfferStamp.tsx): slams in, then breathes, the edge turns and a shine crosses the ribbon. */
-.pp-offer-stamp { --stamp-red: #d42a20; position: absolute; top: 14px; right: 16px; z-index: 1; display: block; width: 136px; height: 136px; transform: rotate(-12deg); filter: drop-shadow(0 6px 12px rgba(180,30,20,.22)); animation: pp-stamp-slam .7s cubic-bezier(.2,.9,.3,1.25) both, pp-stamp-breathe 3.2s ease-in-out .9s infinite; pointer-events: none; }
-.pp-offer-stamp svg { display: block; width: 100%; height: 100%; overflow: visible; }
+/* Course page "At a glance": monthly instalment row in dark red with a left-to-right shine. */
+.glance-instalment { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 0; }
+.glance-instalment-label { color: var(--ink-muted); font-family: var(--font-body); font-size: 13px; }
+.glance-instalment-price { position: relative; overflow: hidden; display: inline-flex; align-items: baseline; gap: 4px; padding: 7px 14px; border-radius: 999px; background: linear-gradient(135deg, #8b0d0d, #b3140f 60%, #7a0a0a); color: #fff; font-family: var(--font-display); font-size: 15px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; box-shadow: 0 4px 14px rgba(139,13,13,.35); }
+.glance-instalment-price small { font-family: var(--font-body); font-size: 11px; font-weight: 600; opacity: .9; }
+.glance-instalment-price::after { content: ""; position: absolute; top: -20%; bottom: -20%; left: -40%; width: 30%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.65), rgba(255,255,255,0)); transform: skewX(-20deg) translateX(0); animation: glance-shine 3s ease-in-out 1s infinite; }
+@keyframes glance-shine { 0% { transform: skewX(-20deg) translateX(0); } 45%, 100% { transform: skewX(-20deg) translateX(560%); } }
+@media (prefers-reduced-motion: reduce) { .glance-instalment-price::after { animation: none; display: none; } }
+/* Course price (CoursePrice.tsx): plain, or struck original + animated red offer pill. */
+.course-price { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-variant-numeric: tabular-nums; }
+.course-price-now { color: var(--accent); font-family: var(--font-display); font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+.course-price-old { color: var(--ink-muted); font-family: var(--font-body); font-size: 14px; font-weight: 600; text-decoration-thickness: 2px; text-decoration-color: rgba(212,42,32,.75); }
+.course-price-offer { position: relative; overflow: hidden; display: inline-block; padding: 5px 13px; border-radius: 999px; background: linear-gradient(135deg, #c8201a, #e0332a 55%, #a3120e); color: #fff; font-family: var(--font-display); font-size: 20px; font-weight: 800; box-shadow: 0 5px 16px rgba(200,32,26,.35); animation: course-price-pop .6s cubic-bezier(.2,.9,.3,1.3) .3s both; }
+.course-price-offer::after, .instalment-pill::after { content: ""; position: absolute; top: -20%; bottom: -20%; left: -40%; width: 30%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.6), rgba(255,255,255,0)); transform: skewX(-20deg); animation: glance-shine 3s ease-in-out 1.2s infinite; }
+@keyframes course-price-pop { 0% { opacity: 0; transform: scale(.6); } 70% { opacity: 1; transform: scale(1.08); } 100% { transform: scale(1); } }
+.course-price--hero .course-price-now { font-size: 15px; font-family: var(--font-body); font-weight: 600; color: var(--ink); }
+.course-price--hero .course-price-old { font-size: 12px; }
+.course-price--hero .course-price-offer { padding: 3px 10px; font-size: 15px; }
+.instalment-pill { position: relative; overflow: hidden; display: inline-flex; align-items: baseline; gap: 4px; padding: 5px 12px; border-radius: 999px; background: linear-gradient(135deg, #8b0d0d, #b3140f 60%, #7a0a0a); color: #fff; font-family: var(--font-display); font-size: 14px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; box-shadow: 0 4px 12px rgba(139,13,13,.3); }
+.instalment-pill small { font-family: var(--font-body); font-size: 11px; font-weight: 600; opacity: .9; }
+/* Programme box: prices take the place of the summary paragraph. */
+.programme-card-prices { display: grid; gap: 10px; justify-items: start; margin: 14px 0 26px; }
+.programme-card-footer.only-link { justify-content: flex-end; }
+@media (prefers-reduced-motion: reduce) { .course-price-offer, .course-price-offer::after, .instalment-pill::after { animation: none; } .course-price-offer::after, .instalment-pill::after { display: none; } }
+/* Home page promotion artwork (replaces the old scholarship CTA banner). */
+.home-promo-banner { display: block; max-width: 1200px; margin: 0 auto; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 34px rgba(63,0,124,.12); }
+.home-promo-banner img { display: block; width: 100%; height: auto; }
+@media (max-width: 767px) { .home-promo-banner { max-width: 520px; border-radius: 16px; } }
+/* Christmas theme (CMS Website settings): snowfall canvas and a Santa hat on the logo. */
+.xmas-snow { position: fixed; inset: 0; z-index: 90; pointer-events: none; }
+.xmas-hat { display: none; }
+body.christmas .xmas-logo { position: relative; }
+body.christmas .xmas-hat { display: block; position: absolute; top: -13px; left: -11px; width: 30px; height: 23px; transform: rotate(-18deg); pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+@media (max-width: 767px) { body.christmas .xmas-hat { width: 24px; height: 18px; top: -10px; left: -9px; } }
+@media (prefers-reduced-motion: reduce) { .xmas-snow { display: none; } }
+/* Top announcement strip (CMS Website settings): fixed above the menu; the whole site shifts down by --announce-h. */
+:root { --announce-h: 0px; }
+html.has-announce { --announce-h: 40px; }
+html.has-announce body { padding-top: var(--announce-h); }
+html .site-nav { top: var(--announce-h) !important; }
+html .mobile-nav-menu { top: calc(68px + var(--announce-h)) !important; max-height: calc(100vh - 68px - var(--announce-h)) !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.announce-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 101; height: var(--announce-h, 40px); display: flex; align-items: stretch; background: linear-gradient(90deg, #2a0058, #3F007C 45%, #5b1aa6 100%); color: #fff; box-shadow: 0 1px 0 rgba(255,255,255,.08) inset; }
+.announce-bar-link { position: relative; flex: 1; min-width: 0; display: block; color: inherit; text-decoration: none; }
+.announce-bar-track { position: absolute; inset: 0 18% 0 12%; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.announce-bar-text { position: absolute; top: 50%; left: 0; white-space: nowrap; font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: .01em; transform: translate(-100%, -50%); animation: announce-glide 18s linear infinite; }
+.announce-bar-text b { color: #ffd166; font-weight: 800; margin-left: 4px; }
+.announce-bar:hover .announce-bar-text { animation-play-state: paused; }
+.announce-bar-link:hover .announce-bar-text { text-decoration: underline; text-underline-offset: 3px; }
+@keyframes announce-glide {
+  0% { left: 0; transform: translate(-100%, -50%); opacity: 0; }
+  8% { opacity: 1; }
+  86% { opacity: 1; }
+  100% { left: 100%; transform: translate(0, -50%); opacity: 0; }
+}
+.announce-bar-close { flex: 0 0 auto; width: 44px; border: 0; background: rgba(255,255,255,.08); color: #fff; font-size: 14px; line-height: 1; cursor: pointer; transition: background .2s; }
+.announce-bar-close:hover, .announce-bar-close:focus-visible { background: rgba(255,255,255,.2); }
+@media (max-width: 520px) {
+  html.has-announce { --announce-h: 36px; }
+  html .mobile-nav-menu { top: calc(62px + var(--announce-h)) !important; max-height: calc(100vh - 62px - var(--announce-h)) !important; }
+  .announce-bar-track { inset: 0 4px 0 4px; }
+  .announce-bar-text { font-size: 12.5px; animation-duration: 14s; }
+  .announce-bar-close { width: 38px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .announce-bar-text { animation: none; left: 50%; transform: translate(-50%, -50%); max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+}
+.pp { position: relative; }
+/* Offer stamp (OfferStamp.tsx): shared by programme boxes (badge) and the fees reveal (hero). */
+.offer-stamp { --stamp-red: #d42a20; display: block; pointer-events: none; transform: rotate(-12deg); filter: drop-shadow(0 6px 12px rgba(180,30,20,.22)); }
+.offer-stamp svg { display: block; width: 100%; height: 100%; overflow: visible; }
 .pp-stamp-edge { transform-box: view-box; transform-origin: 100px 100px; animation: pp-stamp-spin 30s linear infinite; }
 .pp-stamp-ring-text { fill: var(--stamp-red); font-family: var(--font-display); font-weight: 800; letter-spacing: .14em; }
 .pp-stamp-ribbon-text { fill: var(--stamp-red); font-family: var(--font-display); font-weight: 900; letter-spacing: .04em; }
@@ -1071,6 +1136,35 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 @keyframes pp-stamp-breathe { 0%, 100% { transform: rotate(-12deg) scale(1); } 50% { transform: rotate(-10deg) scale(1.05); } }
 @keyframes pp-stamp-spin { to { transform: rotate(360deg); } }
 @keyframes pp-stamp-shine { 0% { transform: skewX(-20deg) translateX(0); } 45%, 100% { transform: skewX(-20deg) translateX(300px); } }
+.programme-image-card.has-offer { position: relative; overflow: visible; }
+/* Programme box: red "Limited Offer" ribbon hanging from the top-left edge (OfferRibbon.tsx); folds down on load. */
+.offer-ribbon { position: absolute; top: -9px; left: 30px; z-index: 3; width: 62px; pointer-events: none; filter: drop-shadow(0 6px 8px rgba(120,10,10,.3)); }
+.offer-ribbon::before { content: ""; position: absolute; top: 0; left: -6px; right: -6px; height: 10px; border-radius: 6px 6px 2px 2px; background: linear-gradient(90deg, #6e0909, #c41b17 16%, #ec342b 50%, #c41b17 84%, #6e0909); animation: pp-fade-in .3s ease .35s both; }
+.offer-ribbon-body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; margin-top: 9px; padding: 6px 4px 15px; background: linear-gradient(180deg, #ef2d25, #c4150f 62%, #9e0c09); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), 50% 100%, 0 calc(100% - 9px)); color: #fff; font-family: var(--font-display); text-align: center; text-transform: uppercase; transform-origin: top center; animation: offer-ribbon-unfold .85s cubic-bezier(.2,.8,.3,1.2) .5s both; }
+.offer-ribbon-body b { font-size: 11px; font-weight: 800; letter-spacing: .06em; line-height: 1.08; text-shadow: 0 1px 1px rgba(0,0,0,.18); }
+@keyframes offer-ribbon-unfold { 0% { opacity: 0; transform: perspective(320px) rotateX(-100deg); } 55% { opacity: 1; transform: perspective(320px) rotateX(14deg); } 78% { transform: perspective(320px) rotateX(-6deg); } 100% { opacity: 1; transform: perspective(320px) rotateX(0); } }
+/* Fees reveal: a big stamp pops over the section, clears away, then the cards rise in. */
+.pp-reveal { position: absolute; inset: -14px; z-index: 5; display: flex; justify-content: center; align-items: flex-start; padding-top: clamp(36px, 7vw, 96px); border-radius: 18px; background: radial-gradient(circle at 50% 200px, rgba(255,255,255,.92), rgba(247,244,254,.7) 55%, rgba(247,244,254,0) 85%); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); pointer-events: none; animation: pp-fade-in .25s ease both; }
+.pp-phase-exit .pp-reveal { animation: pp-fade-out .55s ease forwards; }
+/* Sticky so the stamp stays mid-screen even when the visitor lands lower in a tall fees section. */
+.offer-stamp--hero { --hero: 230px; position: sticky; top: calc(50vh - var(--hero) / 2); width: var(--hero); height: var(--hero); animation: pp-stamp-slam .75s cubic-bezier(.2,.9,.3,1.25) both, pp-stamp-breathe 1.6s ease-in-out .8s infinite; }
+.pp-phase-exit .offer-stamp--hero { animation: pp-stamp-exit .55s cubic-bezier(.5,0,.75,0) forwards; }
+@keyframes pp-stamp-exit { to { opacity: 0; transform: rotate(-4deg) scale(1.7); } }
+@keyframes pp-fade-in { from { opacity: 0; } }
+@keyframes pp-fade-out { to { opacity: 0; } }
+.pp-cards:not(.is-shown) .pp-card { opacity: 0; transform: translateY(28px); }
+.pp-cards.is-shown .pp-card { animation: pp-card-rise .6s cubic-bezier(.22,.7,.2,1) backwards; animation-delay: calc(var(--pp-i, 0) * 130ms); }
+.pp-cards.is-shown .pp-card.featured { animation: pp-card-rise .6s cubic-bezier(.22,.7,.2,1) backwards, pp-border-travel 5s linear infinite; animation-delay: calc(var(--pp-i, 0) * 130ms), 0s; }
+@keyframes pp-card-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+/* The card's own additional fee (e.g. Year 1 GBP fee inside the Year 1 card). */
+.pp-card-fees { margin-top: 14px; padding: 12px 14px; border: 1px dashed var(--border-accent); border-radius: 10px; background: var(--surface-lt); }
+.pp-card-fees h4 { margin: 0 0 8px; color: var(--accent); font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.pp-card-fees ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pp-card-fees li { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 12px; }
+.pp-card-fees-label { color: var(--ink); font-size: 13.5px; font-weight: 500; }
+.pp-card-fees strong { color: var(--accent); font-size: 15px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pp-card-fees li small { grid-column: 1 / -1; color: var(--ink-soft); font-size: 12px; }
+.pp-card-fees p { margin: 8px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
 .pp-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .pp-table th, .pp-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
 .pp-table thead th { padding-top: 0; color: var(--ink-muted); font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
@@ -1082,28 +1176,21 @@ body:has([data-site-assistant]) .whatsapp-float { bottom: 90px; }
 .pp-table tr.emphasis th { border-radius: 8px 0 0 8px; }
 .pp-table tr.emphasis td:last-child { border-radius: 0 8px 8px 0; }
 .pp-card-footnote { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--border); color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; }
-.pp-extra { max-width: 1178px; margin: 22px auto 0; padding: 22px; border: 1px dashed var(--border-accent); border-radius: 14px; background: var(--surface-lt); }
-.pp.single .pp-extra { max-width: 580px; }
-.pp-extra h3 { margin: 0 0 12px; font-family: var(--font-display); font-size: 18px; color: var(--ink); }
-.pp-extra .pp-table td:last-child { white-space: normal; text-align: left; font-weight: 400; color: var(--ink-soft); }
-.pp-extra .pp-table thead th:last-child { text-align: left; }
-.pp-extra .pp-table td.pp-extra-amount { color: var(--accent); font-weight: 700; white-space: nowrap; }
-.pp-extra-note { margin: 12px 0 0; color: var(--ink-soft); font-size: 13px; }
 @media (max-width: 600px) {
   .pp-card { flex-basis: 100%; }
-  .pp-card.has-offer .pp-card-top, .pp-card.has-offer .pp-card-title, .pp-card.has-offer .pp-card-price { padding-right: 108px; }
-  .pp-offer-stamp { top: 8px; right: 8px; width: 104px; height: 104px; }
-  .pp-card, .pp-extra { padding: 18px; }
+  .pp-card { padding: 18px; }
+  .offer-stamp--hero { --hero: 170px; }
+  .offer-ribbon { left: 22px; width: 54px; }
+  .offer-ribbon-body { padding: 5px 3px 13px; }
+  .offer-ribbon-body b { font-size: 10px; }
   .pp-table thead { display: none; }
   .pp-table tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 8px; border-bottom: 1px solid var(--border); }
   .pp-table th, .pp-table td { padding: 0; border: 0; background: none !important; }
   .pp-table td:nth-child(2) { grid-column: 1; grid-row: 2; font-size: 12px; }
   .pp-table td:last-child { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
   .pp-table tr.emphasis { background: var(--surface-lt); border-radius: 8px; border-bottom: 0; }
-  .pp-extra .pp-table td.pp-extra-amount { grid-column: 2; grid-row: 1; }
-  .pp-extra .pp-table td:last-child { grid-column: 1 / -1; grid-row: 2; font-size: 12px; }
 }
-@media (prefers-reduced-motion: reduce) { .pp-card.featured, .pp-offer-stamp, .pp-stamp-edge, .pp-stamp-shine { animation: none; } .pp-card { transition: none; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pp-card.featured, .offer-stamp, .offer-ribbon::before, .offer-ribbon-body, .pp-stamp-edge, .pp-stamp-shine, .pp-cards.is-shown .pp-card { animation: none; } .pp-cards:not(.is-shown) .pp-card { opacity: 1; transform: none; } .pp-card { transition: none; transform: none; } }
 
 /* WTC event campaign heading and floating information cards. */
 .home-wtc-title { margin: 0 0 18px; font-family: var(--font-display); font-size: clamp(36px, 3.3vw, 48px); font-weight: 600; letter-spacing: -.025em; line-height: 1.08; }

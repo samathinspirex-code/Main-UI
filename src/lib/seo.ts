@@ -54,7 +54,7 @@ export const PAGES: Record<string, PageSeo> = {
   "/contact": {
     title: "Contact Us – Free Counselling Session",
     description:
-      "Talk to an advisor for free. Call or WhatsApp +94 71 199 3331, email enrol@inspire.college, or visit us at Level 01, Shangri-La, Colombo 2.",
+      "Chat with an advisor for free. Call or WhatsApp +94 71 199 3331, email enrol@inspire.college, or visit us at Level 01, Shangri-La, Colombo 2.",
   },
   "/privacy-policy": {
     title: "Privacy Policy",

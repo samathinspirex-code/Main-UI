@@ -4,6 +4,9 @@ import "./globals.css";
 import { SiteAnalytics } from "@/components/layout/SiteAnalytics";
 import { SiteAssistant } from "@/components/layout/SiteAssistant";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import ChristmasTheme from "@/components/layout/ChristmasTheme";
+import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import { fetchSiteSettings } from "@/data/siteSettings";
 import { SiteJsonLd } from "@/components/seo/JsonLd";
 import { PAGES, SITE_NAME, SITE_URL } from "@/lib/seo";
 
@@ -36,9 +39,11 @@ export const metadata: Metadata = {
   // verification: { google: "XXXXXXXXXXXX" },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const siteSettings = await fetchSiteSettings();
+  // data-scroll-behavior lets Next.js jump straight to the top on page changes while keeping in-page smooth scrolling.
   return (
-    <html lang="en" className={nohemi.variable}>
+    <html lang="en" className={siteSettings.announcement ? `${nohemi.variable} has-announce` : nohemi.variable} data-scroll-behavior="smooth">
       <head>
         {/* Google Tag Manager */}
         <script
@@ -87,7 +92,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
         {/* TikTok Pixel Code End */}
       </head>
-      <body>
+      <body className={siteSettings.christmasTheme ? "christmas" : undefined}>
+        {siteSettings.announcement && <AnnouncementBar announcement={siteSettings.announcement} />}
         <SiteJsonLd />
         {/* Google Tag Manager (noscript) */}
         <noscript>
@@ -115,6 +121,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteAnalytics />
         <WhatsAppButton />
         <SiteAssistant />
+        {siteSettings.christmasTheme && <ChristmasTheme />}
       </body>
     </html>
   );

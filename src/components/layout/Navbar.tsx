@@ -47,6 +47,7 @@ export function Navbar({ actionLabel = 'Apply Now', onAction }: { actionLabel?: 
   return (
     <>
       <nav
+        className="site-nav"
         style={{
           position: 'fixed',
           top: 0,
@@ -66,7 +67,13 @@ export function Navbar({ actionLabel = 'Apply Now', onAction }: { actionLabel?: 
           transition: 'background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease',
         }}
       >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+        <Link href="/" className="xmas-logo" style={{ display: 'flex', alignItems: 'center' }}>
+          <svg className="xmas-hat" viewBox="0 0 64 48" aria-hidden="true">
+            <path d="M8 38 C14 18 30 4 50 8 C46 16 46 26 52 34 Z" fill="#d42a20" />
+            <path d="M8 38 C14 18 30 4 50 8 C40 12 30 22 24 36 Z" fill="#b01d16" opacity=".55" />
+            <rect x="2" y="34" width="54" height="11" rx="5.5" fill="#fff" stroke="#e6e0f2" />
+            <circle cx="53" cy="9" r="6.5" fill="#fff" stroke="#e6e0f2" />
+          </svg>
           <img
             src={LOGO}
             alt="Inspire College"
