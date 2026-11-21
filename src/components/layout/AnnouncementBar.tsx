@@ -4,29 +4,20 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import type { Announcement } from '../../data/siteSettings'
 
-const DISMISS_KEY = 'inspire-announcement-dismissed'
-
-/** Short stable fingerprint so a closed strip reappears when the CMS text changes. */
-function fingerprint(text: string) {
-  let hash = 0
-  for (let i = 0; i < text.length; i++) hash = (hash * 31 + text.charCodeAt(i)) | 0
-  return String(hash)
-}
+/** Older builds remembered a closed strip in the browser; clear it so the strip shows on every load. */
+const OLD_DISMISS_KEY = 'inspire-announcement-dismissed'
 
 /**
  * CMS-managed strip above the menu on every page. The message glides from right to left,
  * fades out, and comes back in from the right. Clicking it opens the link (default /programs);
- * the ✕ hides it for this visitor until the text changes.
+ * the ✕ hides it until the visitor reloads or opens the site again.
  */
 export default function AnnouncementBar({ announcement }: { announcement: Announcement }) {
   const [closed, setClosed] = useState(false)
-  const id = fingerprint(announcement.text)
 
   useEffect(() => {
-    try {
-      if (localStorage.getItem(DISMISS_KEY) === id) setClosed(true)
-    } catch { /* storage unavailable: keep showing */ }
-  }, [id])
+    try { localStorage.removeItem(OLD_DISMISS_KEY) } catch { /* storage unavailable */ }
+  }, [])
 
   useEffect(() => {
     document.documentElement.classList.toggle('has-announce', !closed)
@@ -35,10 +26,6 @@ export default function AnnouncementBar({ announcement }: { announcement: Announ
 
   if (closed) return null
 
-  const close = () => {
-    setClosed(true)
-    try { localStorage.setItem(DISMISS_KEY, id) } catch { /* ignore */ }
-  }
   const external = /^https?:\/\//.test(announcement.link)
 
   return (
@@ -53,7 +40,7 @@ export default function AnnouncementBar({ announcement }: { announcement: Announ
         </span>
         <span className="sr-only">{announcement.text}</span>
       </Link>
-      <button type="button" className="announce-bar-close" onClick={close} aria-label="Close announcement">✕</button>
+      <button type="button" className="announce-bar-close" onClick={() => setClosed(true)} aria-label="Close announcement">✕</button>
     </div>
   )
 }
