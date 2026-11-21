@@ -14,8 +14,8 @@ function fingerprint(text: string) {
 }
 
 /**
- * CMS-managed strip above the menu on every page. The message glides from left to right,
- * fades out, and comes back in from the left. Clicking it opens the link (default /programs);
+ * CMS-managed strip above the menu on every page. The message glides from right to left,
+ * fades out, and comes back in from the right. Clicking it opens the link (default /programs);
  * the ✕ hides it for this visitor until the text changes.
  */
 export default function AnnouncementBar({ announcement }: { announcement: Announcement }) {
