@@ -9,5 +9,5 @@ export const metadata: Metadata = pageMetadata("/programs");
 export default async function ProgramsPage({ searchParams }: { searchParams: Promise<{ q?: string; body?: string; school?: string; programme?: string; level?: string }> }) {
   const [params, programs, programmeNodes] = await Promise.all([searchParams, fetchPrograms(), fetchProgrammeNodes()]);
   const filterKey = [params.q, params.body, params.school, params.programme, params.level].map((value) => value ?? "").join("|");
-  return <Programs key={filterKey} programs={programs} programmeNodes={programmeNodes} initialQuery={params.q ?? ""} initialBody={params.body ?? ""} initialSchool={params.school ?? ""} initialProgramme={params.programme ?? ""} initialLevel={params.level ?? ""} />;
+  return <Programs key={filterKey} programs={programs} programmeNodes={programmeNodes} initialQuery={params.q ?? ""} initialBody={params.body ?? ""} initialSchool={params.school ?? ""} initialProgramme={params.programme ?? ""} initialLevel={params.level === "Short Course" ? "Short Courses" : params.level ?? ""} />;
 }

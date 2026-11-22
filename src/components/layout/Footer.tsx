@@ -9,6 +9,7 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
     { label: 'ATHE', href: '/programs?body=ATHE#programme-catalogue-top' },
     { label: 'WINC', href: '/programs?body=WINC#programme-catalogue-top' },
     { label: 'Jain University', href: '/programs?body=Jain+University#programme-catalogue-top' },
+    { label: 'HND Courses', href: '/hnd-courses' },
     { label: 'Computing & IT Degrees', href: '/computing-degrees' },
     { label: 'Postgraduate Degrees', href: '/postgraduate-degrees' },
     { label: 'Short Courses', href: '/short-courses' },
@@ -21,8 +22,8 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
   ],
   Apply: [
     { label: 'Foundation', href: '/programs?level=Foundation#programme-catalogue-top' },
-    { label: 'HND', href: '/programs?level=HND#programme-catalogue-top' },
-    { label: 'Short Course', href: '/short-courses' },
+    { label: 'HND', href: '/hnd-courses' },
+    { label: 'Short Courses', href: '/short-courses' },
     { label: 'Postgraduate', href: '/postgraduate-degrees' },
   ],
   Connect: [

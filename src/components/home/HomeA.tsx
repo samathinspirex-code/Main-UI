@@ -12,8 +12,8 @@ import { NEWS, formatNewsDate } from "@/data/news";
 
 const PATH_CARDS = [
   { icon: "grad", title: "Foundation", blurb: "Build essential knowledge and skills for further study and a successful academic journey.", tag: "From LKR 125,000", href: "/programs?level=Foundation" },
-  { icon: "book", title: "HND & Degrees", blurb: "Strong foundation of knowledge and practical skills with HND, Top-Up Degrees and Postgraduate routes.", tag: "From LKR 250,000", href: "/programs?level=HND" },
-  { icon: "brush", title: "Short Courses", blurb: "Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.", tag: "From LKR 15,000", href: "/programs?level=Short+Course" },
+  { icon: "book", title: "HND & Degrees", blurb: "Strong foundation of knowledge and practical skills with HND, Top-Up Degrees and Postgraduate routes.", tag: "From LKR 250,000", href: "/hnd-courses" },
+  { icon: "brush", title: "Short Courses", blurb: "Practical, skill-focused courses — AI Mastery, Digital Marketing, Data Analytics & more.", tag: "From LKR 15,000", href: "/short-courses" },
 ] as const;
 
 const STATS = [

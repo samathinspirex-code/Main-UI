@@ -8,7 +8,7 @@ import { fetchNewsEvents } from "@/data/news";
 import { fetchTestimonials } from "@/data/testimonials";
 import { fetchSiteSettings } from "@/data/siteSettings";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = pageMetadata("/");
 

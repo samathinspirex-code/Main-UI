@@ -19,7 +19,7 @@ const bundledTestimonials: Testimonial[] = [
 export async function fetchTestimonials(): Promise<Testimonial[]> {
   const base = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
   try {
-    const response = await fetch(`${base}/api/v1/public/testimonials`, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    const response = await fetch(`${base}/api/v1/public/testimonials`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(`Testimonials API: ${response.status}`);
     const payload = await response.json();
     if (!Array.isArray(payload.data)) throw new Error('Testimonials API returned an invalid payload');

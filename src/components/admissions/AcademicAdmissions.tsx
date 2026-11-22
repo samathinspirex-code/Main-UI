@@ -34,7 +34,7 @@ function coursePrice(course?: Program, fallback = 0) {
 function programmeMatches(name: string, requested: string) {
   const value = name.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   const target = requested.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-  return value === target || value.startsWith(`${target} `) || (target === "top up" && value.includes("top up"));
+  return value === target || value === `${target}s` || value.startsWith(`${target} `) || (target === "top up" && value.includes("top up"));
 }
 
 function allowsCourseDeferral(name?: string) {
@@ -45,7 +45,7 @@ function qualificationForCourse(course?: Program) {
   if (course?.level === "Foundation") return "After O/L";
   if (course?.level === "Top-Up Degree" || course?.level === "Higher Diploma" || course?.level === "Diploma") return "Diploma/HND";
   if (course?.level === "Postgraduate") return "Bachelor degree";
-  if (course?.level === "Short Course") return "Certificate";
+  if (course && programmeMatches(course.level, "short course")) return "Certificate";
   return "After A/L";
 }
 

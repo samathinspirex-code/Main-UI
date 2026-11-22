@@ -5,7 +5,12 @@ import { ArticleJsonLd } from "@/components/seo/JsonLd";
 import { fetchNewsEventBySlug, fetchNewsEvents } from "@/data/news";
 import { buildMetadata, snippet } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const news = await fetchNewsEvents();
+  return news.map((item) => ({ slug: item.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

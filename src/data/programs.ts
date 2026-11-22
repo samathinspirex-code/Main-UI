@@ -365,7 +365,7 @@ function mapApiProgramToUi(api: ApiProgram): Program {
 
 export async function fetchPrograms(): Promise<Program[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/public/catalogue/courses`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/catalogue/courses`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(`Programme API returned ${response.status}`);
     const payload = (await response.json()) as { data: ApiProgram[] };
     return payload.data.map(mapApiProgramToUi);
@@ -377,7 +377,7 @@ export async function fetchPrograms(): Promise<Program[]> {
 
 export async function fetchProgrammeNodes(): Promise<ProgrammeNode[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/public/catalogue/programmes`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/catalogue/programmes`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(`Programme hierarchy API returned ${response.status}`);
     return ((await response.json()) as { data: ProgrammeNode[] }).data;
   } catch (error) {
@@ -389,7 +389,7 @@ export async function fetchProgrammeNodes(): Promise<ProgrammeNode[]> {
 
 export async function fetchProgramBySlug(slug: string): Promise<Program | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/public/programs/${encodeURIComponent(slug)}`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/programs/${encodeURIComponent(slug)}`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) });
     if (response.status === 404) {
       const programs = await fetchPrograms();
       return programs.find((program) => program.slug === slug) ?? null;

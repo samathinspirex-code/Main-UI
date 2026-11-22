@@ -5,7 +5,13 @@ import { CourseJsonLd } from "@/components/seo/JsonLd";
 import { fetchProgramBySlug, fetchPrograms, type Program } from "@/data/programs";
 import { buildMetadata, PROGRAM_SEO, snippet } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+// Pre-build every course page; new courses render on first visit, then stay cached.
+export async function generateStaticParams() {
+  const programs = await fetchPrograms();
+  return [...new Set(programs.map((p) => p.slug))].map((slug) => ({ slug }));
+}
 
 function programSeo(program: Program) {
   const custom = PROGRAM_SEO[program.slug];

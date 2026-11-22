@@ -1,7 +1,7 @@
 import { ProgramsLanding } from "@/components/programs/ProgramsLanding";
 import { pageMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const metadata = pageMetadata("/computing-degrees");
 
 export default function ComputingDegreesPage() {
