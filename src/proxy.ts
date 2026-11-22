@@ -7,7 +7,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const GONE = [
   /^\/dtlms_/, // old LMS demo lessons, quizzes, questions, assignments, packages
-  /^\/classes\//,
+  /^\/classes(\/|$)/,
   /^\/category\//,
   /^\/tag\//,
   /^\/author\//,

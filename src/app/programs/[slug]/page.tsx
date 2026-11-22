@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import ProgramDetail from "@/components/design/ProgramDetail";
 import { CourseJsonLd } from "@/components/seo/JsonLd";
 import { fetchProgramBySlug, fetchPrograms, type Program } from "@/data/programs";
@@ -31,7 +31,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ProgramDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [program, programs] = await Promise.all([fetchProgramBySlug(slug), fetchPrograms()]);
-  if (!program) notFound();
+  if (!program) {
+    // An old CMS slug with a space ("level 7") is still in Google's index.
+    if (decodeURIComponent(slug).trim().toLowerCase() === "level 7") permanentRedirect("/postgraduate-degrees");
+    notFound();
+  }
   const related = programs.filter((item) => item.school === program.school && item.slug !== program.slug).slice(0, 3);
   const seo = programSeo(program);
   return (
