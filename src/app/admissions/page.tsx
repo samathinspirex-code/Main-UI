@@ -3,7 +3,7 @@ import { pageMetadata } from "@/lib/seo";
 import AcademicAdmissions from "@/components/admissions/AcademicAdmissions";
 import { fetchPrograms, fetchProgrammeNodes } from "@/data/programs";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const metadata: Metadata = pageMetadata("/admissions");
 
 export default async function AdmissionsPage({ searchParams }: { searchParams: Promise<{ program?: string }> }) {

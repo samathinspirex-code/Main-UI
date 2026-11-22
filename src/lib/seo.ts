@@ -26,6 +26,11 @@ export const PAGES: Record<string, PageSeo> = {
     description:
       "Software Engineering, AI, Cyber Security & Data Analytics. Foundation to Master's, 100% online from Sri Lanka. Explore the School of Computing.",
   },
+  "/hnd-courses": {
+    title: "HND Courses – Online UK HND in Computing & Business",
+    description:
+      "Two-year UK HND-level diplomas in AI, Software Engineering, Cyber Security, Business and Accounting. Pay monthly and top up to a degree.",
+  },
   "/short-courses": {
     title: "Short Courses – CPD Certified, 100% Online",
     description:
@@ -42,9 +47,9 @@ export const PAGES: Record<string, PageSeo> = {
       "Apply to Inspire College in minutes. Tell us what you want to study and a free advisor will guide you through entry requirements and fees.",
   },
   "/about": {
-    title: "About Inspire College – Sri Lanka's Online University",
+    title: "About Us – Sri Lanka's First Tech-Enabled Online College",
     description:
-      "Sri Lanka's first tech-enabled online higher education institution, partnered with ATHE and WINC UK. Learn about our vision and leadership.",
+      "Meet the team behind Inspire College: our story, vision, leadership board and UK partners ATHE and WINC. Based at Shangri-La, Colombo.",
   },
   "/news": {
     title: "News & Events",
@@ -75,37 +80,42 @@ export const PAGES: Record<string, PageSeo> = {
  * not listed here falls back to its CMS title and blurb.
  */
 export const PROGRAM_SEO: Record<string, PageSeo> = {
-  "postgraduate-diploma-in-computing-artificial-intelligence-postgraduate": {
+  "international-foundation-diploma": {
+    title: "International Foundation Diploma in Business & ICT (LSBF)",
+    description:
+      "LSBF General Foundation in Business and ICT, studied online from Sri Lanka. A first step into diploma and degree study after O/Ls.",
+  },
+  "postgraduate-diploma-in-computing-artificial-intelligence": {
     title: "Study Artificial Intelligence – Postgraduate Diploma in AI (Online)",
     description:
       "Ready to work in AI? Study a Level 7 Postgraduate Diploma in Computing – Artificial Intelligence, 100% online with practical, industry-shaped modules.",
   },
-  "hnd-computing-ai": {
-    title: "HND in Computing & Artificial Intelligence (Online)",
+  "hnd-in-artificial-intelligence": {
+    title: "HND in Artificial Intelligence (Online)",
     description:
       "Study AI online: machine learning, Python and data skills on a UK HND-level pathway. Go from AI student to AI engineer. Apply now.",
   },
-  "hnd-computing-software-engineering": {
+  "hnd-in-computing-software-engineering-software-developer-pathway": {
     title: "HND in Computing – Software Engineering (Online)",
     description:
       "Full-stack and cloud-focused software engineering HND, 100% online. Build, test and deploy real applications. UK-regulated pathway.",
   },
-  "hnd-computing-cyber-security": {
+  "hnd-in-computing-cyber-security-technologist-pathway": {
     title: "HND in Computing – Cyber Security (Online)",
     description:
       "Learn ethical hacking, network security and digital forensics online on a UK HND-level Cyber Security pathway. Apply today.",
   },
-  "hnd-computing-data-analytics": {
+  "hnd-in-computing-data-analytics-data-technologist-pathway": {
     title: "HND in Computing – Data Analytics (Online)",
     description:
       "Master data analysis, visualisation and business intelligence on a 100% online UK HND-level Data Analytics pathway.",
   },
-  "foundation-in-information-digital-technologies-foundation": {
+  "foundation-in-information-digital-technologies": {
     title: "Foundation in Information & Digital Technologies (Online)",
     description:
       "Start your IT career with an online Foundation in Information & Digital Technologies – your pathway into HND and degree study.",
   },
-  "foundation-in-business-management-foundation": {
+  "foundation-in-business-management": {
     title: "Foundation in Business Management (Online)",
     description:
       "Online Foundation in Business Management – a flexible first step toward HND and top-up degrees in business. UK-recognised.",

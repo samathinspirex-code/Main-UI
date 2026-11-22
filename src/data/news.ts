@@ -106,7 +106,7 @@ function mapApiNewsEvent(item: ApiNewsEvent): NewsItem {
 
 export async function fetchNewsEvents(): Promise<NewsItem[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/public/news-events`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/news-events`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(`News API returned ${response.status}`);
     const payload = (await response.json()) as { data: ApiNewsEvent[] };
     return payload.data.map(mapApiNewsEvent);
@@ -118,7 +118,7 @@ export async function fetchNewsEvents(): Promise<NewsItem[]> {
 
 export async function fetchNewsEventBySlug(slug: string): Promise<NewsItem | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/public/news-events/${encodeURIComponent(slug)}`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/api/v1/public/news-events/${encodeURIComponent(slug)}`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(8000) });
     if (response.status === 404) {
       const items = await fetchNewsEvents();
       return items.find((item) => item.slug === slug) ?? null;

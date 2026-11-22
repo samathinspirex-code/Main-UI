@@ -19,7 +19,7 @@ const MEGA_LINKS = [
   { label: "WINC ▾", href: "/programs?body=WINC" },
   { label: "LSBF ▾", href: "/programs?body=LSBF" },
   { label: "Jain University ▾", href: "/programs?body=Jain" },
-  { label: "Short Courses ▾", href: "/programs?level=Short+Course" },
+  { label: "Short Courses ▾", href: "/short-courses" },
 ];
 
 export function TopNav({ variant = "classic" }: { variant?: "classic" | "minimal" | "mega" }) {
