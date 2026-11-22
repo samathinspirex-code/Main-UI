@@ -15,6 +15,7 @@ import { formatNewsDate, type NewsItem } from '../../data/news'
 import { getProgramImage, type Program } from '../../data/programs'
 import OfferRibbon from './OfferRibbon'
 import CoursePrice, { InstalmentPill } from './CoursePrice'
+import type { CmsHeroSlide, PromoBanner } from '../../data/siteSettings'
 
 const AWARDING_BODY_ORDER = ['ATHE', 'CPD', 'WINC', 'LSBF', 'Jain University', 'Inspire College']
 const canonicalBody = (value: string) => {
@@ -62,17 +63,18 @@ interface HeroSlide {
   description: string
   benefits: string[]
   primaryBtn: { label: string; href: string }
-  secondaryBtn: { label: string; href: string }
+  secondaryBtn?: { label: string; href: string }
   image: string
   imageAlt: string
   titleBreakBeforeHighlight?: boolean
   titleSingleLine?: boolean
   badgeTop?: { label: string }
-  badgeBottom: { eyebrow: string; value: string }
+  badgeBottom?: { eyebrow: string; value: string }
   event?: { date: string; time: string; venue: string; invitation: string }
 }
 
-const HERO_SLIDES: HeroSlide[] = [
+/** Built-in slides, used only when the CMS settings can't be loaded. Live slides are edited in CMS > Website Settings. */
+const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
     tag: '· Free Coffee with Barista ·',
     title: 'Your Future ',
@@ -161,10 +163,42 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ]
 
+const DEFAULT_PROMO_BANNER: PromoBanner = {
+  desktopImage: '/free-coffee-banner-desktop.jpg',
+  mobileImage: '/free-coffee-banner-mobile.jpg',
+  alt: 'Your Future is Brewing. Free Coffee for every enrolled Inspire College student: 1 coffee a week, 4 coffees a month, 48 coffees a year.',
+  link: '',
+}
+
+/** "whatsapp" in the CMS means the advisor chat link. */
+const cmsLink = (link: string) => (link.trim().toLowerCase() === 'whatsapp' ? WHATSAPP_BOT_URL : link.trim())
+const isExternal = (src: string) => /^https?:\/\//i.test(src)
+
+function fromCms(slide: CmsHeroSlide): HeroSlide {
+  return {
+    tag: slide.tag,
+    title: slide.title,
+    titleHighlight: slide.title_highlight,
+    titleBreakBeforeHighlight: slide.title_break,
+    titleSingleLine: slide.title_single_line,
+    subtitle: slide.subtitle,
+    description: slide.description,
+    benefits: slide.benefits,
+    primaryBtn: { label: slide.primary_label, href: cmsLink(slide.primary_link) || '/admissions' },
+    secondaryBtn: slide.secondary_label && slide.secondary_link ? { label: slide.secondary_label, href: cmsLink(slide.secondary_link) } : undefined,
+    image: slide.image,
+    imageAlt: slide.image_alt,
+    badgeTop: slide.badge_top ? { label: slide.badge_top } : undefined,
+    badgeBottom: slide.badge_bottom_eyebrow || slide.badge_bottom_value ? { eyebrow: slide.badge_bottom_eyebrow, value: slide.badge_bottom_value } : undefined,
+  }
+}
+
 const HERO_SLIDE_INTERVAL_MS = 7000
 const HERO_SLIDE_TRANSITION = 'opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1)'
 
-export default function Home({ programs, news, testimonials = [] }: { programs: Program[]; news: NewsItem[]; testimonials?: Testimonial[] }) {
+export default function Home({ programs, news, testimonials = [], heroSlides: cmsSlides, promoBanner: cmsBanner }: { programs: Program[]; news: NewsItem[]; testimonials?: Testimonial[]; heroSlides?: CmsHeroSlide[] | null; promoBanner?: PromoBanner | null }) {
+  const HERO_SLIDES = useMemo(() => (cmsSlides?.length ? cmsSlides.map(fromCms) : DEFAULT_HERO_SLIDES), [cmsSlides])
+  const promoBanner = cmsBanner === undefined ? DEFAULT_PROMO_BANNER : cmsBanner
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
   const latestNews = [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
@@ -218,7 +252,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
     }, currentSlide === 0 ? 10000 : HERO_SLIDE_INTERVAL_MS)
     return () => window.clearTimeout(timer)
-  }, [currentSlide, touchingHero])
+  }, [currentSlide, touchingHero, HERO_SLIDES.length])
 
   return (
     <div className="home-page" style={{ minHeight: '100vh', background: 'var(--bg)' }}>
@@ -342,7 +376,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     <Link className="home-wtc-preregister" href="/wtc-event">Pre-Registration</Link>
                   ) : <div className="home-hero-actions" style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                     <Button variant="primary" size="lg" href={slide.primaryBtn.href}>{slide.primaryBtn.label}</Button>
-                    <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>
+                    {slide.secondaryBtn && <Button variant="outline" size="lg" href={slide.secondaryBtn.href}>{slide.secondaryBtn.label}</Button>}
                   </div>}
                 </div>
               )
@@ -373,6 +407,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     width={1024}
                     height={1024}
                     sizes="(max-width: 900px) 92vw, 600px"
+                    unoptimized={isExternal(slide.image)}
                     preload={idx === 0}
                     fetchPriority={idx === 0 ? 'high' : 'low'}
                     loading={idx === 0 ? 'eager' : 'lazy'}
@@ -385,7 +420,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                     }}
                   />
                   {/* Floating achievement badge */}
-                  <div
+                  {slide.badgeBottom && <div
                     className="home-hero-badge-bottom"
                     style={{
                       position: 'absolute', bottom: -24, left: -24, zIndex: 2,
@@ -398,7 +433,7 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
                   >
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', color: 'var(--ink-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{slide.badgeBottom.eyebrow}</div>
                     <div style={{ fontFamily: 'var(--font-body)', fontSize: 18, fontWeight: 700, color: 'var(--accent)' }}>{slide.badgeBottom.value}</div>
-                  </div>
+                  </div>}
                   {slide.event && (
                     <div className="home-wtc-widgets">
                       <div className="home-wtc-widget home-wtc-date">
@@ -635,20 +670,25 @@ export default function Home({ programs, news, testimonials = [] }: { programs: 
           </div>
         </section>
 
-        {/* Free Coffee promotion artwork (desktop and mobile versions). */}
-        <section className="sx" style={{ padding: '0 0 100px' }}>
-          <picture className="reveal home-promo-banner">
-            <source media="(max-width: 767px)" srcSet="/free-coffee-banner-mobile.jpg" width={750} height={900} />
-            <img
-              src="/free-coffee-banner-desktop.jpg"
-              width={2000}
-              height={517}
-              loading="lazy"
-              alt="Your Future is Brewing. Free Coffee for every enrolled Inspire College student: 1 coffee a week, 4 coffees a month, 48 coffees a year."
-            />
-          </picture>
-        </section>
+        {/* Bottom promotion artwork (desktop and phone versions), managed in CMS > Website Settings. */}
+        {promoBanner && <section className="sx" style={{ padding: '0 0 100px' }}>
+          <PromoArtwork banner={promoBanner} />
+        </section>}
       </div>
     </div>
   )
+}
+
+function PromoArtwork({ banner }: { banner: PromoBanner }) {
+  const picture = (
+    <picture className="reveal home-promo-banner">
+      {banner.mobileImage && <source media="(max-width: 767px)" srcSet={banner.mobileImage} />}
+      <img src={banner.desktopImage} loading="lazy" alt={banner.alt} />
+    </picture>
+  )
+  const href = cmsLink(banner.link)
+  if (!href) return picture
+  return isExternal(href)
+    ? <a href={href} target="_blank" rel="noopener noreferrer" className="home-promo-banner-link">{picture}</a>
+    : <Link href={href} className="home-promo-banner-link">{picture}</Link>
 }

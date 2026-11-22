@@ -6,12 +6,13 @@ import { Navbar } from "@/components/layout/Navbar";
 import { fetchPrograms } from "@/data/programs";
 import { fetchNewsEvents } from "@/data/news";
 import { fetchTestimonials } from "@/data/testimonials";
+import { fetchSiteSettings } from "@/data/siteSettings";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata("/");
 
 export default async function Page() {
-  const [programs, news, testimonials] = await Promise.all([fetchPrograms(), fetchNewsEvents(), fetchTestimonials()]);
-  return <><Navbar /><Home programs={programs} news={news} testimonials={testimonials} /><Footer /></>;
+  const [programs, news, testimonials, siteSettings] = await Promise.all([fetchPrograms(), fetchNewsEvents(), fetchTestimonials(), fetchSiteSettings()]);
+  return <><Navbar /><Home programs={programs} news={news} testimonials={testimonials} heroSlides={siteSettings.heroSlides} promoBanner={siteSettings.promoBanner} /><Footer /></>;
 }
