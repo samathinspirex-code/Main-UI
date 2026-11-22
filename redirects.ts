@@ -8,6 +8,10 @@ import type { NextConfig } from "next";
 type Redirect = Awaited<ReturnType<NonNullable<NextConfig["redirects"]>>>[number];
 
 const map: Record<string, string> = {
+  // Cut-off URLs Google picked up from old links (22 Nov 2026).
+  "/foundation-in-information-": "/programs/foundation-in-information-digital-technologies",
+  "/our-": "/programs",
+  "/the-level-6-diploma-in-healthcare-management": "/programs/postgraduate-diploma-in-healthcare-management",
   "/about-us": "/about",
   "/advanced-diploma-in-accounting-finance": "/programs/hnd-in-accounting-athe",
   "/advanced-diploma-in-business-studies": "/programs/hnd-business-management",
