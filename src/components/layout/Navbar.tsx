@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from '../ui/Button'
 import { Icon } from '../ui/Icon'
 
-const LOGO = '/uploads/2025/09/LeadHype-300-x-80-px-1.png'
+const LOGO = '/brand/inspire-college-wordmark.png'
 
 const NAV = [
   { label: 'Home', href: '/' },
@@ -77,8 +77,8 @@ export function Navbar({ actionLabel = 'Apply Now', onAction }: { actionLabel?: 
           <img
             src={LOGO}
             alt="Inspire College"
-            height={34}
-            style={{ height: 34, width: 'auto' }}
+            height={25}
+            style={{ height: 25, width: 'auto' }}
           />
         </Link>
 
