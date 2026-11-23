@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-const LOGO = '/uploads/2025/09/LeadHype-300-x-80-px-1.png'
+const LOGO = '/brand/inspire-college-wordmark.png'
 
 const COLS: Record<string, { label: string; href?: string; external?: boolean }[]> = {
   Programs: [
@@ -63,8 +63,8 @@ export function Footer() {
               <img
                 src={LOGO}
                 alt="Inspire College"
-                height={32}
-                style={{ height: 32, width: 'auto', filter: 'brightness(0) invert(1)' }}
+                height={24}
+                style={{ height: 24, width: 'auto', filter: 'brightness(0) invert(1)' }}
               />
             </Link>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: F.link, marginTop: 18, lineHeight: 1.75, maxWidth: 260 }}>
