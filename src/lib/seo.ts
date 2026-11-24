@@ -17,24 +17,29 @@ export const PAGES: Record<string, PageSeo> = {
 
   // ---- Sitelink landing pages (each shows the programmes list pre-filtered) ----
   "/postgraduate-degrees": {
-    title: "Postgraduate Degrees – Online MBA, MCA & Level 7",
+    title: "Postgraduate Degrees",
     description:
-      "Postgraduate study designed for global careers. Online MBA, MCA and Level 7 diplomas, UK-recognised and flexible. Compare programmes and apply.",
+      "Take your career further with an online MBA, MCA, MSc or Level 7 diploma from WINC, ATHE or Jain University, studied alongside your job.",
   },
   "/computing-degrees": {
-    title: "Computing & IT Degrees – School of Computing",
+    title: "Computing & IT Degrees",
     description:
-      "Software Engineering, AI, Cyber Security & Data Analytics. Foundation to Master's, 100% online from Sri Lanka. Explore the School of Computing.",
+      "Become a software engineer, AI specialist or data analyst. Computing qualifications from Foundation to Master's, built around real industry projects.",
   },
   "/hnd-courses": {
-    title: "HND Courses – Online UK HND in Computing & Business",
+    title: "HND Courses",
     description:
-      "Two-year UK HND-level diplomas in AI, Software Engineering, Cyber Security, Business and Accounting. Pay monthly and top up to a degree.",
+      "Finished your A/Ls? Earn a UK HND in two years in AI, software engineering, cyber security, accounting or law, then top up to a full degree.",
+  },
+  "/business-degrees": {
+    title: "Business Degrees",
+    description:
+      "Prepare to lead in management, finance, marketing or HR with a BBA, B.Com, MBA, top-up degree or business HND recognised in the UK and India.",
   },
   "/short-courses": {
-    title: "Short Courses – CPD Certified, 100% Online",
+    title: "Short Courses",
     description:
-      "CPD short courses in AI, digital marketing, data and finance. Learn practical skills in weeks, fully online. Browse all short courses.",
+      "Gain a job-ready skill in 4 to 12 weeks. CPD-certified courses in AI tools, digital marketing, data and personal finance for working professionals.",
   },
   "/programs": {
     title: "Programmes – Foundation, HND, Top-Up Degree & Master's",
@@ -57,9 +62,9 @@ export const PAGES: Record<string, PageSeo> = {
       "Latest news, partnerships and events from Inspire College, including our ATHE and WINC UK partnerships.",
   },
   "/contact": {
-    title: "Contact Us – Free Counselling Session",
+    title: "Free Counselling Session",
     description:
-      "Chat with an advisor for free. Call or WhatsApp +94 71 199 3331, email enrol@inspire.college, or visit us at Level 01, Shangri-La, Colombo 2.",
+      "Not sure which course is right for you? Speak to an advisor free of charge by phone, WhatsApp or in person at our Colombo office.",
   },
   "/privacy-policy": {
     title: "Privacy Policy",

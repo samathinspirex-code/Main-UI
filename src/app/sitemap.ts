@@ -7,7 +7,7 @@ import { PAGES, SITE_URL } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-const SECTIONS = ["/programs", "/hnd-courses", "/postgraduate-degrees", "/computing-degrees", "/short-courses", "/admissions", "/about", "/contact", "/news"];
+const SECTIONS = ["/programs", "/hnd-courses", "/postgraduate-degrees", "/computing-degrees", "/business-degrees", "/short-courses", "/admissions", "/about", "/contact", "/news"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

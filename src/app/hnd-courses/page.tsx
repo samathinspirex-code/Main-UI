@@ -10,7 +10,7 @@ export default function HndCoursesPage() {
       path="/hnd-courses"
       name="HND Courses"
       heading="HND Courses (Level 4 & 5)"
-      intro="Two-year UK HND-level diplomas in AI, Software Engineering, Cyber Security, Data Analytics, Business, Accounting, Law and Health – then top up to a degree."
+      intro="A two-year UK Higher National Diploma after your A/Ls – choose AI, software, cyber security, business, accounting, law or health, then top up to a degree."
       checks={{ programmes: ["HND"] }}
     />
   );
