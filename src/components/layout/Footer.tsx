@@ -10,8 +10,9 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
     { label: 'WINC', href: '/programs?body=WINC#programme-catalogue-top' },
     { label: 'Jain University', href: '/programs?body=Jain+University#programme-catalogue-top' },
     { label: 'HND Courses', href: '/hnd-courses' },
-    { label: 'Computing & IT Degrees', href: '/computing-degrees' },
     { label: 'Postgraduate Degrees', href: '/postgraduate-degrees' },
+    { label: 'Computing & IT Degrees', href: '/computing-degrees' },
+    { label: 'Business Degrees', href: '/business-degrees' },
     { label: 'Short Courses', href: '/short-courses' },
   ],
   About: [

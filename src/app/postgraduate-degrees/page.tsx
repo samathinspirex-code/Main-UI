@@ -10,7 +10,7 @@ export default function PostgraduateDegreesPage() {
       path="/postgraduate-degrees"
       name="Postgraduate Degrees"
       heading="Postgraduate Degrees"
-      intro="Postgraduate study designed for global careers – online MBA, MCA and Level 7 diplomas."
+      intro="Master's-level study for working graduates – online MBA, MCA, MSc and Level 7 diplomas you can fit around your job."
       checks={{ programmes: ["Postgraduate", "MBA", "MCA"] }}
     />
   );

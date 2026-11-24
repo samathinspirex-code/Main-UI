@@ -10,7 +10,7 @@ export default function ComputingDegreesPage() {
       path="/computing-degrees"
       name="Computing & IT Degrees"
       heading="Computing & IT Degrees"
-      intro="Software Engineering, AI, Cyber Security and Data Analytics – Foundation to Master's, 100% online."
+      intro="Start a tech career in software engineering, AI, cyber security or data – from Foundation to Master's, with hands-on industry projects."
       checks={{ schools: ["School of Computing"] }}
     />
   );
