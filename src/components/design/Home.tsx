@@ -31,7 +31,7 @@ const canonicalBody = (value: string) => {
 
 const PATH_CARDS = [
   { icon: 'grad', title: 'Foundation', blurb: 'Start your pathway to a degree with flexible monthly payments.', tag: 'From LKR 5,000/month*', href: '/programs?level=Foundation', delay: 0 },
-  { icon: 'book', title: 'HND-Level Study', blurb: 'Explore Level 4 & 5 programmes — Year 1 and Year 2.', tag: 'From LKR 9,900/month*', href: '/hnd-courses', delay: 100 },
+  { icon: 'book', title: 'HND-Level Study', blurb: 'Explore Level 4 & 5 programmes — Year 1 and Year 2.', tag: 'From LKR 9,999/month*', href: '/hnd-courses', delay: 100 },
   { icon: 'brush', title: 'Short Courses', blurb: 'Build practical skills with career-focused CPD programmes.', tag: 'From LKR 9,900/month*', href: '/short-courses', delay: 200 },
 ]
 
