@@ -22,7 +22,7 @@ export function SiteJsonLd() {
     logo: `${SITE_URL}/icon.png`,
     description: "Sri Lanka's first tech-enabled online higher education institution.",
     email: "enrol@inspire.college",
-    telephone: "+94711993331",
+    telephone: "+94760974225",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Level 01, Shangri-La",

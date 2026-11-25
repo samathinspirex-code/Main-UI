@@ -136,7 +136,7 @@ export default function OfferDocuments({ token }: { token: string }) {
         : view.status === "unavailable"
           ? "The page is temporarily unavailable. Please try again in a few minutes."
           : "Please check that you opened the full link from your offer email, or contact our Admissions Team."}</p>
-      <a className="admission-button primary" href="tel:+94711993331">Call Admissions · 071 199 3331</a>
+      <a className="admission-button primary" href="tel:+94760974225">Call Admissions · 076 097 4225</a>
       <Link className="admission-button ghost" href="/">Back to home</Link>
     </main><Footer /></div>;
   }
@@ -195,7 +195,7 @@ export default function OfferDocuments({ token }: { token: string }) {
           {selectedCount > 1 ? `Submit ${selectedCount} documents` : "Submit documents"}
         </button>
         <p className="offer-docs-note">Your documents are stored securely and only seen by our Admissions Team.</p>
-        <p className="offer-docs-help">Need help? Call Admissions on <a href="tel:+94711993331">071 199 3331</a>.</p>
+        <p className="offer-docs-help">Need help? Call Admissions on <a href="tel:+94760974225">076 097 4225</a>.</p>
       </div>
     </section>
     {progress && <div className="offer-docs-uploading" role="alertdialog" aria-live="polite" aria-label="Uploading your documents">
