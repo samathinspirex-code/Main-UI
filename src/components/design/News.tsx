@@ -8,7 +8,8 @@ import { Icon } from '../ui/Icon'
 import { formatNewsDate, type NewsItem } from '../../data/news'
 
 export default function NewsPage({ items }: { items: NewsItem[] }) {
-  const sortedItems = [...items].sort((a, b) => b.date.localeCompare(a.date))
+  // Keep the order set in the CMS (the API already sends posts in website order).
+  const sortedItems = items
 
   return (
     <div>

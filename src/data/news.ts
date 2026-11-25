@@ -132,7 +132,7 @@ export async function fetchNewsEvents(): Promise<NewsItem[]> {
     return payload.data.map(mapApiNewsEvent);
   } catch (error) {
     console.error("Unable to load news from the API; using bundled news.", error);
-    return NEWS;
+    return [...NEWS].sort((a, b) => b.date.localeCompare(a.date));
   }
 }
 

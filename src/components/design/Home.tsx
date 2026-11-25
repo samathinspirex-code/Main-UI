@@ -201,7 +201,8 @@ export default function Home({ programs, news, testimonials = [], heroSlides: cm
   const promoBanner = cmsBanner === undefined ? DEFAULT_PROMO_BANNER : cmsBanner
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
-  const latestNews = [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 12)
+  // Order comes from the CMS (News > ↑ ↓); the API sends posts in website order.
+  const latestNews = news.slice(0, 12)
   // Latest news row: slides one card at a time with the arrow buttons (or swipe on touch screens).
   const newsTrack = useRef<HTMLDivElement>(null)
   const [newsEdges, setNewsEdges] = useState({ prev: false, next: false })
