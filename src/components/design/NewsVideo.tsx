@@ -1,10 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { NewsVideo as NewsVideoData } from '../../data/news'
 
+/**
+ * News article video. It starts by itself when the page opens. Browsers only
+ * allow that while muted, so it begins muted with a "Tap for sound" button.
+ */
 export default function NewsVideo({ video, title }: { video: NewsVideoData; title: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
   const [failed, setFailed] = useState(false)
+  const [muted, setMuted] = useState(true)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    el.muted = true
+    el.play().catch(() => { /* autoplay blocked: the controls stay available */ })
+  }, [video.url])
+
+  const turnSoundOn = () => {
+    const el = ref.current
+    if (!el) return
+    el.muted = false
+    setMuted(false)
+    el.play().catch(() => {})
+  }
+
   return (
     <figure className={`article-video article-video--${video.orientation}`}>
       {failed ? (
@@ -13,16 +35,26 @@ export default function NewsVideo({ video, title }: { video: NewsVideoData; titl
           <a href={video.url} target="_blank" rel="noopener noreferrer">Open video directly →</a>
         </div>
       ) : (
-        <video
-          // Without a cover, #t=0.1 makes browsers (Safari too) show the first frame instead of a black box.
-          src={video.poster || video.url.includes('#') ? video.url : `${video.url}#t=0.1`}
-          poster={video.poster}
-          controls
-          playsInline
-          preload="metadata"
-          aria-label={`Video: ${title}`}
-          onError={() => setFailed(true)}
-        />
+        <>
+          <video
+            ref={ref}
+            src={video.url}
+            poster={video.poster}
+            autoPlay
+            muted
+            playsInline
+            controls
+            preload="auto"
+            aria-label={`Video: ${title}`}
+            onVolumeChange={(event) => setMuted(event.currentTarget.muted)}
+            onError={() => setFailed(true)}
+          />
+          {muted && (
+            <button type="button" className="contact-video-sound" onClick={turnSoundOn}>
+              <span aria-hidden="true">🔊</span> Tap for sound
+            </button>
+          )}
+        </>
       )}
     </figure>
   )
