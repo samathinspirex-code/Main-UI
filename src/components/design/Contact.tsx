@@ -1,112 +1,58 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { Navbar } from '../layout/Navbar'
 import { Footer } from '../layout/Footer'
-import { Button } from '../ui/Button'
 import { Icon } from '../ui/Icon'
-import { ContactCaptcha } from './ContactCaptcha'
-import { track } from '@/lib/analytics'
-import { AdsConsent, adsConsentFields } from '../ui/AdsConsent'
 
-const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
+const CONTACT_VIDEO = '/contact/inspire-contact-video.mp4'
 
-const inputStyle = {
-  width: '100%',
-  padding: '12px 16px',
-  background: 'var(--surface)',
-  border: '1px solid var(--border)',
-  borderRadius: 6,
-  fontFamily: 'var(--font-body)',
-  fontSize: 15,
-  color: 'var(--ink)',
-  outline: 'none',
-  transition: 'border-color 0.2s',
+/** Portrait welcome video: starts by itself (muted, as browsers require) and offers a sound button. */
+function ContactVideo() {
+  const video = useRef<HTMLVideoElement>(null)
+  const [muted, setMuted] = useState(true)
+
+  useEffect(() => {
+    const el = video.current
+    if (!el) return
+    el.muted = true
+    el.play().catch(() => { /* autoplay blocked: the controls stay available */ })
+  }, [])
+
+  const turnSoundOn = () => {
+    const el = video.current
+    if (!el) return
+    el.muted = false
+    setMuted(false)
+    el.play().catch(() => {})
+  }
+
+  return (
+    <figure id="contact-video" className="reveal reveal-delay-2 contact-video">
+      <video
+        ref={video}
+        src={CONTACT_VIDEO}
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls
+        preload="auto"
+        aria-label="Welcome video from Inspire College"
+        onVolumeChange={(event) => setMuted(event.currentTarget.muted)}
+      />
+      {muted && (
+        <button type="button" className="contact-video-sound" onClick={turnSoundOn}>
+          <span aria-hidden="true">🔊</span> Tap for sound
+        </button>
+      )}
+    </figure>
+  )
 }
 
 export default function Contact() {
   const revealRef = useScrollReveal()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [adsConsent, setAdsConsent] = useState(false)
-  const [message, setMessage] = useState('')
-  const [sent, setSent] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
-  const [focused, setFocused] = useState<string | null>(null)
-  const [captchaToken, setCaptchaToken] = useState('')
-  const [captchaResetCount, setCaptchaResetCount] = useState(0)
-
-  async function submitContactForm(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setBusy(true)
-    setError('')
-    try {
-      const trimmedName = name.trim()
-      const trimmedEmail = email.trim()
-      const trimmedPhone = phone.trim()
-      const trimmedMessage = message.trim()
-
-      if (!trimmedName || !trimmedEmail || !trimmedPhone || !trimmedMessage) {
-        throw new Error('Please fill in your name, email, phone number, and message.')
-      }
-      if (recaptchaSiteKey && !captchaToken) {
-        throw new Error('Please complete the reCAPTCHA check before sending your message.')
-      }
-
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name: trimmedName, email: trimmedEmail, phone: trimmedPhone, message: trimmedMessage, captcha_token: captchaToken || undefined, ...adsConsentFields(adsConsent) }),
-      })
-      const payload = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        let msg = 'We could not send your message. Please try again.'
-        if (payload?.error?.details && Array.isArray(payload.error.details) && payload.error.details.length > 0) {
-          msg = payload.error.details.map((d: { issue?: string; msg?: string; field?: string }) => d.issue || d.msg || `${d.field}: invalid`).join('. ')
-        } else if (typeof payload?.error?.message === 'string') {
-          msg = payload.error.message
-        } else if (typeof payload?.detail === 'string') {
-          msg = payload.detail
-        } else if (Array.isArray(payload?.detail) && payload.detail.length > 0) {
-          msg = payload.detail.map((d: { msg?: string }) => d.msg || 'Invalid input').join('. ')
-        }
-        throw new Error(msg)
-      }
-
-      track('generate_lead', { form: 'contact' })
-      setSent(true)
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'We could not send your message. Please try again.')
-      if (captchaToken) setCaptchaResetCount((count) => count + 1)
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  if (sent) {
-    return (
-      <div>
-        <Navbar />
-        <main style={{ paddingTop: 68, minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-          <div>
-            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--accent-dim)', border: '1px solid var(--border-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-              <Icon kind="check" size={28} color="var(--accent)" />
-            </div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, margin: '0 0 12px' }}>Message sent!</h2>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--ink-soft)', margin: '0 0 32px' }}>
-              Thanks {name.split(' ')[0] || 'there'} — we'll reply to {email || 'your email'} soon.
-            </p>
-            <Button variant="outline" href="/">Back to home</Button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    )
-  }
 
   return (
     <div>
@@ -152,43 +98,8 @@ export default function Contact() {
             </a>
           </div>
 
-          {/* Form */}
-          <form
-            id="contact-form"
-            className="reveal reveal-delay-2 contact-form-card"
-            onSubmit={submitContactForm}
-            style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 32, display: 'flex', flexDirection: 'column', gap: 20, scrollMarginTop: 96 }}
-          >
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, margin: 0 }}>Send us a message</h2>
-            <div>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>FULL NAME</label>
-              <input style={{ ...inputStyle, borderColor: focused === 'name' ? 'var(--accent)' : 'var(--border)' }} required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your full name"
-                onFocus={() => setFocused('name')} onBlur={() => setFocused(null)} />
-            </div>
-            <div>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>EMAIL</label>
-              <input style={{ ...inputStyle, borderColor: focused === 'email' ? 'var(--accent)' : 'var(--border)' }} required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
-                onFocus={() => setFocused('email')} onBlur={() => setFocused(null)} />
-            </div>
-            <div>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>PHONE NUMBER</label>
-              <input style={{ ...inputStyle, borderColor: focused === 'phone' ? 'var(--accent)' : 'var(--border)' }} required type="tel" inputMode="tel" autoComplete="tel" minLength={5} maxLength={50} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+94 77 123 4567"
-                onFocus={() => setFocused('phone')} onBlur={() => setFocused(null)} />
-            </div>
-            <div>
-              <label style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--ink-muted)', display: 'block', marginBottom: 8 }}>MESSAGE</label>
-              <textarea style={{ ...inputStyle, minHeight: 130, resize: 'vertical', borderColor: focused === 'message' ? 'var(--accent)' : 'var(--border)' }} required value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How can we help?"
-                onFocus={() => setFocused('message')} onBlur={() => setFocused(null)} />
-            </div>
-            <AdsConsent checked={adsConsent} onChange={setAdsConsent} />
-            {recaptchaSiteKey && <ContactCaptcha siteKey={recaptchaSiteKey} onToken={setCaptchaToken} resetCount={captchaResetCount} />}
-            {error && (
-              <div role="alert" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: '#a11b1b', background: '#fff3f3', border: '1px solid #efcaca', borderRadius: 6, padding: '10px 12px' }}>
-                {error}
-              </div>
-            )}
-            <Button variant="primary" type="submit" fullWidth disabled={busy}>{busy ? 'Sending…' : 'Apply now →'}</Button>
-          </form>
+          {/* Video (replaces the old contact form) */}
+          <ContactVideo />
         </div>
       </main>
       <Footer />

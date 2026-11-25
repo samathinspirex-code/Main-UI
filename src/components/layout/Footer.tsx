@@ -29,7 +29,7 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
   ],
   Connect: [
     { label: 'Contact Us', href: '/contact' },
-    { label: 'Free Counselling', href: '/contact#contact-form' },
+    { label: 'Free Counselling', href: '/contact' },
     { label: 'Student Portal', href: 'https://lms-ui-amber.vercel.app/', external: true },
     { label: 'WhatsApp', href: 'https://wa.me/94760974225', external: true },
     { label: '+94 76 097 4225', href: 'tel:+94760974225', external: true },

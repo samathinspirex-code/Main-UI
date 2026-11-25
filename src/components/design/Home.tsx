@@ -201,7 +201,28 @@ export default function Home({ programs, news, testimonials = [], heroSlides: cm
   const promoBanner = cmsBanner === undefined ? DEFAULT_PROMO_BANNER : cmsBanner
   const revealRef = useScrollReveal()
   const heroRef = useRef<HTMLDivElement>(null)
-  const latestNews = [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
+  const latestNews = [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 12)
+  // Latest news row: slides one card at a time with the arrow buttons (or swipe on touch screens).
+  const newsTrack = useRef<HTMLDivElement>(null)
+  const [newsEdges, setNewsEdges] = useState({ prev: false, next: false })
+  const updateNewsEdges = () => {
+    const track = newsTrack.current
+    if (!track) return
+    const max = track.scrollWidth - track.clientWidth
+    setNewsEdges({ prev: track.scrollLeft > 4, next: track.scrollLeft < max - 4 })
+  }
+  const slideNews = (direction: 1 | -1) => {
+    const track = newsTrack.current
+    const card = track?.querySelector<HTMLElement>('.home-news-card')
+    if (!track || !card) return
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0
+    track.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: 'smooth' })
+  }
+  useEffect(() => {
+    updateNewsEdges()
+    window.addEventListener('resize', updateNewsEdges)
+    return () => window.removeEventListener('resize', updateNewsEdges)
+  }, [news])
   const featuredPrograms = [...programs].sort((a, b) => b.popularity - a.popularity).slice(0, 6)
   const [selectedBody, setSelectedBody] = useState('')
   const [selectedSchool, setSelectedSchool] = useState('')
@@ -646,9 +667,32 @@ export default function Home({ programs, news, testimonials = [], heroSlides: cm
                 <h2>Latest from Inspire College</h2>
                 <p>College news, partnerships, events and opportunities—all in one place.</p>
               </div>
-              <Button variant="ghost" size="sm" href="/news">All news →</Button>
+              <div className="home-news-controls">
+                {(newsEdges.prev || newsEdges.next) && (
+                  <div className="home-news-arrows">
+                    <button type="button" className="home-news-arrow" aria-label="Previous news" disabled={!newsEdges.prev} onClick={() => slideNews(-1)}>
+                      <span aria-hidden="true" style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}><Icon kind="arrow" size={18} /></span>
+                    </button>
+                    <button type="button" className="home-news-arrow" aria-label="Next news" disabled={!newsEdges.next} onClick={() => slideNews(1)}>
+                      <span aria-hidden="true" style={{ display: 'inline-flex' }}><Icon kind="arrow" size={18} /></span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="home-news-grid reveal reveal-delay-1">
+            <div className="home-news-carousel">
+            {/* Laptop/desktop: side arrows. Left shows only after moving right; right hides at the end. */}
+            {newsEdges.prev && (
+              <button type="button" className="home-news-side home-news-side--prev" aria-label="Previous news" onClick={() => slideNews(-1)}>
+                <span aria-hidden="true" style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}><Icon kind="arrow" size={20} /></span>
+              </button>
+            )}
+            {newsEdges.next && (
+              <button type="button" className="home-news-side home-news-side--next" aria-label="Next news" onClick={() => slideNews(1)}>
+                <span aria-hidden="true" style={{ display: 'inline-flex' }}><Icon kind="arrow" size={20} /></span>
+              </button>
+            )}
+            <div className="home-news-track reveal reveal-delay-1" ref={newsTrack} onScroll={updateNewsEdges}>
               {latestNews.map((item) => (
                 <Link key={item.slug} href={`/news/${item.slug}`} className="home-news-card card-hover">
                   <div className="home-news-card-media">
@@ -666,6 +710,10 @@ export default function Home({ programs, news, testimonials = [], heroSlides: cm
                 </Link>
               ))}
               {!latestNews.length && <div className="news-empty">No published news yet.</div>}
+            </div>
+            </div>
+            <div className="home-news-all">
+              <Button variant="ghost" size="sm" href="/news">All news →</Button>
             </div>
           </div>
         </section>
