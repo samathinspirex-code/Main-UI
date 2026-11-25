@@ -1,5 +1,11 @@
 const IC = (path: string) => `/uploads/${path}`;
 
+export interface NewsVideo {
+  url: string;
+  orientation: "portrait" | "landscape";
+  poster?: string;
+}
+
 export interface NewsItem {
   slug: string;
   date: string;
@@ -8,6 +14,7 @@ export interface NewsItem {
   image: string;
   excerpt: string;
   body: string[];
+  video?: NewsVideo;
 }
 
 export const NEWS: NewsItem[] = [
@@ -88,6 +95,9 @@ interface ApiNewsEvent {
   published_on: string | null;
   event_date: string | null;
   created_at: string;
+  video_url?: string | null;
+  video_orientation?: "portrait" | "landscape" | null;
+  video_poster_url?: string | null;
 }
 
 const API_BASE_URL = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
@@ -101,6 +111,16 @@ function mapApiNewsEvent(item: ApiNewsEvent): NewsItem {
     image: item.image_url,
     excerpt: item.excerpt,
     body: item.content,
+    ...(item.video_url
+      ? {
+          video: {
+            url: item.video_url,
+            orientation: item.video_orientation === "portrait" ? "portrait" : "landscape",
+            // A landscape cover crops badly in a 9:16 frame, so portrait videos show their own first frame unless a cover was set.
+            poster: item.video_poster_url || (item.video_orientation === "portrait" ? undefined : item.image_url),
+          } satisfies NewsVideo,
+        }
+      : {}),
   };
 }
 

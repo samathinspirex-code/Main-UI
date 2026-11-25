@@ -21,6 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     metadata.openGraph = { ...metadata.openGraph, images: [{ url: item.image, alt: item.title }] };
     metadata.twitter = { ...metadata.twitter, images: [item.image] };
   }
+  if (item.video) {
+    metadata.openGraph = { ...metadata.openGraph, videos: [{ url: item.video.url }] };
+  }
   return metadata;
 }
 
@@ -30,7 +33,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
   if (!item) notFound();
   return (
     <>
-      <ArticleJsonLd slug={item.slug} title={item.title} description={snippet(item.excerpt)} image={item.image} date={item.date} />
+      <ArticleJsonLd slug={item.slug} title={item.title} description={snippet(item.excerpt)} image={item.image} date={item.date} video={item.video} />
       <NewsDetail item={item} others={items.filter((other) => other.slug !== item.slug).slice(0, 3)} />
     </>
   );

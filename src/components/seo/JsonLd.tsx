@@ -99,8 +99,9 @@ export function CourseJsonLd({ slug, name, description, duration }: { slug: stri
 }
 
 /** On each news article. */
-export function ArticleJsonLd({ slug, title, description, image, date }: { slug: string; title: string; description?: string; image?: string; date?: string }) {
+export function ArticleJsonLd({ slug, title, description, image, date, video }: { slug: string; title: string; description?: string; image?: string; date?: string; video?: { url: string; poster?: string } }) {
   const path = `/news/${slug}`;
+  const thumb = video?.poster || image;
   return (
     <>
       <JsonLd
@@ -111,6 +112,18 @@ export function ArticleJsonLd({ slug, title, description, image, date }: { slug:
           ...(description ? { description } : {}),
           ...(image ? { image: [image.startsWith("http") ? image : absolute(image)] } : {}),
           ...(date ? { datePublished: date } : {}),
+          ...(video
+            ? {
+                video: {
+                  "@type": "VideoObject",
+                  name: title,
+                  ...(description ? { description } : {}),
+                  contentUrl: video.url,
+                  ...(thumb ? { thumbnailUrl: [thumb.startsWith("http") ? thumb : absolute(thumb)] } : {}),
+                  ...(date ? { uploadDate: date } : {}),
+                },
+              }
+            : {}),
           mainEntityOfPage: absolute(path),
           publisher: { "@id": `${SITE_URL}/#organization` },
           author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },

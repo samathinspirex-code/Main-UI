@@ -40,7 +40,7 @@ export default function NewsPage({ items }: { items: NewsItem[] }) {
                 href={`/news/${item.slug}`}
                 className="news-card card-hover"
               >
-                <div className="news-card-media"><img src={item.image} alt={item.title} /></div>
+                <div className="news-card-media"><img src={item.image} alt={item.title} />{item.video && <span className="news-video-badge">▶ Video</span>}</div>
                 <div className="news-card-body">
                   <div className="news-card-meta"><Tag accent>{item.category}</Tag><span>{formatNewsDate(item.date)}</span></div>
                   <h3>{item.title}</h3>
