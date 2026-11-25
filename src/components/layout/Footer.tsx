@@ -31,8 +31,8 @@ const COLS: Record<string, { label: string; href?: string; external?: boolean }[
     { label: 'Contact Us', href: '/contact' },
     { label: 'Free Counselling', href: '/contact#contact-form' },
     { label: 'Student Portal', href: 'https://lms-ui-amber.vercel.app/', external: true },
-    { label: 'WhatsApp', href: 'https://wa.me/94711993331', external: true },
-    { label: '+94 71 199 3331', href: 'tel:+94711993331', external: true },
+    { label: 'WhatsApp', href: 'https://wa.me/94760974225', external: true },
+    { label: '+94 76 097 4225', href: 'tel:+94760974225', external: true },
   ],
 }
 
@@ -72,7 +72,7 @@ export function Footer() {
               Sri Lanka's first tech-enabled online higher education institution, revolutionizing education through innovation.
             </p>
             <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: F.muted, marginTop: 14, lineHeight: 1.7 }}>
-              Level 01, Shangri-La, Colombo 2<br />+94 71 199 3331
+              Level 01, Shangri-La, Colombo 2<br />+94 76 097 4225
             </p>
             <div className="footer-socials">
               {SOCIALS.map((social) => (
