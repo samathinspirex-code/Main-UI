@@ -15,6 +15,9 @@ export interface NewsItem {
   excerpt: string;
   body: string[];
   video?: NewsVideo;
+  /** AI-written search engine title and description from the CMS; fall back to title/excerpt when empty. */
+  metaTitle?: string;
+  metaDescription?: string;
 }
 
 export const NEWS: NewsItem[] = [
@@ -98,6 +101,8 @@ interface ApiNewsEvent {
   video_url?: string | null;
   video_orientation?: "portrait" | "landscape" | null;
   video_poster_url?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 const API_BASE_URL = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
@@ -111,6 +116,8 @@ function mapApiNewsEvent(item: ApiNewsEvent): NewsItem {
     image: item.image_url,
     excerpt: item.excerpt,
     body: item.content,
+    ...(item.meta_title?.trim() ? { metaTitle: item.meta_title.trim() } : {}),
+    ...(item.meta_description?.trim() ? { metaDescription: item.meta_description.trim() } : {}),
     ...(item.video_url
       ? {
           video: {
