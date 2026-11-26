@@ -16,7 +16,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = await fetchNewsEventBySlug(slug);
   if (!item) return { title: "News article not found", robots: { index: false } };
-  const metadata = buildMetadata(`/news/${item.slug}`, { title: item.title, description: snippet(item.excerpt) }, { type: "article" });
+  const metadata = buildMetadata(
+    `/news/${item.slug}`,
+    { title: item.metaTitle || item.title, description: item.metaDescription || snippet(item.excerpt) },
+    { type: "article" },
+  );
   if (item.image) {
     metadata.openGraph = { ...metadata.openGraph, images: [{ url: item.image, alt: item.title }] };
     metadata.twitter = { ...metadata.twitter, images: [item.image] };
@@ -33,7 +37,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
   if (!item) notFound();
   return (
     <>
-      <ArticleJsonLd slug={item.slug} title={item.title} description={snippet(item.excerpt)} image={item.image} date={item.date} video={item.video} />
+      <ArticleJsonLd slug={item.slug} title={item.title} description={item.metaDescription || snippet(item.excerpt)} image={item.image} date={item.date} video={item.video} />
       <NewsDetail item={item} others={items.filter((other) => other.slug !== item.slug).slice(0, 3)} />
     </>
   );
